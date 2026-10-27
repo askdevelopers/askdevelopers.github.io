@@ -21,7 +21,7 @@ Type is Clash Display (headlines) + Satoshi (body) from Fontshare, with JetBrain
 all three are linked in `index.html`.
 
 - `framer-motion` drives everything scroll-linked: the hero parallax, the pinned Platform story
-  (`Platform.tsx` + `PlatformVisuals.tsx`), the Process timeline, tilt cards in Work, and the `Reveal`,
+  (`Platform.tsx` + `PlatformVisuals.tsx`), the AI section tiles (`AI.tsx`), the Process timeline, tilt cards in Work, and the `Reveal`,
   `SplitWords` and `CountUp` helpers in `src/components/motion.tsx`.
 - `lenis` provides smooth scrolling (`src/lib/smooth-scroll.ts`); it is skipped for users who prefer reduced
   motion, and `MotionConfig reducedMotion="user"` tones the rest down for them.

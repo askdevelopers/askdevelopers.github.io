@@ -3,7 +3,7 @@ import { EXPERTISE } from '@/lib/data';
 
 export function Statement() {
   return (
-    <section id="about" className="theme-dark py-24 sm:py-32">
+    <section id="about" className="theme-light py-24 sm:py-32">
       <div className="container-x">
         <div className="mx-auto max-w-4xl text-center">
           <Reveal>

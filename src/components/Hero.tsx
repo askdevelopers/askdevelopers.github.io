@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Apple, ArrowRight, ChevronRight, Sparkles, TrendingUp } from 'lucide-react';
+import { Apple, ArrowRight, Check, ChevronRight, LayoutDashboard, Sparkles } from 'lucide-react';
 import { NeuralSphere } from './NeuralSphere';
 import { Robot } from './Robot';
 import { CountUp, EASE, Reveal, SplitWords } from './motion';
@@ -108,15 +108,17 @@ export function Hero() {
 
           <motion.div style={{ y: cardD }} className="glass absolute right-[6%] top-[8%] hidden w-44 rounded-2xl p-4 sm:block">
             <div className="flex items-center justify-between text-xs text-muted">
-              CRM leads
-              <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
+              Custom CRM
+              <LayoutDashboard className="h-3.5 w-3.5 text-brand-400" />
             </div>
-            <p className="mt-2 font-display text-2xl font-semibold tracking-tight text-fg">+38%</p>
-            <div className="mt-2 flex h-6 items-end gap-1">
-              {[40, 55, 45, 70, 60, 85, 100].map((h, i) => (
-                <span key={i} className="w-full rounded-sm bg-brand-400/70" style={{ height: `${h}%` }} />
+            <ul className="mt-2.5 space-y-1.5">
+              {['Lead pipeline', 'Roles & permissions', 'Reports'].map((f) => (
+                <li key={f} className="flex items-center gap-1.5 text-xs text-fg/90">
+                  <Check className="h-3 w-3 text-brand-400" />
+                  {f}
+                </li>
               ))}
-            </div>
+            </ul>
           </motion.div>
         </motion.div>
 

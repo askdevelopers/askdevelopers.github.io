@@ -33,6 +33,7 @@ export const CONTACT = {
 export const NAV_LINKS = [
   { label: 'Platform', href: '#platform' },
   { label: 'Services', href: '#services' },
+  { label: 'AI', href: '#ai' },
   { label: 'Work', href: '#work' },
   { label: 'Case studies', href: '#case-studies' },
   { label: 'Process', href: '#process' },
@@ -45,6 +46,7 @@ export const PAGE_SECTIONS = [
   { id: 'home', label: 'Start' },
   { id: 'platform', label: 'Platform' },
   { id: 'services', label: 'Services' },
+  { id: 'ai', label: 'AI' },
   { id: 'work', label: 'Work' },
   { id: 'case-studies', label: 'Case studies' },
   { id: 'process', label: 'Process' },
@@ -59,8 +61,8 @@ export const PLATFORM_STEPS = [
     eyebrow: 'AI platform',
     title: 'Intelligence, built in.',
     description:
-      'LLM integration, RAG, agents, document intelligence and AI-powered search — wired into your product, not bolted on.',
-    chips: ['LLMs', 'RAG', 'AI agents', 'Vector DBs'],
+      'LLM integration, RAG, agents, fine-tuned models and document intelligence — wired into your product, not bolted on, on Azure or the cloud you already run.',
+    chips: ['LLMs', 'RAG', 'AI agents', 'Azure OpenAI'],
   },
   {
     key: 'web',
@@ -92,7 +94,7 @@ export const STATS = [
   { value: '10+', label: 'Apps live on the App Store' },
   { value: '4+', label: 'Web platforms shipped' },
   { value: '12+', label: 'Technologies mastered' },
-  { value: '100%', label: 'On-time delivery' },
+  { value: '24h', label: 'Typical first response' },
 ];
 
 export type Service = {
@@ -144,7 +146,7 @@ export const SERVICES: Service[] = [
     description:
       'Integrate GPT, Claude, and open-source LLMs into your product — chatbots, RAG, agents, and automation.',
     points: ['RAG & vector search', 'AI agents', 'Document intelligence'],
-    stack: ['LLMs', 'RAG', 'Vector DBs', 'AI APIs'],
+    stack: ['LLMs', 'RAG', 'Vector DBs', 'Azure OpenAI'],
     tone: 'featured',
   },
   {
@@ -277,6 +279,7 @@ export const TECH_STACK: Tech[] = [
   { name: 'Flutter', icon: devicon('flutter/flutter-original.svg') },
   { name: 'React Native', icon: devicon('react/react-original.svg') },
   { name: 'Python', icon: devicon('python/python-original.svg') },
+  { name: 'Azure', icon: devicon('azure/azure-original.svg') },
   { name: 'OpenAI & LLMs', fallback: Bot },
 ];
 
@@ -308,8 +311,8 @@ export const TECH_GROUPS: { group: string; items: string[] }[] = [
   { group: 'Frontend', items: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'Tailwind CSS'] },
   { group: 'Backend', items: ['Node.js', 'Express', 'NestJS', 'PHP', 'Laravel', 'Java'] },
   { group: 'Databases', items: ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis'] },
-  { group: 'Cloud & DevOps', items: ['AWS', 'Docker', 'Kubernetes', 'CI/CD'] },
-  { group: 'AI', items: ['LLMs', 'Generative AI', 'RAG', 'AI Agents', 'Vector DBs'] },
+  { group: 'Cloud & DevOps', items: ['Azure', 'AWS', 'Docker', 'Kubernetes', 'CI/CD'] },
+  { group: 'AI & ML', items: ['LLMs', 'Fine-tuning', 'RAG', 'AI Agents', 'Vector DBs', 'Azure AI'] },
 ];
 
 export type CaseStudy = {
@@ -435,3 +438,54 @@ export const INDUSTRIES = [
 ];
 
 export const EXPERTISE = ['Mobile', 'Web', 'Backend', 'Cloud', 'AI', 'UI/UX', 'E-commerce', 'SaaS', 'Business apps'];
+
+/** Tiles of the AI & ML section. */
+export const AI_CAPABILITIES = [
+  {
+    key: 'llm',
+    title: 'LLM integration',
+    description:
+      'GPT, Claude, Azure OpenAI and open-source models wired into your web and mobile apps — chat, copilots, summarisation and structured extraction.',
+    points: ['Chatbots & copilots', 'Structured extraction', 'Multi-provider'],
+  },
+  {
+    key: 'training',
+    title: 'Model training & fine-tuning',
+    description:
+      'Fine-tune open models on your own data, or train classic ML for forecasting, classification and recommendations — with evaluation sets so you can measure it.',
+    points: ['Fine-tuning', 'Recommendation systems', 'Evaluation'],
+  },
+  {
+    key: 'rag',
+    title: 'RAG & document intelligence',
+    description:
+      'Answers grounded in your documents, with citations — chunking strategies, vector search and AI-powered search over your knowledge base.',
+    points: ['Vector databases', 'AI-powered search', 'Citations'],
+  },
+  {
+    key: 'agents',
+    title: 'AI agents & automation',
+    description:
+      'Agents that plan, call your tools and APIs, verify results and complete workflows end to end — with a human in the loop where it matters.',
+    points: ['Tool calling', 'Workflow automation', 'Human-in-the-loop'],
+  },
+  {
+    key: 'cloud',
+    title: 'Azure & cloud deployment',
+    description:
+      'Deployed on Azure — Azure OpenAI, AI Search, Azure ML — or on AWS. Your data stays in your tenant, with monitoring and cost control built in.',
+    points: ['Azure OpenAI', 'Azure AI Search', 'AKS & Functions'],
+  },
+];
+
+export const AI_USE_CASES = [
+  'AI application development',
+  'LLM integration',
+  'AI chatbots',
+  'RAG systems',
+  'AI agents',
+  'Document intelligence',
+  'AI-powered search',
+  'Recommendation systems',
+  'Workflow automation',
+];

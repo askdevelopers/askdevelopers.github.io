@@ -105,13 +105,13 @@ export function Contact() {
         <form onSubmit={onSubmit} noValidate className="rounded-[28px] bg-card p-6 sm:p-8">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Field label="Full name" required error={errors.fullName} htmlFor="fullName">
-              <input id="fullName" type="text" autoComplete="name" value={form.fullName} onChange={(e) => update('fullName', e.target.value)} className={inputCls(!!errors.fullName)} placeholder="Jane Doe" />
+              <input id="fullName" type="text" autoComplete="name" value={form.fullName} onChange={(e) => update('fullName', e.target.value)} className={inputCls(!!errors.fullName)} placeholder="Your name" />
             </Field>
             <Field label="Email" required error={errors.email} htmlFor="email">
-              <input id="email" type="email" autoComplete="email" value={form.email} onChange={(e) => update('email', e.target.value)} className={inputCls(!!errors.email)} placeholder="jane@company.com" />
+              <input id="email" type="email" autoComplete="email" value={form.email} onChange={(e) => update('email', e.target.value)} className={inputCls(!!errors.email)} placeholder="you@company.com" />
             </Field>
             <Field label="Company" htmlFor="company">
-              <input id="company" type="text" autoComplete="organization" value={form.company} onChange={(e) => update('company', e.target.value)} className={inputCls(false)} placeholder="Acme Inc." />
+              <input id="company" type="text" autoComplete="organization" value={form.company} onChange={(e) => update('company', e.target.value)} className={inputCls(false)} placeholder="Company name" />
             </Field>
             <Field label="Phone number" error={errors.phone} htmlFor="phone">
               <input id="phone" type="tel" autoComplete="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} className={inputCls(!!errors.phone)} placeholder="+91 91065 66799" />

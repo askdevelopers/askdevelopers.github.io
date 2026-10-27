@@ -4,6 +4,7 @@ import { ScrollBot } from '@/components/ScrollBot';
 import { Hero } from '@/components/Hero';
 import { Platform } from '@/components/Platform';
 import { Services } from '@/components/Services';
+import { AI } from '@/components/AI';
 import { Statement } from '@/components/Statement';
 import { Work } from '@/components/Work';
 import { CaseStudies } from '@/components/CaseStudies';
@@ -26,6 +27,7 @@ export default function App() {
           <Hero />
           <Platform />
           <Services />
+          <AI />
           <Statement />
           <Work />
           <CaseStudies />

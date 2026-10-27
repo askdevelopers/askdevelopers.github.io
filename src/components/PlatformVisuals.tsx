@@ -1,11 +1,12 @@
 import { motion } from 'framer-motion';
-import { ArrowUp, Search, ShieldCheck } from 'lucide-react';
+import { ArrowUp, ChevronRight, FileSpreadsheet, Globe, Plug, Search, ShieldCheck } from 'lucide-react';
 import { Robot } from './Robot';
 import { EASE } from './motion';
 
 /*
  * Product mock-ups for the pinned Platform story. Each is a `Frame` that fills its
  * stage; children tagged with `item` stagger in when the stage becomes active.
+ * They illustrate layouts and capabilities only — no figures, names or metrics.
  */
 
 const list = {
@@ -56,7 +57,7 @@ export function AIVisual({ active }: VisualProps) {
           </div>
         </motion.div>
         <motion.div variants={item} className="pl-8 font-mono text-[10px] text-white/40">
-          Searched 1,240 chunks · 2 sources · 0.8s
+          Grounded in your documents · cites its sources
         </motion.div>
         <motion.div variants={item} className="mt-auto flex items-center gap-2 rounded-full border border-white/10 bg-ink-950/60 px-4 py-2.5">
           <span className="flex-1 text-[13px] text-white/40">Ask anything…</span>
@@ -69,12 +70,12 @@ export function AIVisual({ active }: VisualProps) {
   );
 }
 
-/* 2 — Web dashboard */
+/* 2 — Web dashboard (shapes only, no values) */
 const BARS = [35, 52, 44, 68, 58, 80, 64, 90, 72, 100, 84, 96];
-const KPIS = [
-  ['Revenue', '$48.2k', '+12%'],
-  ['Orders', '1,204', '+8%'],
-  ['Conversion', '3.8%', '+0.4'],
+const KPIS: [string, string][] = [
+  ['Revenue', '0,18 8,14 16,16 24,10 32,12 40,6 48,8 56,3'],
+  ['Orders', '0,14 8,16 16,10 24,12 32,8 40,10 48,5 56,6'],
+  ['Conversion', '0,16 8,12 16,14 24,9 32,11 40,7 48,8 56,4'],
 ];
 export function WebVisual({ active }: VisualProps) {
   return (
@@ -100,18 +101,19 @@ export function WebVisual({ active }: VisualProps) {
         </motion.aside>
         <div className="flex-1 p-4">
           <div className="grid grid-cols-3 gap-2">
-            {KPIS.map(([l, v, d]) => (
+            {KPIS.map(([l, pts]) => (
               <motion.div key={l} variants={item} className="rounded-xl bg-white/[0.05] p-3">
                 <p className="text-[10px] text-white/40">{l}</p>
-                <p className="mt-1 text-base font-semibold">{v}</p>
-                <p className="text-[10px] text-emerald-400">{d}</p>
+                <svg viewBox="0 0 56 20" className="mt-2 h-5 w-full overflow-visible" aria-hidden="true">
+                  <polyline points={pts} fill="none" stroke="#ff7a45" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" />
+                </svg>
               </motion.div>
             ))}
           </div>
           <motion.div variants={item} className="mt-3 rounded-xl bg-white/[0.05] p-3">
             <div className="flex justify-between text-[10px] text-white/40">
-              <span>Revenue, last 12 months</span>
-              <span className="text-emerald-400">↑ 32%</span>
+              <span>Overview</span>
+              <span>Last 12 months</span>
             </div>
             <div className="mt-3 flex h-24 items-end gap-1.5">
               {BARS.map((h, i) => (
@@ -147,7 +149,7 @@ export function MobileVisual({ active }: VisualProps) {
         <div className="absolute left-1/2 top-2 h-5 w-20 -translate-x-1/2 rounded-full bg-ink-600" />
         <div className="p-3 pt-10">
           <p className="text-[10px] text-white/40">Good morning</p>
-          <p className="text-sm font-semibold">Today&apos;s workout</p>
+          <p className="text-sm font-semibold">Today</p>
           <svg viewBox="0 0 100 100" className="mx-auto mt-4 h-24 w-24 -rotate-90">
             <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.1)" strokeWidth="10" fill="none" />
             <motion.circle
@@ -169,16 +171,11 @@ export function MobileVisual({ active }: VisualProps) {
               </linearGradient>
             </defs>
           </svg>
-          <p className="-mt-16 text-center text-lg font-semibold">72%</p>
-          <div className="mt-12 space-y-1.5">
-            {[
-              ['Run', '5.2 km'],
-              ['Calories', '412'],
-              ['Heart rate', '128 bpm'],
-            ].map(([l, v]) => (
-              <div key={l} className="flex justify-between rounded-lg bg-white/[0.06] px-2.5 py-1.5 text-[11px]">
-                <span className="text-white/50">{l}</span>
-                <span className="font-medium">{v}</span>
+          <div className="mt-5 space-y-1.5">
+            {['Activity', 'Goals', 'History'].map((l) => (
+              <div key={l} className="flex items-center justify-between rounded-lg bg-white/[0.06] px-2.5 py-2 text-[11px]">
+                <span className="text-white/80">{l}</span>
+                <ChevronRight className="h-3 w-3 text-white/40" />
               </div>
             ))}
           </div>
@@ -200,49 +197,76 @@ export function MobileVisual({ active }: VisualProps) {
   );
 }
 
-/* 4 — CRM board */
-const COLS = [
-  { name: 'New', count: 12, tone: 'bg-brand-400', leads: [['Priya Shah', 'Glanz Interiors', '₹2.4L'], ['Marcus Lee', 'Fitburn', '$18k']] },
-  { name: 'Contacted', count: 8, tone: 'bg-amber-400', leads: [['Aarav Mehta', 'Breakdown', '₹6.1L'], ['Sofia Rossi', 'Stored', '$9.5k']] },
-  { name: 'Won', count: 5, tone: 'bg-emerald-400', leads: [['Ananya Rao', 'Abhinaya', '₹3.8L']] },
+/* 4 — CRM admin: roles & permissions matrix + lead sources */
+const ROLES = ['Admin', 'Manager', 'Sales'];
+const MODULES: [string, boolean[]][] = [
+  ['Leads', [true, true, true]],
+  ['Employees', [true, true, false]],
+  ['Reports', [true, true, false]],
+  ['Settings', [true, false, false]],
+];
+const SOURCES = [
+  { label: 'Website form', icon: Globe },
+  { label: 'Excel import', icon: FileSpreadsheet },
+  { label: 'API', icon: Plug },
 ];
 export function CrmVisual({ active }: VisualProps) {
   return (
     <Frame active={active} className="flex flex-col">
       <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3">
-        <p className="text-sm font-semibold">Leads</p>
+        <p className="text-sm font-semibold">Admin panel</p>
         <span className="hidden items-center gap-1.5 rounded-full bg-white/5 px-3 py-1 text-[11px] text-white/40 sm:flex">
           <Search className="h-3 w-3" />
-          Search leads…
+          Search…
         </span>
         <span className="ml-auto flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-medium text-emerald-300">
           <ShieldCheck className="h-3 w-3" />
-          Admin · RBAC
+          Roles & permissions
         </span>
       </div>
-      <div className="grid min-h-0 flex-1 grid-cols-3 gap-2 p-3">
-        {COLS.map((col) => (
-          <div key={col.name} className="rounded-xl bg-white/[0.04] p-2">
-            <div className="flex items-center gap-1.5 px-1 text-[11px] text-white/60">
-              <span className={`h-1.5 w-1.5 rounded-full ${col.tone}`} />
-              {col.name}
-              <span className="ml-auto text-white/30">{col.count}</span>
-            </div>
-            <div className="mt-2 space-y-2">
-              {col.leads.map(([n, c, v]) => (
-                <motion.div key={n} variants={item} className="rounded-lg border border-white/5 bg-ink-800 p-2.5">
-                  <p className="truncate text-[12px] font-medium">{n}</p>
-                  <p className="truncate text-[10px] text-white/40">{c}</p>
-                  <p className="mt-1.5 text-[11px] font-semibold text-brand-300">{v}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+
+      <div className="flex gap-1 border-b border-white/10 px-4 text-[11px]">
+        {['Leads', 'Employees', 'Roles', 'Reports'].map((t, i) => (
+          <span key={t} className={`px-2.5 py-2 ${i === 2 ? 'border-b-2 border-brand-500 text-white' : 'text-white/45'}`}>
+            {t}
+          </span>
         ))}
       </div>
-      <motion.p variants={item} className="border-t border-white/10 px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-white/35">
-        Excel import · Lead forms · Reports · Automation
-      </motion.p>
+
+      <div className="flex-1 p-4">
+        <div className="grid grid-cols-[1.4fr_repeat(3,1fr)] gap-y-1 text-[11px]">
+          <span className="text-white/35">Module</span>
+          {ROLES.map((r) => (
+            <span key={r} className="text-center font-medium text-white/70">
+              {r}
+            </span>
+          ))}
+          {MODULES.map(([mod, cells]) => (
+            <motion.div key={mod} variants={item} className="contents">
+              <span className="flex items-center rounded-l-lg bg-white/[0.04] px-2.5 py-2 text-white/80">{mod}</span>
+              {cells.map((on, i) => (
+                <span key={i} className={`flex items-center justify-center bg-white/[0.04] py-2 ${i === 2 ? 'rounded-r-lg' : ''}`}>
+                  <span className={`relative h-4 w-7 rounded-full transition-colors ${on ? 'bg-brand-500' : 'bg-white/15'}`}>
+                    <span className={`absolute top-0.5 h-3 w-3 rounded-full bg-white transition-all ${on ? 'left-3.5' : 'left-0.5'}`} />
+                  </span>
+                </span>
+              ))}
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <motion.div variants={item} className="flex flex-wrap items-center gap-2 border-t border-white/10 px-4 py-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/35">Lead sources</span>
+        {SOURCES.map(({ label, icon: Icon }) => (
+          <span key={label} className="flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 text-[11px] text-white/80">
+            <Icon className="h-3 w-3 text-brand-400" />
+            {label}
+          </span>
+        ))}
+        <ChevronRight className="h-3 w-3 text-white/30" />
+        <span className="rounded-full bg-brand-500/15 px-2.5 py-1 text-[11px] text-brand-300">Pipeline</span>
+      </motion.div>
     </Frame>
   );
 }
