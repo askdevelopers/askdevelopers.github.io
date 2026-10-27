@@ -19,7 +19,7 @@ export function scrollToId(id: string) {
 export function useSmoothScroll() {
   useEffect(() => {
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      lenis = new Lenis({ autoRaf: true, lerp: 0.09, anchors: false });
+      lenis = new Lenis({ autoRaf: true, lerp: 0.12, anchors: false });
     }
 
     const onClick = (e: MouseEvent) => {

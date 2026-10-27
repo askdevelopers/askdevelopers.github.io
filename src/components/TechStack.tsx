@@ -5,7 +5,7 @@ export function TechStack() {
   // Rendered twice so the marquee can loop seamlessly at -50%.
   const items = [...TECH_STACK, ...TECH_STACK];
   return (
-    <section aria-label="Technologies we build with" className="theme-dark py-20 sm:py-28">
+    <section id="tech" aria-label="Technologies we build with" className="theme-dark py-20 sm:py-28">
       <div className="container-x">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="eyebrow">Our toolkit</p>

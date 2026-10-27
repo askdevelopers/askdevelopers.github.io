@@ -67,7 +67,7 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.4, ease: EASE, delay: 0.5 }}
-          className="relative mx-auto mt-10 aspect-[4/3] w-full max-w-[780px] sm:mt-14 sm:aspect-[16/10]"
+          className="relative mx-auto mt-10 aspect-[4/3] w-full max-w-[780px] will-change-transform sm:mt-14 sm:aspect-[16/10]"
         >
           <NeuralSphere className="absolute inset-0 h-full w-full" />
 

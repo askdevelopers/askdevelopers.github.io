@@ -20,7 +20,7 @@ export function Navbar() {
     <motion.header
       animate={{ y: hidden ? '-100%' : '0%' }}
       transition={{ duration: 0.4, ease: EASE }}
-      className="theme-dark fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-ink-950/70 backdrop-blur-xl"
+      className="theme-dark fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-ink-950/80 backdrop-blur-md"
     >
       <nav className="container-x flex h-14 items-center justify-between">
         <a href="#home" aria-label="Ask Developers home">

@@ -82,7 +82,7 @@ body {
   }
 
   .glass {
-    @apply border border-line/10 bg-card/60 backdrop-blur-xl;
+    @apply border border-line/10 bg-card/90 lg:bg-card/60 lg:backdrop-blur-xl;
   }
 
   .btn-primary {

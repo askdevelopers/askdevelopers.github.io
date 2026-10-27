@@ -17,19 +17,19 @@ function useStage(progress: MotionValue<number>, i: number) {
   const input = first ? [end - f, end] : last ? [start, start + f] : [start, start + f, end - f, end];
   const opacity = useTransform(progress, input, first ? [1, 0] : last ? [0, 1] : [0, 1, 1, 0]);
   const y = useTransform(progress, input, first ? [0, -36] : last ? [36, 0] : [36, 0, 0, -36]);
-  const scale = useTransform(progress, input, first ? [1, 0.96] : last ? [0.96, 1] : [0.96, 1, 1, 0.96]);
-  return { opacity, y, scale };
+  return { opacity, y };
 }
 
 function StepText({ i, progress }: { i: number; progress: MotionValue<number> }) {
   const step = PLATFORM_STEPS[i];
   const { opacity, y } = useStage(progress, i);
   return (
-    <motion.div style={{ opacity, y }} className="absolute inset-0 flex flex-col justify-center text-center lg:text-left">
+    // All steps share one grid cell, so the block is as tall as the longest step and nothing overflows.
+    <motion.div style={{ opacity, y }} className="col-start-1 row-start-1 flex flex-col justify-center text-center will-change-transform lg:text-left">
       <p className="eyebrow text-brand-300">{step.eyebrow}</p>
-      <h3 className="headline mt-3 text-4xl leading-[1.02] sm:text-5xl lg:text-6xl">{step.title}</h3>
-      <p className="lede mx-auto mt-4 max-w-md text-base sm:text-lg lg:mx-0">{step.description}</p>
-      <ul className="mt-5 flex flex-wrap justify-center gap-2 lg:justify-start">
+      <h3 className="headline mt-2 text-3xl leading-[1.04] sm:text-5xl lg:mt-3 lg:text-6xl">{step.title}</h3>
+      <p className="lede mx-auto mt-3 max-w-md text-[15px] sm:text-lg lg:mx-0 lg:mt-4">{step.description}</p>
+      <ul className="mt-4 flex flex-wrap justify-center gap-2 lg:justify-start">
         {step.chips.map((c) => (
           <li key={c} className="chip">
             {c}
@@ -41,9 +41,9 @@ function StepText({ i, progress }: { i: number; progress: MotionValue<number> })
 }
 
 function Stage({ i, progress, children }: { i: number; progress: MotionValue<number>; children: ReactNode }) {
-  const { opacity, y, scale } = useStage(progress, i);
+  const { opacity, y } = useStage(progress, i);
   return (
-    <motion.div style={{ opacity, y, scale }} className="absolute inset-0">
+    <motion.div style={{ opacity, y }} className="absolute inset-0 will-change-transform">
       {children}
     </motion.div>
   );
@@ -61,16 +61,17 @@ export function Platform() {
       <div ref={ref} className="relative" style={{ height: `${(N + 1) * 100}vh` }}>
         <div className="sticky top-0 flex h-[100svh] flex-col justify-center overflow-hidden">
           <div className="container-x">
-            <p className="mb-6 text-center text-sm font-medium text-muted lg:mb-10">One partner. Every platform.</p>
+            <p className="mb-3 text-center text-sm font-medium text-muted lg:mb-10">One partner. Every platform.</p>
 
-            <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
-              <div className="relative order-2 h-[230px] sm:h-[260px] lg:order-1 lg:h-[380px]">
+            <div className="grid items-center gap-4 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
+              <div className="order-2 grid lg:order-1">
                 {PLATFORM_STEPS.map((s, i) => (
                   <StepText key={s.key} i={i} progress={scrollYProgress} />
                 ))}
               </div>
 
-              <div className="relative order-1 mx-auto aspect-[4/3] w-full max-w-[520px] lg:order-2 lg:max-w-[640px]">
+              {/* On phones the stage is sized by height so the whole story fits one screen. */}
+              <div className="relative order-1 aspect-square h-[min(360px,38svh)] justify-self-center lg:order-2 lg:aspect-[5/4] lg:h-auto lg:w-full lg:max-w-[640px] lg:justify-self-stretch">
                 {VISUALS.map((Visual, i) => (
                   <Stage key={PLATFORM_STEPS[i].key} i={i} progress={scrollYProgress}>
                     <Visual active={active === i} />
@@ -79,7 +80,7 @@ export function Platform() {
               </div>
             </div>
 
-            <ol className="mx-auto mt-8 flex max-w-xs gap-2 lg:mt-12" aria-label="Platform steps">
+            <ol className="mx-auto mt-4 flex max-w-xs gap-2 lg:mt-12" aria-label="Platform steps">
               {PLATFORM_STEPS.map((s, i) => (
                 <li
                   key={s.key}

@@ -26,7 +26,7 @@ function Frame({ active, className = '', children }: VisualProps & { className?:
       variants={list}
       initial="hide"
       animate={active ? 'show' : 'hide'}
-      className={`absolute inset-0 overflow-hidden rounded-[28px] border border-white/10 bg-[#1a1a1a] text-white shadow-[0_40px_80px_-30px_rgba(0,0,0,0.8)] ${className}`}
+      className={`absolute inset-0 overflow-hidden rounded-[28px] border border-white/10 bg-[#1a1a1a] text-white lg:shadow-[0_40px_80px_-30px_rgba(0,0,0,0.8)] ${className}`}
     >
       {children}
     </motion.div>

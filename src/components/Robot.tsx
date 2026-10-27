@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef } from 'react';
-import { motion, useMotionValue, useSpring, type MotionValue } from 'framer-motion';
+import { motion, useInView, useMotionValue, useSpring, type MotionValue } from 'framer-motion';
 
 type Props = {
   className?: string;
@@ -13,6 +13,7 @@ type Props = {
 export function Robot({ className = 'h-40 w-40', track = false, look }: Props) {
   const gid = useId();
   const ref = useRef<SVGSVGElement>(null);
+  const inView = useInView(ref);
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
   const x = useSpring(rawX, { stiffness: 120, damping: 16 });
@@ -88,7 +89,7 @@ export function Robot({ className = 'h-40 w-40', track = false, look }: Props) {
       {/* Eyes */}
       <motion.g style={{ x, y }}>
         <motion.g
-          animate={{ scaleY: [1, 1, 0.08, 1, 1] }}
+          animate={inView ? { scaleY: [1, 1, 0.08, 1, 1] } : { scaleY: 1 }}
           transition={{ duration: 4.8, times: [0, 0.9, 0.94, 0.98, 1], repeat: Infinity, ease: 'easeInOut' }}
           style={{ transformOrigin: '60px 64px' }}
         >

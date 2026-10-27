@@ -6,11 +6,11 @@ const NODE_COUNT = 380;
 const LINK_DISTANCE = 0.26;
 
 /** Fibonacci-distributed points on a unit sphere, with a few "hot" nodes that glow. */
-function buildSphere(): { nodes: Node[]; links: [number, number][] } {
+function buildSphere(count: number): { nodes: Node[]; links: [number, number][] } {
   const nodes: Node[] = [];
   const golden = Math.PI * (3 - Math.sqrt(5));
-  for (let i = 0; i < NODE_COUNT; i++) {
-    const y = 1 - (i / (NODE_COUNT - 1)) * 2;
+  for (let i = 0; i < count; i++) {
+    const y = 1 - (i / (count - 1)) * 2;
     const r = Math.sqrt(1 - y * y);
     const theta = golden * i;
     nodes.push({ x: Math.cos(theta) * r, y, z: Math.sin(theta) * r, hot: i % 17 === 0 });
@@ -36,7 +36,9 @@ export function NeuralSphere({ className }: { className?: string }) {
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
 
-    const { nodes, links } = buildSphere();
+    // Phones get a lighter sphere: fewer nodes, capped DPR and half the frame rate.
+    const small = window.innerWidth < 768;
+    const { nodes, links } = buildSphere(small ? 200 : NODE_COUNT);
     const projected = nodes.map(() => ({ x: 0, y: 0, z: 0 }));
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -48,7 +50,7 @@ export function NeuralSphere({ className }: { className?: string }) {
     const tilt = { x: 0, y: 0, tx: 0, ty: 0 };
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2);
       const rect = canvas.getBoundingClientRect();
       width = rect.width;
       height = rect.height;
@@ -84,15 +86,21 @@ export function NeuralSphere({ className }: { className?: string }) {
         projected[i].z = z2;
       }
 
+      // Links are grouped into depth buckets so each bucket is a single stroke call.
       ctx.lineWidth = 0.7;
-      for (const [a, b] of links) {
-        const pa = projected[a];
-        const pb = projected[b];
-        const depth = (2 - (pa.z + pb.z)) / 4; // 0 (back) .. 1 (front)
+      const BUCKETS = 5;
+      for (let k = 0; k < BUCKETS; k++) {
+        const depth = (k + 0.5) / BUCKETS; // 0 (back) .. 1 (front)
         ctx.strokeStyle = `rgba(${Math.round(230 + 25 * depth)}, ${Math.round(110 + 50 * depth)}, ${Math.round(50 + 30 * depth)}, ${0.05 + depth * 0.32})`;
         ctx.beginPath();
-        ctx.moveTo(pa.x, pa.y);
-        ctx.lineTo(pb.x, pb.y);
+        for (const [a, b] of links) {
+          const pa = projected[a];
+          const pb = projected[b];
+          const d = (2 - (pa.z + pb.z)) / 4;
+          if (Math.min(BUCKETS - 1, Math.floor(d * BUCKETS)) !== k) continue;
+          ctx.moveTo(pa.x, pa.y);
+          ctx.lineTo(pb.x, pb.y);
+        }
         ctx.stroke();
       }
 
@@ -115,9 +123,13 @@ export function NeuralSphere({ className }: { className?: string }) {
       }
     };
 
+    let frame = 0;
     const loop = () => {
-      angle += 0.0022;
-      draw();
+      frame++;
+      if (!small || frame % 2 === 0) {
+        angle += small ? 0.0044 : 0.0022;
+        draw();
+      }
       if (visible) raf = requestAnimationFrame(loop);
     };
 
