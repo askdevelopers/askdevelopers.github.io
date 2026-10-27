@@ -33,7 +33,7 @@ all three are linked in `index.html`.
 All copy — services, portfolio, case studies, solutions, industries, process, tech stack — lives in
 `src/lib/data.ts`. Sections are in `src/components/`, composed in `src/App.tsx`.
 
-**Business identity** (phone, email, legal name, postal address, hours, dispute jurisdiction, the policies'
+**Business identity** (email, legal name, postal address, hours, dispute jurisdiction, the policies'
 "last updated" date) lives in `src/lib/business.ts`. It feeds the footer, the About/Support/policy pages and the
 Organization structured data on the home page, so change it there and nowhere else. The address and hours are
 empty until filled in; nothing renders for them until then. Keep them identical to Google Business Profile,

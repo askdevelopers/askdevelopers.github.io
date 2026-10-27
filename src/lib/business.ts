@@ -4,9 +4,8 @@
  * home page. Keep these values identical to Google Business Profile, Play Console and App Store Connect.
  */
 
+/** Email is the only published contact channel; no phone number appears anywhere on the site. */
 export const CONTACT = {
-  phone: '+91-9106566799',
-  phoneHref: 'tel:+919106566799',
   email: 'askdevelopers001@gmail.com',
   facebook: 'https://www.facebook.com/ask.dev.58/',
 } as const;

@@ -1,4 +1,4 @@
-import { ArrowUpRight, Facebook, Globe, Mail, MapPin, Phone } from 'lucide-react';
+import { ArrowUpRight, Facebook, Globe, Mail, MapPin } from 'lucide-react';
 import { addressLines, BUSINESS, CONTACT } from '@/lib/business';
 import { SERVICES, STATS, WHY_CHOOSE } from '@/lib/data';
 import { SITE_URL } from '@/lib/site';
@@ -79,15 +79,6 @@ export function AboutPage() {
                 <dt className="text-xs text-muted">Email</dt>
                 <dd className="mt-0.5 break-all text-sm">
                   <a href={`mailto:${CONTACT.email}`} className="hover:text-link">{CONTACT.email}</a>
-                </dd>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <Phone className="mt-0.5 h-4 w-4 shrink-0 text-link" />
-              <div>
-                <dt className="text-xs text-muted">Phone</dt>
-                <dd className="mt-0.5 text-sm">
-                  <a href={CONTACT.phoneHref} className="hover:text-link">{CONTACT.phone}</a>
                 </dd>
               </div>
             </div>

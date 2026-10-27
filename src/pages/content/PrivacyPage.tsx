@@ -1,5 +1,5 @@
 import { DocPage } from '../shell/DocPage';
-import { ContactDetails, EmailLink, PhoneLink } from '../shell/ContactDetails';
+import { ContactDetails, EmailLink } from '../shell/ContactDetails';
 import { BUSINESS } from '@/lib/business';
 import { SITE_URL } from '@/lib/site';
 
@@ -34,7 +34,7 @@ export function PrivacyPage() {
               <p>
                 For the personal data described in this policy we are the data controller (the &ldquo;data
                 fiduciary&rdquo; under India&rsquo;s Digital Personal Data Protection Act, 2023). You can reach us at{' '}
-                <EmailLink subject="Privacy" /> or <PhoneLink />.
+                <EmailLink subject="Privacy" />.
               </p>
             </>
           ),

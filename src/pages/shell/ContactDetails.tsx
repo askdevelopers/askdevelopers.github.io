@@ -1,13 +1,11 @@
-import { Clock, Mail, MapPin, Phone } from 'lucide-react';
+import { Clock, Mail, MapPin } from 'lucide-react';
 import { addressLines, BUSINESS, CONTACT } from '@/lib/business';
 
 export const EmailLink = ({ subject }: { subject?: string }) => (
   <a href={`mailto:${CONTACT.email}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`}>{CONTACT.email}</a>
 );
 
-export const PhoneLink = () => <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>;
-
-/** Email, phone and (once filled in) address and hours, as a card. The same block is used on every page that must name the business. */
+/** Email and (once filled in) address and hours, as a card. The same block is used on every page that must name the business. */
 export function ContactDetails({ className = '' }: { className?: string }) {
   const address = addressLines();
   return (
@@ -18,12 +16,6 @@ export function ContactDetails({ className = '' }: { className?: string }) {
           <Mail className="mt-0.5 h-4 w-4 shrink-0 text-link" />
           <a href={`mailto:${CONTACT.email}`} className="break-all text-fg hover:text-link">
             {CONTACT.email}
-          </a>
-        </li>
-        <li className="flex items-start gap-3">
-          <Phone className="mt-0.5 h-4 w-4 shrink-0 text-link" />
-          <a href={CONTACT.phoneHref} className="text-fg hover:text-link">
-            {CONTACT.phone}
           </a>
         </li>
         {address.length > 0 && (

@@ -1,5 +1,5 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
-import { AlertCircle, ArrowUpRight, CheckCircle2, Loader2, Mail, Phone, Send, X } from 'lucide-react';
+import { AlertCircle, ArrowUpRight, CheckCircle2, Loader2, Mail, Send, X } from 'lucide-react';
 import { BUDGETS, CONTACT, CONTACT_SERVICES } from '@/lib/data';
 import { Reveal } from './motion';
 import { supabase } from '@/lib/supabase';
@@ -96,7 +96,6 @@ export function Contact() {
           </p>
 
           <div className="mt-10 space-y-3">
-            <ContactLink href={CONTACT.phoneHref} icon={<Phone className="h-5 w-5" />} label="Call us directly" value={CONTACT.phone} />
             <ContactLink href={`mailto:${CONTACT.email}`} icon={<Mail className="h-5 w-5" />} label="Email us" value={CONTACT.email} />
           </div>
         </Reveal>
@@ -114,7 +113,7 @@ export function Contact() {
               <input id="company" type="text" autoComplete="organization" value={form.company} onChange={(e) => update('company', e.target.value)} className={inputCls(false)} placeholder="Company name" />
             </Field>
             <Field label="Phone number" error={errors.phone} htmlFor="phone">
-              <input id="phone" type="tel" autoComplete="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} className={inputCls(!!errors.phone)} placeholder="+91 91065 66799" />
+              <input id="phone" type="tel" autoComplete="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} className={inputCls(!!errors.phone)} placeholder="Optional, with country code" />
             </Field>
             <div className="sm:col-span-2">
               <Field label="Project type" htmlFor="serviceNeeded">

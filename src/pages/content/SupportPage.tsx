@@ -1,4 +1,4 @@
-import { ArrowUpRight, Clock, Mail, MapPin, Phone } from 'lucide-react';
+import { ArrowUpRight, Clock, Mail, MapPin } from 'lucide-react';
 import { addressLines, BUSINESS, CONTACT } from '@/lib/business';
 import { COMPANY_LINKS } from '../routes';
 
@@ -40,6 +40,8 @@ const FAQ = [
 /** App Store "Support URL" and Play Console support contact point here: how to reach us, what to include, common questions. */
 export function SupportPage() {
   const address = addressLines();
+  // The email card is the only fixed one; it takes the full row until an address or hours are filled in.
+  const emailAlone = address.length === 0 && !BUSINESS.hours.label;
   return (
     <>
       <section className="container-x pb-12 pt-14 sm:pt-24">
@@ -53,27 +55,14 @@ export function SupportPage() {
 
       <section className="container-x pb-16">
         <div className="grid gap-4 sm:grid-cols-2">
-          <a href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('Support request')}`} className="group flex items-start gap-4 rounded-[28px] bg-card p-6 shadow-tile transition-shadow hover:shadow-tile-hover">
+          <a href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('Support request')}`} className={`group flex items-start gap-4 rounded-[28px] bg-card p-6 shadow-tile transition-shadow hover:shadow-tile-hover ${emailAlone ? 'sm:col-span-2' : ''}`}>
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-gradient text-white">
               <Mail className="h-5 w-5" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-xs text-muted">Email, the fastest way</span>
+              <span className="block text-xs text-muted">Email us</span>
               <span className="mt-1 block break-all text-base font-semibold text-fg">{CONTACT.email}</span>
               <span className="mt-1 block text-xs text-muted">Reply {BUSINESS.supportResponse}</span>
-            </span>
-            <ArrowUpRight className="h-5 w-5 text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-          </a>
-          <a href={CONTACT.phoneHref} className="group flex items-start gap-4 rounded-[28px] bg-card p-6 shadow-tile transition-shadow hover:shadow-tile-hover">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-ink-800 text-white">
-              <Phone className="h-5 w-5" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-xs text-muted">Call or WhatsApp</span>
-              <span className="mt-1 block text-base font-semibold text-fg">{CONTACT.phone}</span>
-              <span className="mt-1 block text-xs text-muted">
-                {BUSINESS.hours.label || 'Business hours, Indian Standard Time'}
-              </span>
             </span>
             <ArrowUpRight className="h-5 w-5 text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </a>

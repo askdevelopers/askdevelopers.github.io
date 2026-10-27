@@ -39,7 +39,7 @@ export const PAGE_ROUTES: PageRoute[] = [
     file: 'support/index.html',
     title: 'Support',
     description:
-      'Get help with any Ask Developers app, your project or your account. Email and phone support with a reply within one business day.',
+      'Get help with any Ask Developers app, your project or your account. Email support with a reply within one business day.',
     navLabel: 'Support',
     index: true,
   },

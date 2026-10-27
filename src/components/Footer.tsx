@@ -1,4 +1,4 @@
-import { ArrowUpRight, Facebook, Mail, Phone } from 'lucide-react';
+import { ArrowUpRight, Facebook, Mail } from 'lucide-react';
 import { Logo } from './Logo';
 import { CONTACT, NAV_LINKS, SERVICES } from '@/lib/data';
 import { COMPANY_LINKS } from '@/pages/routes';
@@ -62,12 +62,6 @@ export function Footer({ home = true }: { home?: boolean }) {
           <div>
             <h3 className="text-sm font-semibold text-fg">Get in touch</h3>
             <ul className="mt-2.5 space-y-1">
-              <li>
-                <a href={CONTACT.phoneHref} className="flex items-center gap-3 py-1.5 text-sm text-muted hover:text-fg">
-                  <Phone className="h-4 w-4 text-link" />
-                  {CONTACT.phone}
-                </a>
-              </li>
               <li>
                 <a href={`mailto:${CONTACT.email}`} className="flex items-center gap-3 break-all py-1.5 text-sm text-muted hover:text-fg">
                   <Mail className="h-4 w-4 shrink-0 text-link" />

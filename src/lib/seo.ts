@@ -19,7 +19,6 @@ export function organizationJsonLd(siteUrl: string) {
     description: BUSINESS.description,
     slogan: 'We Build Technology That Moves Businesses Forward.',
     email: CONTACT.email,
-    telephone: CONTACT.phone,
     sameAs: [CONTACT.facebook],
     areaServed: 'Worldwide',
     ...(hasAddress && {
@@ -38,7 +37,6 @@ export function organizationJsonLd(siteUrl: string) {
         '@type': 'ContactPoint',
         contactType: 'customer support',
         email: CONTACT.email,
-        telephone: CONTACT.phone,
         url: `${siteUrl}/support/`,
         availableLanguage: ['en', 'hi'],
       },
