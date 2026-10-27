@@ -138,7 +138,7 @@ export function Contact() {
                       role="radio"
                       aria-checked={active}
                       onClick={() => update('budgetRange', active ? '' : b)}
-                      className={`rounded-full border px-3.5 py-1.5 text-xs transition-colors ${
+                      className={`rounded-full border px-3.5 py-2.5 text-xs transition-colors ${
                         active ? 'border-transparent bg-brand-gradient text-white' : 'border-line/10 bg-fg/5 text-fg/80 hover:bg-fg/10'
                       }`}
                     >

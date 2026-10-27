@@ -59,7 +59,7 @@ export function Navbar() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.35, ease: EASE }}
-            className="overflow-hidden border-t border-white/10 bg-ink-950/90 md:hidden"
+            className="overflow-hidden border-t border-white/10 bg-ink-950 md:hidden"
           >
             <ul className="container-x space-y-1 py-4">
               {NAV_LINKS.map((l, i) => (

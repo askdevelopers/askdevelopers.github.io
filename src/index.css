@@ -98,7 +98,7 @@ body {
   }
 
   .link-arrow {
-    @apply inline-flex items-center gap-1 text-[15px] font-medium text-link hover:underline;
+    @apply inline-flex min-h-[44px] items-center gap-1 text-[15px] font-medium text-link hover:underline;
   }
 
   .chip {

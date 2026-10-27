@@ -13,6 +13,7 @@ function TiltCard({ children, className }: { children: ReactNode; className?: st
   const rotateY = useSpring(ry, { stiffness: 160, damping: 22 });
 
   const onMove = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'touch') return; // touch drags are for scrolling, not tilting
     const r = e.currentTarget.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width - 0.5;
     const py = (e.clientY - r.top) / r.height - 0.5;

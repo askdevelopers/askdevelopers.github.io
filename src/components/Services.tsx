@@ -87,7 +87,7 @@ export function Services() {
                 </ul>
                 <div className="mt-auto flex items-end justify-between gap-4 pt-7">
                   <p className={`font-mono text-[10px] uppercase leading-relaxed tracking-[0.14em] ${t.muted}`}>{s.stack.join(' · ')}</p>
-                  <a href="#contact" className={`inline-flex shrink-0 items-center gap-1 text-[15px] font-medium ${t.cta}`}>
+                  <a href="#contact" className={`inline-flex min-h-[44px] shrink-0 items-center gap-1 text-[15px] font-medium ${t.cta}`}>
                     Discuss
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </a>
