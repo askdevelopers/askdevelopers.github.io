@@ -24,8 +24,8 @@ import {
 } from 'lucide-react';
 
 export const CONTACT = {
-  phone: '+91-8401009197',
-  phoneHref: 'tel:+918401009197',
+  phone: '+91-9106566799',
+  phoneHref: 'tel:+919106566799',
   email: 'askdevelopers001@gmail.com',
   facebook: 'https://www.facebook.com/ask.dev.58/',
 } as const;

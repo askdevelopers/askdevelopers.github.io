@@ -114,7 +114,7 @@ export function Contact() {
               <input id="company" type="text" autoComplete="organization" value={form.company} onChange={(e) => update('company', e.target.value)} className={inputCls(false)} placeholder="Acme Inc." />
             </Field>
             <Field label="Phone number" error={errors.phone} htmlFor="phone">
-              <input id="phone" type="tel" autoComplete="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} className={inputCls(!!errors.phone)} placeholder="+91 84010 09197" />
+              <input id="phone" type="tel" autoComplete="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} className={inputCls(!!errors.phone)} placeholder="+91 91065 66799" />
             </Field>
             <div className="sm:col-span-2">
               <Field label="Project type" htmlFor="serviceNeeded">
