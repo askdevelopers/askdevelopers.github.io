@@ -89,7 +89,7 @@ export function NeuralSphere({ className }: { className?: string }) {
         const pa = projected[a];
         const pb = projected[b];
         const depth = (2 - (pa.z + pb.z)) / 4; // 0 (back) .. 1 (front)
-        ctx.strokeStyle = `rgba(${Math.round(110 + 60 * depth)}, ${Math.round(120 - 20 * depth)}, 255, ${0.05 + depth * 0.32})`;
+        ctx.strokeStyle = `rgba(${Math.round(230 + 25 * depth)}, ${Math.round(110 + 50 * depth)}, ${Math.round(50 + 30 * depth)}, ${0.05 + depth * 0.32})`;
         ctx.beginPath();
         ctx.moveTo(pa.x, pa.y);
         ctx.lineTo(pb.x, pb.y);
@@ -101,14 +101,14 @@ export function NeuralSphere({ className }: { className?: string }) {
         const depth = (1 - p.z) / 2;
         if (nodes[i].hot) {
           const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 12 * depth + 4);
-          g.addColorStop(0, `rgba(167, 139, 250, ${0.85 * depth})`);
-          g.addColorStop(1, 'rgba(167, 139, 250, 0)');
+          g.addColorStop(0, `rgba(255, 122, 69, ${0.85 * depth})`);
+          g.addColorStop(1, 'rgba(255, 122, 69, 0)');
           ctx.fillStyle = g;
           ctx.beginPath();
           ctx.arc(p.x, p.y, 12 * depth + 4, 0, Math.PI * 2);
           ctx.fill();
         }
-        ctx.fillStyle = nodes[i].hot ? `rgba(255,255,255,${0.4 + depth * 0.6})` : `rgba(157, 180, 255, ${0.15 + depth * 0.75})`;
+        ctx.fillStyle = nodes[i].hot ? `rgba(255,255,255,${0.4 + depth * 0.6})` : `rgba(255, 190, 150, ${0.15 + depth * 0.75})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, (nodes[i].hot ? 2.2 : 1.2) * (0.6 + depth), 0, Math.PI * 2);
         ctx.fill();

@@ -1,8 +1,11 @@
 import type { LucideIcon } from 'lucide-react';
 import {
   Bot,
+  Boxes,
   CalendarCheck,
   Code2,
+  Globe,
+  Handshake,
   LayoutDashboard,
   Layers,
   LifeBuoy,
@@ -16,6 +19,8 @@ import {
   ShoppingCart,
   Smartphone,
   Sparkles,
+  Target,
+  Workflow,
 } from 'lucide-react';
 
 export const CONTACT = {
@@ -26,11 +31,61 @@ export const CONTACT = {
 } as const;
 
 export const NAV_LINKS = [
+  { label: 'Platform', href: '#platform' },
   { label: 'Services', href: '#services' },
   { label: 'Work', href: '#work' },
+  { label: 'Case studies', href: '#case-studies' },
   { label: 'Process', href: '#process' },
   { label: 'Why us', href: '#why' },
   { label: 'Contact', href: '#contact' },
+];
+
+/** Stops on the scroll rail, in page order. */
+export const PAGE_SECTIONS = [
+  { id: 'home', label: 'Start' },
+  { id: 'platform', label: 'Platform' },
+  { id: 'services', label: 'Services' },
+  { id: 'work', label: 'Work' },
+  { id: 'case-studies', label: 'Case studies' },
+  { id: 'process', label: 'Process' },
+  { id: 'why', label: 'Why us' },
+  { id: 'contact', label: 'Contact' },
+];
+
+/** Steps of the pinned "one partner, every platform" story. */
+export const PLATFORM_STEPS = [
+  {
+    key: 'ai',
+    eyebrow: 'AI platform',
+    title: 'Intelligence, built in.',
+    description:
+      'LLM integration, RAG, agents, document intelligence and AI-powered search — wired into your product, not bolted on.',
+    chips: ['LLMs', 'RAG', 'AI agents', 'Vector DBs'],
+  },
+  {
+    key: 'web',
+    eyebrow: 'Web & SaaS',
+    title: 'Platforms that run the business.',
+    description:
+      'SaaS products, dashboards, marketplaces and enterprise apps on React, Next.js, Node.js and Laravel — fast, secure and built to scale.',
+    chips: ['React', 'Next.js', 'Node.js', 'Laravel'],
+  },
+  {
+    key: 'mobile',
+    eyebrow: 'iOS · Android · Flutter',
+    title: 'Apps people keep.',
+    description:
+      'Native Swift and Kotlin, or cross-platform Flutter and React Native. 10+ apps live on the App Store, from travel rewards to wearables.',
+    chips: ['Swift', 'Kotlin', 'Flutter', 'React Native'],
+  },
+  {
+    key: 'crm',
+    eyebrow: 'CRM & business apps',
+    title: 'Your workflow, as software.',
+    description:
+      'Custom CRMs, admin panels, role-based access, lead pipelines and reporting — built around how your team actually works.',
+    chips: ['Lead management', 'RBAC', 'Reporting', 'Automation'],
+  },
 ];
 
 export const STATS = [
@@ -45,6 +100,8 @@ export type Service = {
   title: string;
   description: string;
   points: string[];
+  /** Technologies shown as a mono line at the bottom of the card. */
+  stack: string[];
   /** Visual treatment of the card — mirrors the alternating cards in the design references. */
   tone?: 'default' | 'light' | 'featured';
 };
@@ -55,70 +112,78 @@ export const SERVICES: Service[] = [
     title: 'iOS & Android App Development',
     description:
       'Native iOS (Swift) and Android (Kotlin) apps engineered for performance, security, and a polished user experience.',
-    points: ['Native Swift & Kotlin', 'App Store & Play Store launch', 'Performance tuning'],
+    points: ['App Store & Play Store launch', 'Payments & push', 'Maps & real-time'],
+    stack: ['Swift', 'SwiftUI', 'UIKit', 'Kotlin', 'Java'],
     tone: 'light',
   },
   {
-    icon: Code2,
-    title: 'MERN Stack Development',
+    icon: Layers,
+    title: 'Hybrid App Development',
+    description: 'One codebase, every platform — Flutter and React Native apps that feel native on iOS and Android.',
+    points: ['Shared codebase', 'Native modules', 'Fast iteration'],
+    stack: ['Flutter', 'React Native'],
+  },
+  {
+    icon: Globe,
+    title: 'Web & Full-Stack Development',
     description:
-      'Full-stack JavaScript apps with MongoDB, Express, React, and Node.js — fast, scalable, and maintainable.',
-    points: ['React + Node.js', 'REST & GraphQL APIs', 'Realtime & sockets'],
+      'Business websites, SaaS platforms, dashboards and marketplaces — MERN, Next.js or Laravel, built to scale.',
+    points: ['SaaS & marketplaces', 'Dashboards', 'Enterprise apps'],
+    stack: ['React', 'Next.js', 'Node.js', 'Express', 'MongoDB', 'PHP', 'Laravel'],
   },
   {
     icon: Server,
-    title: 'PHP & Laravel Development',
-    description: 'Robust backend platforms and APIs with Laravel — secure, well-architected, and ready to scale.',
-    points: ['Laravel & Lumen APIs', 'Queues & jobs', 'Database design'],
+    title: 'Backend & API Development',
+    description: 'Secure, well-architected backends and APIs — authentication, payments, real-time and integrations.',
+    points: ['REST & GraphQL APIs', 'Queues & microservices', 'Database design'],
+    stack: ['Node.js', 'NestJS', 'Laravel', 'Java', 'PostgreSQL', 'Redis'],
+  },
+  {
+    icon: Sparkles,
+    title: 'AI & Generative AI',
+    description:
+      'Integrate GPT, Claude, and open-source LLMs into your product — chatbots, RAG, agents, and automation.',
+    points: ['RAG & vector search', 'AI agents', 'Document intelligence'],
+    stack: ['LLMs', 'RAG', 'Vector DBs', 'AI APIs'],
+    tone: 'featured',
   },
   {
     icon: PenTool,
     title: 'UI/UX Design',
     description:
       'User-centered design that looks beautiful and converts — research, wireframes, prototypes, and design systems.',
-    points: ['Figma prototypes', 'Design systems', 'Usability testing'],
-  },
-  {
-    icon: Sparkles,
-    title: 'AI & LLM Solutions',
-    description:
-      'Integrate GPT, Claude, and open-source LLMs into your product — chatbots, RAG, agents, and automation.',
-    points: ['RAG & vector search', 'AI agents', 'LLM fine-tuning'],
-    tone: 'featured',
-  },
-  {
-    icon: Layers,
-    title: 'Hybrid App Development',
-    description: 'One codebase, every platform — Flutter and React Native apps that feel native on iOS and Android.',
-    points: ['Flutter & React Native', 'Shared codebase', 'Fast iteration'],
+    points: ['UX research', 'Figma prototypes', 'Design systems'],
+    stack: ['Figma', 'Prototyping', 'Usability testing'],
   },
   {
     icon: LayoutDashboard,
-    title: 'CRM & Admin Panel Development',
-    description: 'Custom CRMs and admin dashboards with roles, permissions, and workflows tailored to your business.',
-    points: ['RBAC & permissions', 'Custom workflows', 'Dashboards & reports'],
+    title: 'CRM & Business Applications',
+    description: 'Custom CRMs and admin panels built around your workflows — roles, permissions, leads and reporting.',
+    points: ['RBAC & permissions', 'Lead management', 'Dashboards & reports'],
+    stack: ['Laravel', 'Node.js', 'React', 'MySQL'],
   },
   {
     icon: ShoppingCart,
     title: 'E-commerce Development',
     description: 'Conversion-focused online stores with payments, shipments, inventory, and a powerful admin panel.',
-    points: ['Payments & shipments', 'Inventory & orders', 'SEO-ready'],
+    points: ['Payments & shipping', 'Inventory & orders', 'SEO-ready'],
+    stack: ['Custom', 'Shopify', 'Laravel', 'React'],
   },
 ];
 
-export type AppItem = { name: string; url: string; tag: string; hue: number };
+export type AppItem = { name: string; url: string; tag: string; hue: number; description?: string };
 
 export const APPS: AppItem[] = [
-  { name: 'Miles', url: 'https://apps.apple.com/us/app/miles-travel-shop-get-cash/id1393913947', tag: 'Travel', hue: 210 },
-  { name: 'Fitburn', url: 'https://apps.apple.com/us/app/fitburn-watch/id6502515644', tag: 'Health & Fitness', hue: 12 },
-  { name: 'Stored', url: 'https://apps.apple.com/in/app/stored-social-shopping/id1663518540', tag: 'Social Shopping', hue: 275 },
+  { name: 'Miles', url: 'https://apps.apple.com/us/app/miles-travel-shop-get-cash/id1393913947', tag: 'Travel', hue: 210, description: 'Rewards for everyday travel and shopping.' },
+  { name: 'Fitburn', url: 'https://apps.apple.com/us/app/fitburn-watch/id6502515644', tag: 'Health & Fitness', hue: 12, description: 'Workout tracking across iPhone and Apple Watch.' },
+  { name: 'Stored', url: 'https://apps.apple.com/in/app/stored-social-shopping/id1663518540', tag: 'Social Shopping', hue: 275, description: 'Social feed meets product discovery.' },
   { name: 'Flocco', url: 'https://apps.apple.com/in/app/flocco/id1629581523', tag: 'Fashion', hue: 165 },
   { name: 'Adawatie', url: 'https://apps.apple.com/in/app/adawatie/id1473815126', tag: 'Lifestyle', hue: 40 },
-  { name: 'Soniq', url: 'https://apps.apple.com/in/app/soniq-your-music-companion/id6744140818', tag: 'Music', hue: 235 },
-  { name: 'Meal ID', url: 'https://apps.apple.com/us/app/meal-id-meal-prep-planner/id1504099975', tag: 'Food & Drink', hue: 95 },
+  { name: 'Soniq', url: 'https://apps.apple.com/in/app/soniq-your-music-companion/id6744140818', tag: 'Music', hue: 235, description: 'Discover and share what you listen to.' },
+  { name: 'Meal ID', url: 'https://apps.apple.com/us/app/meal-id-meal-prep-planner/id1504099975', tag: 'Food & Drink', hue: 95, description: 'Structured meal planning and prep.' },
   { name: 'Palace', url: 'https://apps.apple.com/gb/app/palaceapp/id1439058382', tag: 'Lifestyle', hue: 300 },
   { name: 'LilRequester', url: 'https://apps.apple.com/us/app/lil-requester/id1488416772', tag: 'Productivity', hue: 190 },
-  { name: 'Dynamite Travel', url: 'https://apps.apple.com/us/app/dynamite-travel-1-0/id998736815', tag: 'Travel', hue: 20 },
+  { name: 'Dynamite Travel', url: 'https://apps.apple.com/us/app/dynamite-travel-1-0/id998736815', tag: 'Travel', hue: 20, description: 'Plan and book journeys.' },
 ];
 
 export type WebProject = {
@@ -185,11 +250,15 @@ export const PROCESS_STEPS: { icon: LucideIcon; title: string; description: stri
 ];
 
 export const WHY_CHOOSE: { icon: LucideIcon; title: string; description: string }[] = [
+  { icon: Target, title: 'Product-Focused Engineering', description: 'We understand the product, users and business goals — not just the ticket.' },
+  { icon: Workflow, title: 'End-to-End Development', description: 'UI/UX, architecture, development, deployment and maintenance under one roof.' },
+  { icon: Boxes, title: 'Multi-Technology Expertise', description: 'Mobile, web, backend, cloud and AI — no juggling separate vendors.' },
   { icon: Sparkles, title: 'Clean UI', description: 'Pixel-perfect, accessible interfaces that feel premium.' },
-  { icon: Layers, title: 'Scalable Architecture', description: 'Built to grow from MVP to millions of users.' },
+  { icon: Layers, title: 'Scalable Architecture', description: 'Built to grow from MVP to production-scale systems.' },
   { icon: ShieldCheck, title: 'Secure Backend', description: 'Best-practice security, auth, and data protection.' },
-  { icon: MessagesSquare, title: 'Transparent Communication', description: 'Clear timelines, honest updates, no surprises.' },
+  { icon: MessagesSquare, title: 'Transparent Communication', description: 'Clear timelines, regular updates, no surprises.' },
   { icon: CalendarCheck, title: 'On-Time Delivery', description: 'Predictable milestones and dependable launches.' },
+  { icon: Handshake, title: 'Long-Term Partnership', description: 'A technology partner that stays on after launch — not just a vendor.' },
 ];
 
 export type Tech = { name: string; icon?: string; fallback?: LucideIcon };
@@ -211,7 +280,18 @@ export const TECH_STACK: Tech[] = [
   { name: 'OpenAI & LLMs', fallback: Bot },
 ];
 
-export const CONTACT_SERVICES = ['App Development', 'Web Development', 'UI/UX', 'AI/LLM', 'E-commerce', 'CRM', 'Other'];
+export const CONTACT_SERVICES = [
+  'Mobile App',
+  'Web Application',
+  'E-commerce',
+  'SaaS',
+  'CRM',
+  'AI / LLM',
+  'UI/UX',
+  'Backend / API',
+  'Custom Software',
+  'Other',
+];
 
 export const BUDGETS = [
   'Under $1,000',
@@ -221,3 +301,137 @@ export const BUDGETS = [
   '$50,000+',
   'Not sure yet',
 ];
+
+/** Grouped toolkit shown under the logo marquee. */
+export const TECH_GROUPS: { group: string; items: string[] }[] = [
+  { group: 'Mobile', items: ['Swift', 'SwiftUI', 'UIKit', 'Kotlin', 'Java', 'Flutter', 'React Native'] },
+  { group: 'Frontend', items: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'Tailwind CSS'] },
+  { group: 'Backend', items: ['Node.js', 'Express', 'NestJS', 'PHP', 'Laravel', 'Java'] },
+  { group: 'Databases', items: ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis'] },
+  { group: 'Cloud & DevOps', items: ['AWS', 'Docker', 'Kubernetes', 'CI/CD'] },
+  { group: 'AI', items: ['LLMs', 'Generative AI', 'RAG', 'AI Agents', 'Vector DBs'] },
+];
+
+export type CaseStudy = {
+  project: string;
+  industry: string;
+  challenge: string;
+  solution: string;
+  stack: string[];
+  features: string[];
+  outcome: string;
+  url: string;
+  linkLabel: 'View on App Store' | 'Visit website';
+  hue: number;
+};
+
+export const CASE_STUDIES: CaseStudy[] = [
+  {
+    project: 'Breakdown CRM',
+    industry: 'Business / CRM',
+    challenge:
+      'Replace scattered spreadsheets and manual lead handling with one system for sales, employees and permissions.',
+    solution:
+      'A business website connected to a custom CRM and admin panel with role-based access control and Excel lead import.',
+    stack: ['Laravel', 'MySQL', 'Blade', 'RBAC'],
+    features: ['Lead management', 'Website lead forms', 'Excel lead import', 'Employee management', 'Roles & permissions', 'Admin dashboard'],
+    outcome: 'A single operational platform combining the public website with internal CRM workflows.',
+    url: 'https://breakdown.laravue.in/',
+    linkLabel: 'Visit website',
+    hue: 220,
+  },
+  {
+    project: 'Miles',
+    industry: 'Travel / Rewards / Shopping',
+    challenge:
+      'Reward everyday travel and shopping activity inside a single consumer app without draining device resources.',
+    solution:
+      'A native iOS experience with efficient location handling, reward logic and partner offer integrations behind a clean API layer.',
+    stack: ['Swift', 'iOS SDKs', 'REST APIs', 'Location services'],
+    features: ['Reward tracking', 'Offers & shopping', 'Location-aware activity', 'Secure account flows'],
+    outcome: 'Live on the App Store as a consumer travel and rewards application.',
+    url: 'https://apps.apple.com/us/app/miles-travel-shop-get-cash/id1393913947',
+    linkLabel: 'View on App Store',
+    hue: 210,
+  },
+  {
+    project: 'Abhinaya Creations',
+    industry: 'E-commerce / Handicrafts',
+    challenge: 'Take a regional handicrafts business online with full control over catalogue, orders and shipping.',
+    solution:
+      'An end-to-end e-commerce platform with payments, shipment management and a dynamic content-managed storefront.',
+    stack: ['Laravel', 'MySQL', 'Payment gateway', 'Admin panel'],
+    features: ['Product & category management', 'Orders', 'Payments', 'Shipment management', 'Dynamic content'],
+    outcome: 'A live storefront where the team manages products, orders and shipping independently.',
+    url: 'https://abhinayacreations.in/',
+    linkLabel: 'Visit website',
+    hue: 25,
+  },
+  {
+    project: 'Fitburn',
+    industry: 'Fitness / Health / Wearables',
+    challenge: 'Deliver reliable workout and activity tracking across phone and wearable with data staying in sync.',
+    solution: 'An iOS and watch-focused application with health data integration and synchronised activity sessions.',
+    stack: ['Swift', 'SwiftUI', 'watchOS', 'HealthKit'],
+    features: ['Workout tracking', 'Wearable companion', 'Health data sync', 'Progress views'],
+    outcome: 'Available on the App Store as a fitness and wearable application.',
+    url: 'https://apps.apple.com/us/app/fitburn-watch/id6502515644',
+    linkLabel: 'View on App Store',
+    hue: 12,
+  },
+  {
+    project: 'Stored',
+    industry: 'Social Commerce',
+    challenge: 'Blend social interaction with product discovery so shopping feels like browsing a feed, not a catalogue.',
+    solution:
+      'A social shopping app with feed-driven discovery, product collections and a backend built for interaction-heavy usage.',
+    stack: ['Swift', 'REST APIs', 'Cloud backend'],
+    features: ['Social feed', 'Product collections', 'User profiles', 'Sharing & discovery'],
+    outcome: 'Published on the App Store as a social shopping application.',
+    url: 'https://apps.apple.com/in/app/stored-social-shopping/id1663518540',
+    linkLabel: 'View on App Store',
+    hue: 275,
+  },
+  {
+    project: 'Glowing Fusions',
+    industry: 'E-commerce / Jewellery & Gifting',
+    challenge: 'Present jewellery and gifting products attractively on mobile while supporting custom gift creation.',
+    solution:
+      'A mobile-first e-commerce experience with a rich catalogue and custom gifting flow; a mobile app is in development.',
+    stack: ['E-commerce stack', 'Responsive front-end', 'Payments'],
+    features: ['Jewellery catalog', 'Gifting', 'Custom gift creation', 'Mobile-first experience'],
+    outcome: 'A live commerce platform with a companion mobile application currently under development.',
+    url: 'https://www.glowingfusions.com/',
+    linkLabel: 'Visit website',
+    hue: 290,
+  },
+];
+
+export const SOLUTIONS: { title: string; description: string }[] = [
+  { title: 'MVP Development', description: 'Turn an idea into a working product quickly.' },
+  { title: 'SaaS Platforms', description: 'Scalable subscription-based products.' },
+  { title: 'Mobile Applications', description: 'Native and cross-platform apps.' },
+  { title: 'Enterprise Software', description: 'Custom software for complex business workflows.' },
+  { title: 'E-commerce', description: 'Complete online commerce ecosystems.' },
+  { title: 'AI Products', description: 'AI-powered apps and intelligent automation.' },
+  { title: 'CRM', description: 'Custom business management systems.' },
+  { title: 'Digital Transformation', description: 'Modernise existing systems and workflows.' },
+];
+
+export const INDUSTRIES = [
+  'E-commerce',
+  'Travel & Tourism',
+  'Fitness & Wellness',
+  'Healthcare',
+  'FinTech',
+  'Social Platforms',
+  'SaaS',
+  'Retail',
+  'Education',
+  'Hospitality',
+  'Real Estate',
+  'Entertainment',
+  'Logistics',
+];
+
+export const EXPERTISE = ['Mobile', 'Web', 'Backend', 'Cloud', 'AI', 'UI/UX', 'E-commerce', 'SaaS', 'Business apps'];

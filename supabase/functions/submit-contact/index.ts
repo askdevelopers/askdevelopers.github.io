@@ -25,6 +25,7 @@ Deno.serve(async (req: Request) => {
     const body = await req.json();
     const fullName = String(body.fullName ?? "").trim();
     const email = String(body.email ?? "").trim();
+    const company = String(body.company ?? "").trim();
     const phone = String(body.phone ?? "").trim();
     const serviceNeeded = String(body.serviceNeeded ?? "").trim();
     const budgetRange = String(body.budgetRange ?? "").trim();
@@ -53,6 +54,7 @@ Deno.serve(async (req: Request) => {
       .insert({
         full_name: fullName,
         email,
+        company,
         phone,
         service_needed: serviceNeeded,
         budget_range: budgetRange,
@@ -74,6 +76,7 @@ Deno.serve(async (req: Request) => {
         `<table cellpadding="6" cellspacing="0" style="font-family:sans-serif;font-size:14px;color:#111">`,
         `<tr><td><b>Name</b></td><td>${esc(fullName)}</td></tr>`,
         `<tr><td><b>Email</b></td><td>${esc(email)}</td></tr>`,
+        `<tr><td><b>Company</b></td><td>${esc(company) || "—"}</td></tr>`,
         `<tr><td><b>Phone</b></td><td>${esc(phone) || "—"}</td></tr>`,
         `<tr><td><b>Service</b></td><td>${esc(serviceNeeded) || "—"}</td></tr>`,
         `<tr><td><b>Budget</b></td><td>${esc(budgetRange) || "—"}</td></tr>`,
@@ -82,7 +85,7 @@ Deno.serve(async (req: Request) => {
         `<p style="font-family:sans-serif;white-space:pre-wrap;color:#222">${esc(projectDetails)}</p>`,
       ].join("");
 
-      const text = `New project inquiry\n\nName: ${fullName}\nEmail: ${email}\nPhone: ${phone || "—"}\nService: ${serviceNeeded || "—"}\nBudget: ${budgetRange || "—"}\n\nProject details:\n${projectDetails}`;
+      const text = `New project inquiry\n\nName: ${fullName}\nEmail: ${email}\nCompany: ${company || "—"}\nPhone: ${phone || "—"}\nService: ${serviceNeeded || "—"}\nBudget: ${budgetRange || "—"}\n\nProject details:\n${projectDetails}`;
 
       try {
         const res = await fetch("https://api.resend.com/emails", {

@@ -1,13 +1,14 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { AlertCircle, ArrowUpRight, CheckCircle2, Loader2, Mail, Phone, Send, X } from 'lucide-react';
 import { BUDGETS, CONTACT, CONTACT_SERVICES } from '@/lib/data';
-import { useReveal } from '@/lib/hooks';
+import { Reveal } from './motion';
 import { supabase } from '@/lib/supabase';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 type Form = {
   fullName: string;
   email: string;
+  company: string;
   phone: string;
   serviceNeeded: string;
   budgetRange: string;
@@ -15,7 +16,7 @@ type Form = {
 };
 type Errors = Partial<Record<'fullName' | 'email' | 'phone' | 'projectDetails', string>>;
 
-const EMPTY_FORM: Form = { fullName: '', email: '', phone: '', serviceNeeded: '', budgetRange: '', projectDetails: '' };
+const EMPTY_FORM: Form = { fullName: '', email: '', company: '', phone: '', serviceNeeded: '', budgetRange: '', projectDetails: '' };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
@@ -24,7 +25,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  */
 async function submitInquiry(form: Form) {
   if (!supabase) {
-    const body = `Name: ${form.fullName}\nEmail: ${form.email}\nPhone: ${form.phone || '—'}\nService: ${form.serviceNeeded || '—'}\nBudget: ${form.budgetRange || '—'}\n\n${form.projectDetails}`;
+    const body = `Name: ${form.fullName}\nEmail: ${form.email}\nCompany: ${form.company || '—'}\nPhone: ${form.phone || '—'}\nService: ${form.serviceNeeded || '—'}\nBudget: ${form.budgetRange || '—'}\n\n${form.projectDetails}`;
     window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(`Project inquiry from ${form.fullName}`)}&body=${encodeURIComponent(body)}`;
     return;
   }
@@ -35,6 +36,7 @@ async function submitInquiry(form: Form) {
   const { error } = await supabase.from('contact_submissions').insert({
     full_name: form.fullName,
     email: form.email,
+    company: form.company || null,
     phone: form.phone || null,
     service_needed: form.serviceNeeded || null,
     budget_range: form.budgetRange || null,
@@ -44,7 +46,6 @@ async function submitInquiry(form: Form) {
 }
 
 export function Contact() {
-  const ref = useReveal<HTMLElement>();
   const [status, setStatus] = useState<Status>('idle');
   const [errors, setErrors] = useState<Errors>({});
   const [form, setForm] = useState<Form>(EMPTY_FORM);
@@ -80,27 +81,28 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" ref={ref} className="py-20 sm:py-28">
+    <section id="contact" className="theme-dark py-24 sm:py-32">
       <div className="container-x grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
-        <div>
-          <p className="reveal eyebrow">Start your project</p>
-          <h2 className="reveal heading mt-4 text-4xl leading-[1.02] sm:text-5xl lg:text-6xl">
+        <Reveal>
+          <p className="eyebrow">Start your project</p>
+          <h2 className="headline mt-4 text-4xl leading-[1.02] sm:text-5xl lg:text-6xl">
             Have a project in mind?
             <br />
             <span className="text-gradient">Let&apos;s build it.</span>
           </h2>
-          <p className="reveal mt-5 max-w-md text-base leading-relaxed text-slate-400">
+          <p className="mt-5 lede max-w-md text-base">
             Share your project requirements and we&apos;ll get back to you with a solution, timeline, and cost estimate
             — usually within 24 hours.
           </p>
 
-          <div className="reveal mt-10 space-y-3">
+          <div className="mt-10 space-y-3">
             <ContactLink href={CONTACT.phoneHref} icon={<Phone className="h-5 w-5" />} label="Call us directly" value={CONTACT.phone} />
             <ContactLink href={`mailto:${CONTACT.email}`} icon={<Mail className="h-5 w-5" />} label="Email us" value={CONTACT.email} />
           </div>
-        </div>
+        </Reveal>
 
-        <form onSubmit={onSubmit} noValidate className="reveal glass rounded-[2rem] p-6 sm:p-8">
+        <Reveal delay={0.1}>
+        <form onSubmit={onSubmit} noValidate className="rounded-[28px] bg-card p-6 sm:p-8">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Field label="Full name" required error={errors.fullName} htmlFor="fullName">
               <input id="fullName" type="text" autoComplete="name" value={form.fullName} onChange={(e) => update('fullName', e.target.value)} className={inputCls(!!errors.fullName)} placeholder="Jane Doe" />
@@ -108,19 +110,24 @@ export function Contact() {
             <Field label="Email" required error={errors.email} htmlFor="email">
               <input id="email" type="email" autoComplete="email" value={form.email} onChange={(e) => update('email', e.target.value)} className={inputCls(!!errors.email)} placeholder="jane@company.com" />
             </Field>
+            <Field label="Company" htmlFor="company">
+              <input id="company" type="text" autoComplete="organization" value={form.company} onChange={(e) => update('company', e.target.value)} className={inputCls(false)} placeholder="Acme Inc." />
+            </Field>
             <Field label="Phone number" error={errors.phone} htmlFor="phone">
               <input id="phone" type="tel" autoComplete="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} className={inputCls(!!errors.phone)} placeholder="+91 84010 09197" />
             </Field>
-            <Field label="Service needed" htmlFor="serviceNeeded">
-              <select id="serviceNeeded" value={form.serviceNeeded} onChange={(e) => update('serviceNeeded', e.target.value)} className={inputCls(false)}>
-                <option value="">Select a service</option>
-                {CONTACT_SERVICES.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </Field>
             <div className="sm:col-span-2">
-              <p className="mb-2 text-xs font-medium text-slate-300">Budget range</p>
+              <Field label="Project type" htmlFor="serviceNeeded">
+                <select id="serviceNeeded" value={form.serviceNeeded} onChange={(e) => update('serviceNeeded', e.target.value)} className={inputCls(false)}>
+                  <option value="">Select a project type</option>
+                  {CONTACT_SERVICES.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </Field>
+            </div>
+            <div className="sm:col-span-2">
+              <p className="mb-2 text-xs font-medium text-fg/80">Budget range</p>
               <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Budget range">
                 {BUDGETS.map((b) => {
                   const active = form.budgetRange === b;
@@ -132,7 +139,7 @@ export function Contact() {
                       aria-checked={active}
                       onClick={() => update('budgetRange', active ? '' : b)}
                       className={`rounded-full border px-3.5 py-1.5 text-xs transition-colors ${
-                        active ? 'border-transparent bg-brand-gradient text-white' : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                        active ? 'border-transparent bg-brand-gradient text-white' : 'border-line/10 bg-fg/5 text-fg/80 hover:bg-fg/10'
                       }`}
                     >
                       {b}
@@ -148,7 +155,7 @@ export function Contact() {
             </div>
           </div>
 
-          <button type="submit" disabled={status === 'loading'} className="btn-primary mt-6 w-full py-3.5 disabled:cursor-not-allowed disabled:opacity-60">
+          <button type="submit" disabled={status === 'loading'} className="btn-primary mt-6 w-full !py-3.5 disabled:cursor-not-allowed disabled:opacity-60">
             {status === 'loading' ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -162,6 +169,7 @@ export function Contact() {
             )}
           </button>
         </form>
+        </Reveal>
       </div>
 
       {status === 'success' && (
@@ -176,27 +184,27 @@ export function Contact() {
 
 function ContactLink({ href, icon, label, value }: { href: string; icon: ReactNode; label: string; value: string }) {
   return (
-    <a href={href} className="glass group flex items-center gap-4 rounded-2xl px-4 py-4 transition-colors hover:border-white/20 hover:bg-white/[0.06]">
+    <a href={href} className="group flex items-center gap-4 rounded-2xl bg-card px-4 py-4 transition-colors hover:bg-ink-700">
       <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gradient text-white">{icon}</span>
       <span className="flex-1">
-        <span className="block text-xs text-slate-500">{label}</span>
-        <span className="text-sm font-semibold text-white">{value}</span>
+        <span className="block text-xs text-muted">{label}</span>
+        <span className="text-sm font-semibold text-fg">{value}</span>
       </span>
-      <ArrowUpRight className="h-5 w-5 text-slate-500 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white" />
+      <ArrowUpRight className="h-5 w-5 text-muted transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-fg" />
     </a>
   );
 }
 
 function inputCls(hasError: boolean) {
-  return `w-full rounded-xl border bg-ink-900/70 px-4 py-3 text-sm text-white placeholder:text-slate-600 outline-none transition-colors ${
-    hasError ? 'border-rose-500/60 focus:border-rose-400' : 'border-white/10 focus:border-brand-400 focus:ring-2 focus:ring-brand-400/30'
+  return `w-full rounded-xl border bg-ink-950/60 px-4 py-3 text-sm text-fg placeholder:text-muted/60 outline-none transition-colors ${
+    hasError ? 'border-rose-500/60 focus:border-rose-400' : 'border-line/10 focus:border-brand-400 focus:ring-2 focus:ring-brand-400/30'
   }`;
 }
 
 function Field({ label, required, error, htmlFor, children }: { label: string; required?: boolean; error?: string; htmlFor: string; children: ReactNode }) {
   return (
     <div>
-      <label htmlFor={htmlFor} className="mb-2 block text-xs font-medium text-slate-300">
+      <label htmlFor={htmlFor} className="mb-2 block text-xs font-medium text-fg/80">
         {label} {required && <span className="text-brand-300">*</span>}
       </label>
       {children}
@@ -213,14 +221,14 @@ function Field({ label, required, error, htmlFor, children }: { label: string; r
 function Toast({ tone, title, message, onClose }: { tone: 'success' | 'error'; title: string; message: string; onClose: () => void }) {
   const IconC = tone === 'success' ? CheckCircle2 : AlertCircle;
   return (
-    <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm animate-fade-up rounded-2xl border border-white/10 bg-ink-800/95 p-4 shadow-glow backdrop-blur-xl">
+    <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm rounded-2xl border border-line/10 bg-ink-800/95 p-4 shadow-glow backdrop-blur-xl">
       <div className="flex items-start gap-3">
         <IconC className={`mt-0.5 h-5 w-5 shrink-0 ${tone === 'success' ? 'text-emerald-400' : 'text-rose-400'}`} />
         <div className="flex-1">
-          <p className="text-sm font-semibold text-white">{title}</p>
-          <p className="mt-0.5 text-xs text-slate-400">{message}</p>
+          <p className="text-sm font-semibold text-fg">{title}</p>
+          <p className="mt-0.5 text-xs text-muted">{message}</p>
         </div>
-        <button type="button" onClick={onClose} className="rounded-md p-1 text-slate-400 hover:text-white" aria-label="Dismiss">
+        <button type="button" onClick={onClose} className="rounded-md p-1 text-muted hover:text-fg" aria-label="Dismiss">
           <X className="h-4 w-4" />
         </button>
       </div>

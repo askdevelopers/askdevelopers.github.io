@@ -4,63 +4,64 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['"Inter Tight"', 'Inter', 'system-ui', 'sans-serif'],
+        // Satoshi + Clash Display from Fontshare (see index.html); JetBrains Mono for small labels.
+        sans: ['Satoshi', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['"Clash Display"', 'Satoshi', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       colors: {
+        // Section-scoped tokens — see .theme-dark / .theme-light in index.css.
+        bg: 'rgb(var(--c-bg) / <alpha-value>)',
+        fg: 'rgb(var(--c-fg) / <alpha-value>)',
+        muted: 'rgb(var(--c-muted) / <alpha-value>)',
+        card: 'rgb(var(--c-card) / <alpha-value>)',
+        line: 'rgb(var(--c-line) / <alpha-value>)',
+        link: 'rgb(var(--c-link) / <alpha-value>)',
+        // Charcoal surfaces
         ink: {
-          950: '#04050b',
-          900: '#070912',
-          800: '#0c0f1c',
-          700: '#131729',
-          600: '#1c2138',
-          500: '#2a3050',
+          950: '#0c0c0c',
+          900: '#141414',
+          800: '#1f1f1f',
+          700: '#2a2a2a',
+          600: '#3a3a3a',
+          500: '#4a4a4a',
         },
+        // Orange accent
         brand: {
-          200: '#c7d4ff',
-          300: '#9db4ff',
-          400: '#6d8dff',
-          500: '#3d63ff',
-          600: '#2a4cf0',
-          700: '#1f3bc4',
+          200: '#ffd9c7',
+          300: '#ffb08a',
+          400: '#ff7a45',
+          500: '#ff5a1f',
+          600: '#e04e14',
+          700: '#b83c0c',
         },
-        violet: {
-          300: '#c4b5fd',
-          400: '#a78bfa',
-          500: '#8b5cf6',
-          600: '#7c3aed',
-        },
-        cyan: {
-          300: '#67e8f9',
-          400: '#22d3ee',
-        },
-        gold: {
-          400: '#fbbf24',
+        // Amber secondary (gradient end, secondary dots)
+        amber: {
+          300: '#ffd166',
+          400: '#ffc247',
+          500: '#f5a623',
+          600: '#d98c12',
         },
       },
       backgroundImage: {
         'grid-faint':
-          'linear-gradient(to right, rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.045) 1px, transparent 1px)',
-        'brand-gradient': 'linear-gradient(120deg, #3d63ff 0%, #8b5cf6 100%)',
+          'linear-gradient(to right, rgb(var(--c-line) / 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgb(var(--c-line) / 0.05) 1px, transparent 1px)',
+        'brand-gradient': 'linear-gradient(120deg, #ff5a1f 0%, #ffc247 100%)',
       },
       boxShadow: {
-        glow: '0 0 0 1px rgba(109,141,255,0.25), 0 20px 60px -20px rgba(61,99,255,0.6)',
-        'glow-violet': '0 30px 80px -30px rgba(139,92,246,0.65)',
+        tile: '0 2px 12px rgba(26,26,26,0.06), 0 0 0 1px rgba(26,26,26,0.04)',
+        'tile-hover': '0 18px 40px -16px rgba(26,26,26,0.24), 0 0 0 1px rgba(26,26,26,0.05)',
+        glow: '0 0 0 1px rgba(255,90,31,0.25), 0 20px 60px -20px rgba(255,90,31,0.5)',
+        'glow-accent': '0 30px 80px -30px rgba(255,90,31,0.55)',
         card: '0 10px 40px -15px rgba(0,0,0,0.6)',
       },
       animation: {
-        'fade-up': 'fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) both',
         float: 'float 7s ease-in-out infinite',
         marquee: 'marquee 40s linear infinite',
         blink: 'blink 1.4s ease-in-out infinite',
-        'pulse-ring': 'pulseRing 2.4s ease-out infinite',
+        'pulse-soft': 'pulseSoft 2.4s ease-in-out infinite',
       },
       keyframes: {
-        fadeUp: {
-          '0%': { opacity: '0', transform: 'translateY(24px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
         float: {
           '0%,100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-10px)' },
@@ -73,9 +74,9 @@ export default {
           '0%,100%': { opacity: '0.25' },
           '50%': { opacity: '1' },
         },
-        pulseRing: {
-          '0%': { transform: 'scale(0.8)', opacity: '0.8' },
-          '100%': { transform: 'scale(2.2)', opacity: '0' },
+        pulseSoft: {
+          '0%,100%': { opacity: '0.55', transform: 'scale(1)' },
+          '50%': { opacity: '1', transform: 'scale(1.25)' },
         },
       },
     },

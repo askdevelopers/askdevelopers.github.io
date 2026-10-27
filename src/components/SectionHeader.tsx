@@ -1,14 +1,42 @@
 import type { ReactNode } from 'react';
+import { Reveal } from './motion';
 
-/** Editorial two-column section header: mono eyebrow + big heading left, supporting copy right. */
-export function SectionHeader({ eyebrow, title, children }: { eyebrow: string; title: ReactNode; children?: ReactNode }) {
+/** Apple-style section intro: small eyebrow, one very large headline, optional lede. */
+export function SectionHeader({
+  eyebrow,
+  title,
+  children,
+  align = 'center',
+  size = 'lg',
+}: {
+  eyebrow?: string;
+  title: ReactNode;
+  children?: ReactNode;
+  align?: 'center' | 'left';
+  size?: 'lg' | 'md';
+}) {
+  const centered = align === 'center';
   return (
-    <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-end">
-      <div>
-        <p className="reveal eyebrow">{eyebrow}</p>
-        <h2 className="reveal heading mt-4 text-4xl leading-[1.02] sm:text-5xl lg:text-6xl">{title}</h2>
-      </div>
-      {children && <p className="reveal max-w-md text-base leading-relaxed text-slate-400 lg:justify-self-end">{children}</p>}
+    <div className={`${centered ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'}`}>
+      {eyebrow && (
+        <Reveal>
+          <p className="eyebrow">{eyebrow}</p>
+        </Reveal>
+      )}
+      <Reveal delay={0.05}>
+        <h2
+          className={`headline mt-3 ${
+            size === 'lg' ? 'text-[2.6rem] leading-[1.04] sm:text-6xl lg:text-7xl' : 'text-3xl leading-[1.08] sm:text-5xl'
+          }`}
+        >
+          {title}
+        </h2>
+      </Reveal>
+      {children && (
+        <Reveal delay={0.12}>
+          <p className={`lede mt-5 ${centered ? 'mx-auto max-w-2xl' : 'max-w-2xl'}`}>{children}</p>
+        </Reveal>
+      )}
     </div>
   );
 }

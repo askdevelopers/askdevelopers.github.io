@@ -8,9 +8,9 @@ export function LogoMark({ className = 'h-9 w-9' }: { className?: string }) {
     <svg viewBox="0 0 64 64" className={className} fill="none" aria-hidden="true">
       <defs>
         <linearGradient id={gid} x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6d8dff" />
-          <stop offset="0.55" stopColor="#a78bfa" />
-          <stop offset="1" stopColor="#22d3ee" />
+          <stop stopColor="#ff5a1f" />
+          <stop offset="0.55" stopColor="#ff8a3d" />
+          <stop offset="1" stopColor="#ffc247" />
         </linearGradient>
       </defs>
       <rect width="64" height="64" rx="16" className="fill-ink-800" />
@@ -33,8 +33,8 @@ export function Logo({ className }: { className?: string }) {
   return (
     <span className={`flex items-center gap-2.5 ${className ?? ''}`}>
       <LogoMark className="h-9 w-9 shrink-0" />
-      <span className="font-display text-[1.05rem] font-bold leading-none tracking-tight text-white">
-        Ask <span className="text-gradient-brand">Developers</span>
+      <span className="font-display text-[1.05rem] font-bold leading-none tracking-tight text-fg">
+        Ask <span className="ml-1 text-gradient-brand">Developers</span>
       </span>
     </span>
   );
