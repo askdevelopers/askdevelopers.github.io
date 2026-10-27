@@ -1,4 +1,4 @@
-import { ArrowUpRight, Facebook, Mail } from 'lucide-react';
+import { ArrowUp, ArrowUpRight, Facebook, Mail } from 'lucide-react';
 import { Logo } from './Logo';
 import { CONTACT, NAV_LINKS, SERVICES } from '@/lib/data';
 import { COMPANY_LINKS } from '@/pages/routes';
