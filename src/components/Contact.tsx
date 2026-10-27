@@ -226,7 +226,7 @@ function Field({ label, required, error, htmlFor, children }: { label: string; r
 function Toast({ tone, title, message, onClose }: { tone: 'success' | 'error'; title: string; message: string; onClose: () => void }) {
   const IconC = tone === 'success' ? CheckCircle2 : AlertCircle;
   return (
-    <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm rounded-2xl border border-line/10 bg-ink-800/95 p-4 shadow-glow backdrop-blur-xl">
+    <div role="status" className="fixed bottom-20 right-5 z-[60] max-w-sm rounded-2xl border border-line/10 bg-ink-800/95 p-4 shadow-glow backdrop-blur-xl">
       <div className="flex items-start gap-3">
         <IconC className={`mt-0.5 h-5 w-5 shrink-0 ${tone === 'success' ? 'text-emerald-400' : 'text-rose-400'}`} />
         <div className="flex-1">

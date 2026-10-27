@@ -2,6 +2,7 @@ import { lazy, useEffect } from 'react';
 import { MotionConfig } from 'framer-motion';
 import { Navbar } from '@/components/Navbar';
 import { ScrollBot } from '@/components/ScrollBot';
+import { BackToTop } from '@/components/BackToTop';
 import { Hero } from '@/components/Hero';
 import { Platform } from '@/components/Platform';
 import { Services } from '@/components/Services';
@@ -53,6 +54,7 @@ export default function App() {
       <div className="min-h-screen bg-ink-900 text-[#f4efe6]">
         <Navbar />
         <ScrollBot />
+        <BackToTop />
         <main>
           <Hero />
           <Platform />

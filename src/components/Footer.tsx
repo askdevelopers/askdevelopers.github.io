@@ -92,7 +92,13 @@ export function Footer({ home = true }: { home?: boolean }) {
             <a href="/refund-policy/" className="py-1 hover:text-fg">Refunds</a>
             <a href="/delete-account/" className="py-1 hover:text-fg">Delete account</a>
           </p>
-          <p className="font-mono uppercase tracking-[0.2em]">Web · Mobile · AI</p>
+          <div className="flex items-center gap-5">
+            <p className="font-mono uppercase tracking-[0.2em]">Web · Mobile · AI</p>
+            <a href="#home" className="inline-flex min-h-[44px] items-center gap-1 font-medium text-link">
+              Back to top
+              <ArrowUp className="h-3.5 w-3.5" />
+            </a>
+          </div>
         </div>
       </div>
 
