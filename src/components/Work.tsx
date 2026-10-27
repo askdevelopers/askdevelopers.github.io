@@ -1,6 +1,6 @@
 import type { PointerEvent, ReactNode } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { Apple, ArrowUpRight, Check } from 'lucide-react';
+import { Apple, ArrowUpRight, Check, Play } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
 import { EASE, Reveal } from './motion';
 import { APPS, WEB_PROJECTS } from '@/lib/data';
@@ -52,7 +52,7 @@ export function Work() {
           }
         >
           CRMs, e-commerce stores and content platforms that run companies every day — plus native and cross-platform
-          apps live on the App Store.
+          apps live on the App Store and Play Store.
         </SectionHeader>
 
         {/* Web platforms */}
@@ -114,10 +114,10 @@ export function Work() {
         <div className="mt-24 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <Reveal>
-              <p className="eyebrow">On the App Store</p>
+              <p className="eyebrow">On the App Store &amp; Play Store</p>
             </Reveal>
             <Reveal delay={0.05}>
-              <h3 className="headline mt-3 text-3xl sm:text-5xl">Ten apps, shipped and live.</h3>
+              <h3 className="headline mt-3 text-3xl sm:text-5xl">Apps shipped and live.</h3>
             </Reveal>
           </div>
           <Reveal delay={0.1}>
@@ -129,17 +129,14 @@ export function Work() {
 
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {APPS.map((a, i) => (
-            <motion.a
+            <motion.div
               key={a.name}
-              href={a.url}
-              target="_blank"
-              rel="noopener noreferrer"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '0px 0px -8% 0px' }}
               transition={{ duration: 0.7, ease: EASE, delay: (i % 5) * 0.06 }}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="group flex flex-col rounded-[22px] bg-card p-4"
+              whileHover={{ y: -5 }}
+              className="flex flex-col rounded-[22px] bg-card p-4"
             >
               <span
                 className="flex h-14 w-14 items-center justify-center rounded-[16px] font-display text-xl font-bold text-white shadow-card"
@@ -150,12 +147,21 @@ export function Work() {
               <p className="mt-4 font-display text-base font-semibold tracking-tight text-fg">{a.name}</p>
               <p className="text-xs text-muted">{a.tag}</p>
               {a.description && <p className="mt-2 text-xs leading-snug text-muted">{a.description}</p>}
-              <span className="mt-auto inline-flex items-center gap-1 pt-4 text-xs font-medium text-link">
-                <Apple className="h-3.5 w-3.5" />
-                App Store
-                <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </span>
-            </motion.a>
+              <div className="mt-auto flex flex-wrap gap-x-4 pt-3">
+                <a href={a.url} target="_blank" rel="noopener noreferrer" className="group inline-flex min-h-[44px] items-center gap-1 text-xs font-medium text-link">
+                  <Apple className="h-3.5 w-3.5" />
+                  App Store
+                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </a>
+                {a.playUrl && (
+                  <a href={a.playUrl} target="_blank" rel="noopener noreferrer" className="group inline-flex min-h-[44px] items-center gap-1 text-xs font-medium text-link">
+                    <Play className="h-3.5 w-3.5" />
+                    Play Store
+                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
+                )}
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>

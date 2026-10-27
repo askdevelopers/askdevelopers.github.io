@@ -93,9 +93,9 @@ export function Hero() {
           <motion.div style={{ y: cardB }} className="glass absolute bottom-[16%] right-[2%] hidden w-52 rounded-2xl p-4 sm:block">
             <div className="flex items-center gap-2 text-xs text-muted">
               <Apple className="h-4 w-4 text-fg" />
-              App Store
+              App Store · Play Store
             </div>
-            <p className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg">10+</p>
+            <p className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg">12+</p>
             <p className="text-xs text-muted">Apps shipped &amp; live</p>
           </motion.div>
 

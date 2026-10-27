@@ -77,7 +77,7 @@ export const PLATFORM_STEPS = [
     eyebrow: 'iOS · Android · Flutter',
     title: 'Apps people keep.',
     description:
-      'Native Swift and Kotlin, or cross-platform Flutter and React Native. 10+ apps live on the App Store, from travel rewards to wearables.',
+      'Native Swift and Kotlin, or cross-platform Flutter and React Native. 12+ apps live on the App Store and Play Store, from travel rewards to wearables.',
     chips: ['Swift', 'Kotlin', 'Flutter', 'React Native'],
   },
   {
@@ -91,8 +91,8 @@ export const PLATFORM_STEPS = [
 ];
 
 export const STATS = [
-  { value: '10+', label: 'Apps live on the App Store' },
-  { value: '4+', label: 'Web platforms shipped' },
+  { value: '12+', label: 'Apps live on App Store & Play Store' },
+  { value: '15+', label: 'Web platforms shipped' },
   { value: '12+', label: 'Technologies mastered' },
   { value: '24h', label: 'Typical first response' },
 ];
@@ -173,7 +173,16 @@ export const SERVICES: Service[] = [
   },
 ];
 
-export type AppItem = { name: string; url: string; tag: string; hue: number; description?: string };
+export type AppItem = {
+  name: string;
+  /** App Store listing. */
+  url: string;
+  /** Google Play listing, when the app is on Android too. */
+  playUrl?: string;
+  tag: string;
+  hue: number;
+  description?: string;
+};
 
 export const APPS: AppItem[] = [
   { name: 'Miles', url: 'https://apps.apple.com/us/app/miles-travel-shop-get-cash/id1393913947', tag: 'Travel', hue: 210, description: 'Rewards for everyday travel and shopping.' },
