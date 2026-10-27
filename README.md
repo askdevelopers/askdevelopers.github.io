@@ -49,7 +49,13 @@ Copy `.env.example` to `.env` and set `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_
   (`supabase/migrations/` — apply both migrations; the second adds the `company` column).
 - Without Supabase env vars the form opens a pre-filled email instead.
 
-## Deploy (Vercel)
+## Deploy
 
-Import the repo in Vercel — framework preset **Vite**, build `npm run build`, output `dist`.
-Add the two `VITE_SUPABASE_*` env vars in the project settings.
+Live at https://askdevelopers.github.io/ via GitHub Pages. `.github/workflows/deploy.yml` builds and deploys on
+every push to `main`; the Pages source is "GitHub Actions" (Settings → Pages). Add `VITE_SUPABASE_URL` and
+`VITE_SUPABASE_ANON_KEY` as repository secrets to enable the Supabase contact form in production.
+
+For a custom domain, add it under Settings → Pages (GitHub provides HTTPS) and point a CNAME at
+`askdevelopers.github.io`.
+
+Vercel also works: framework preset **Vite**, build `npm run build`, output `dist`, same env vars.

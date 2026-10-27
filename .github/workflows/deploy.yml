@@ -30,8 +30,8 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # Site is served at https://askdevelopers001-crypto.github.io/AskWebsite/
-          VITE_BASE: /AskWebsite/
+          # User site: served at the domain root (https://askdevelopers.github.io/)
+          VITE_BASE: /
           # Optional — add these as repository secrets to enable the Supabase contact form.
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}

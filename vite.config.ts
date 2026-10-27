@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // GitHub Pages serves the site under /AskWebsite/; the workflow sets VITE_BASE.
+  // Base path for the build; the Pages workflow sets VITE_BASE (currently "/").
   base: process.env.VITE_BASE ?? '/',
   plugins: [react()],
   resolve: {
