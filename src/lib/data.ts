@@ -23,12 +23,8 @@ import {
   Workflow,
 } from 'lucide-react';
 
-export const CONTACT = {
-  phone: '+91-9106566799',
-  phoneHref: 'tel:+919106566799',
-  email: 'askdevelopers001@gmail.com',
-  facebook: 'https://www.facebook.com/ask.dev.58/',
-} as const;
+/** Contact details and business identity live in business.ts (shared with the build and the policy pages). */
+export { CONTACT, BUSINESS } from './business';
 
 export const NAV_LINKS = [
   { label: 'Platform', href: '#platform' },

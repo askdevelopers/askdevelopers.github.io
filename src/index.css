@@ -106,6 +106,39 @@ body {
   }
 }
 
+/* Long-form pages (policies, support). Blocks marked .not-doc (cards) keep their own styling. */
+.doc > section + section {
+  @apply mt-14;
+}
+.doc h2 {
+  @apply headline text-2xl sm:text-3xl;
+}
+.doc h3:not(.not-doc *) {
+  @apply mt-8 text-lg font-semibold text-fg;
+}
+.doc p:not(.not-doc *) {
+  @apply mt-4 text-[15px] leading-relaxed text-fg/80 sm:text-base;
+}
+.doc ul:not(.not-doc *),
+.doc ol:not(.not-doc *) {
+  @apply mt-4 space-y-2 pl-5 text-[15px] leading-relaxed text-fg/80 sm:text-base;
+}
+.doc ul:not(.not-doc *) {
+  @apply list-disc;
+}
+.doc ol:not(.not-doc *) {
+  @apply list-decimal;
+}
+.doc li:not(.not-doc *)::marker {
+  color: rgb(var(--c-link));
+}
+.doc a:not(.not-doc *) {
+  @apply font-medium text-link underline-offset-2 hover:underline;
+}
+.doc strong:not(.not-doc *) {
+  @apply font-semibold text-fg;
+}
+
 .text-gradient {
   background: linear-gradient(110deg, #ffb08a 0%, #ff5a1f 45%, #ffc247 100%);
   -webkit-background-clip: text;

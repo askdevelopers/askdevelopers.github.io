@@ -1,12 +1,15 @@
 import { ArrowUpRight, Facebook, Mail, Phone } from 'lucide-react';
 import { Logo } from './Logo';
 import { CONTACT, NAV_LINKS, SERVICES } from '@/lib/data';
+import { COMPANY_LINKS } from '@/pages/routes';
 
-export function Footer() {
+/** `home` is false on the stand-alone pages, where in-page anchors must point back at the home page. */
+export function Footer({ home = true }: { home?: boolean }) {
+  const to = (href: string) => (home || !href.startsWith('#') ? href : `/${href}`);
   return (
     <footer className="theme-light relative overflow-hidden border-t border-line/10 pt-14">
       <div className="container-x">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1.2fr]">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.9fr_1.2fr_1fr_1.2fr]">
           <div>
             <Logo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">
@@ -22,7 +25,7 @@ export function Footer() {
             <ul className="mt-2.5 space-y-0.5">
               {NAV_LINKS.map((l) => (
                 <li key={l.href}>
-                  <a href={l.href} className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-fg">
+                  <a href={to(l.href)} className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-fg">
                     {l.label}
                   </a>
                 </li>
@@ -35,8 +38,21 @@ export function Footer() {
             <ul className="mt-2.5 space-y-0.5">
               {SERVICES.map((s) => (
                 <li key={s.title}>
-                  <a href="#services" className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-fg">
+                  <a href={to('#services')} className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-fg">
                     {s.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-fg">Company</h3>
+            <ul className="mt-2.5 space-y-0.5">
+              {COMPANY_LINKS.map((l) => (
+                <li key={l.href}>
+                  <a href={l.href} className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-fg">
+                    {l.label}
                   </a>
                 </li>
               ))}
@@ -74,8 +90,14 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-line/10 py-6 text-xs text-muted sm:flex-row sm:justify-between">
+        <div className="mt-12 flex flex-col gap-3 border-t border-line/10 py-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Ask Developers. All rights reserved.</p>
+          <p className="flex flex-wrap gap-x-4 gap-y-1">
+            <a href="/privacy/" className="py-1 hover:text-fg">Privacy</a>
+            <a href="/terms/" className="py-1 hover:text-fg">Terms</a>
+            <a href="/refund-policy/" className="py-1 hover:text-fg">Refunds</a>
+            <a href="/delete-account/" className="py-1 hover:text-fg">Delete account</a>
+          </p>
           <p className="font-mono uppercase tracking-[0.2em]">Web · Mobile · AI</p>
         </div>
       </div>

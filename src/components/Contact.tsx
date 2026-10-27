@@ -168,6 +168,12 @@ export function Contact() {
               </>
             )}
           </button>
+          <p className="mt-4 text-center text-xs leading-relaxed text-muted">
+            By sending this form you agree to our{' '}
+            <a href="/privacy/" className="text-fg/80 underline underline-offset-2 hover:text-fg">Privacy Policy</a> and{' '}
+            <a href="/terms/" className="text-fg/80 underline underline-offset-2 hover:text-fg">Terms</a>. We use your details
+            only to reply to your enquiry.
+          </p>
         </form>
         </Reveal>
       </div>

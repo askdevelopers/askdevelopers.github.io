@@ -4,6 +4,7 @@ node_modules
 # build output
 dist
 dist-ssr
+.prerender
 *.local
 
 # env files (keep .env.example)
