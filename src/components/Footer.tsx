@@ -19,10 +19,10 @@ export function Footer() {
 
           <div>
             <h3 className="text-sm font-semibold text-fg">Explore</h3>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-2.5 space-y-0.5">
               {NAV_LINKS.map((l) => (
                 <li key={l.href}>
-                  <a href={l.href} className="text-sm text-muted transition-colors hover:text-fg">
+                  <a href={l.href} className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-fg">
                     {l.label}
                   </a>
                 </li>
@@ -32,10 +32,10 @@ export function Footer() {
 
           <div>
             <h3 className="text-sm font-semibold text-fg">Services</h3>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-2.5 space-y-0.5">
               {SERVICES.map((s) => (
                 <li key={s.title}>
-                  <a href="#services" className="text-sm text-muted transition-colors hover:text-fg">
+                  <a href="#services" className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-fg">
                     {s.title}
                   </a>
                 </li>
@@ -45,15 +45,15 @@ export function Footer() {
 
           <div>
             <h3 className="text-sm font-semibold text-fg">Get in touch</h3>
-            <ul className="mt-4 space-y-3">
+            <ul className="mt-2.5 space-y-1">
               <li>
-                <a href={CONTACT.phoneHref} className="flex items-center gap-3 text-sm text-muted hover:text-fg">
+                <a href={CONTACT.phoneHref} className="flex items-center gap-3 py-1.5 text-sm text-muted hover:text-fg">
                   <Phone className="h-4 w-4 text-link" />
                   {CONTACT.phone}
                 </a>
               </li>
               <li>
-                <a href={`mailto:${CONTACT.email}`} className="flex items-center gap-3 break-all text-sm text-muted hover:text-fg">
+                <a href={`mailto:${CONTACT.email}`} className="flex items-center gap-3 break-all py-1.5 text-sm text-muted hover:text-fg">
                   <Mail className="h-4 w-4 shrink-0 text-link" />
                   {CONTACT.email}
                 </a>
@@ -63,7 +63,7 @@ export function Footer() {
                   href={CONTACT.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-sm text-muted hover:text-fg"
+                  className="flex items-center gap-3 py-1.5 text-sm text-muted hover:text-fg"
                 >
                   <Facebook className="h-4 w-4 text-link" />
                   Facebook
