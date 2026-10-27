@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { animate, motion, useInView } from 'framer-motion';
 
 /** Apple-style ease-out — fast start, long settle. */
@@ -72,7 +72,8 @@ export function SplitWords({
 export function CountUp({ value, className }: { value: string; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: '0px 0px -10% 0px' });
-  const match = value.match(/^(\D*)(\d+(?:\.\d+)?)(.*)$/);
+  // Memoised so the effect below doesn't re-run (and restart from 0) on every render.
+  const match = useMemo(() => value.match(/^(\D*)(\d+(?:\.\d+)?)(.*)$/), [value]);
   const target = match ? Number(match[2]) : 0;
   const [n, setN] = useState(0);
 
@@ -82,6 +83,7 @@ export function CountUp({ value, className }: { value: string; className?: strin
       duration: 1.6,
       ease: [0.16, 1, 0.3, 1],
       onUpdate: (v) => setN(Math.round(v)),
+      onComplete: () => setN(target),
     });
     return () => controls.stop();
   }, [inView, target, match]);
