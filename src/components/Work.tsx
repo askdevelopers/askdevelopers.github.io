@@ -1,9 +1,9 @@
 import type { PointerEvent, ReactNode } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { Apple, ArrowUpRight, Check, Play } from 'lucide-react';
+import { Apple, ArrowRight, ArrowUpRight, Check, Play } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
 import { EASE, Reveal } from './motion';
-import { APPS, WEB_PROJECTS } from '@/lib/data';
+import { APPS, CASE_STUDIES, WEB_PROJECTS } from '@/lib/data';
 
 /** Tilts toward the pointer, springs back on leave. */
 function TiltCard({ children, className }: { children: ReactNode; className?: string }) {
@@ -111,7 +111,7 @@ export function Work() {
         </div>
 
         {/* Mobile apps */}
-        <div className="mt-24 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div id="apps" className="mt-24 flex scroll-mt-24 flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <Reveal>
               <p className="eyebrow">On the App Store &amp; Play Store</p>
@@ -164,6 +164,77 @@ export function Work() {
             </motion.div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/** Home-page teaser: three featured projects that open the full case studies on /work/. */
+export function WorkPreview() {
+  return (
+    <section id="work" className="theme-dark py-16 sm:py-24">
+      <div className="container-x">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="eyebrow">Selected work</p>
+            <h2 className="headline mt-2 text-3xl sm:text-5xl">Built for real businesses.</h2>
+          </div>
+          <a href="/work/" className="group inline-flex min-h-[44px] items-center gap-1.5 text-[15px] font-medium text-link">
+            All work &amp; case studies
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </a>
+        </div>
+
+        <ul className="mt-8 grid gap-4 md:grid-cols-3">
+          {CASE_STUDIES.slice(0, 3).map((c) => (
+            <li key={c.project}>
+              <a href="/work/#case-studies" className="group flex h-full flex-col overflow-hidden rounded-[24px] bg-card transition-shadow duration-300 hover:shadow-card">
+                <span
+                  className="relative flex h-32 items-end p-5"
+                  style={{
+                    background: `radial-gradient(80% 110% at 90% 0%, hsla(${c.hue}, 90%, 60%, 0.55), transparent 60%), radial-gradient(60% 80% at 0% 100%, hsla(${(c.hue + 50) % 360}, 85%, 55%, 0.3), transparent 70%), #0c0c0c`,
+                  }}
+                >
+                  <span>
+                    <span className="block text-xs text-white/70">{c.industry}</span>
+                    <span className="headline mt-1 block text-2xl text-white">{c.project}</span>
+                  </span>
+                  <span className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black transition-transform duration-300 group-hover:rotate-45">
+                    <ArrowUpRight className="h-4 w-4" />
+                  </span>
+                </span>
+                <span className="flex flex-1 flex-col p-5">
+                  <span className="line-clamp-3 text-sm leading-relaxed text-muted">{c.outcome}</span>
+                  <span className="mt-auto pt-4 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">{c.stack.join(' · ')}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <a
+          href="/work/#apps"
+          className="group mt-4 flex items-center justify-between gap-4 rounded-[24px] bg-card px-5 py-4 transition-colors hover:bg-ink-700"
+        >
+          <span className="flex items-center gap-3">
+            <span className="flex -space-x-2" aria-hidden="true">
+              {APPS.slice(0, 5).map((a) => (
+                <span
+                  key={a.name}
+                  className="flex h-8 w-8 items-center justify-center rounded-[10px] border-2 border-ink-800 font-display text-xs font-bold text-white"
+                  style={{ background: `linear-gradient(135deg, hsl(${a.hue}, 85%, 60%), hsl(${(a.hue + 40) % 360}, 80%, 45%))` }}
+                >
+                  {a.name.charAt(0)}
+                </span>
+              ))}
+            </span>
+            <span className="text-sm text-fg">
+              <span className="font-semibold">{APPS.length}+ apps</span>
+              <span className="text-muted"> live on the App Store &amp; Play Store</span>
+            </span>
+          </span>
+          <ArrowRight className="h-4 w-4 shrink-0 text-link transition-transform group-hover:translate-x-0.5" />
+        </a>
       </div>
     </section>
   );

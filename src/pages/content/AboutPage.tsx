@@ -42,7 +42,7 @@ export function AboutPage() {
           <ul className="mt-6 space-y-2">
             {SERVICES.map((s) => (
               <li key={s.title}>
-                <a href="/#services" className="group flex items-center justify-between gap-4 rounded-2xl border border-line/10 px-4 py-3 text-sm font-medium text-fg transition-colors hover:bg-fg/5">
+                <a href={`/services/#${s.slug}`} className="group flex items-center justify-between gap-4 rounded-2xl border border-line/10 px-4 py-3 text-sm font-medium text-fg transition-colors hover:bg-fg/5">
                   {s.title}
                   <ArrowUpRight className="h-4 w-4 text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </a>

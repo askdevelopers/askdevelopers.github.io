@@ -5,6 +5,9 @@ import { Logo } from './Logo';
 import { EASE } from './motion';
 import { NAV_LINKS } from '@/lib/data';
 
+// On the home page, `/#contact` becomes an in-page anchor so it scrolls smoothly instead of reloading.
+const LINKS = NAV_LINKS.map((l) => ({ ...l, href: l.href.startsWith('/#') ? l.href.slice(1) : l.href }));
+
 /** Thin, always-dark translucent bar. Slides away while scrolling down and returns on the way up. */
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -28,7 +31,7 @@ export function Navbar() {
         </a>
 
         <ul className="hidden items-center gap-7 md:flex">
-          {NAV_LINKS.map((l) => (
+          {LINKS.map((l) => (
             <li key={l.href}>
               <a href={l.href} className="text-[13px] text-white/80 transition-colors hover:text-white">
                 {l.label}
@@ -62,7 +65,7 @@ export function Navbar() {
             className="overflow-hidden border-t border-white/10 bg-ink-950 md:hidden"
           >
             <ul className="container-x space-y-1 py-4">
-              {NAV_LINKS.map((l, i) => (
+              {LINKS.map((l, i) => (
                 <motion.li
                   key={l.href}
                   initial={{ opacity: 0, x: -10 }}

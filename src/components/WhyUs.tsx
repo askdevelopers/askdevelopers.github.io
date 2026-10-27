@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import { EASE, Reveal } from './motion';
-import { WHY_CHOOSE } from '@/lib/data';
+import { PROCESS_STEPS, WHY_CHOOSE } from '@/lib/data';
 
 export function WhyUs() {
   return (
@@ -80,6 +81,53 @@ export function WhyUs() {
             </ul>
           </div>
         </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/** Home-page strip: the top reasons to work with us beside the six-step process, both opening /process/. */
+export function WhyPreview() {
+  return (
+    <section id="why" className="theme-light py-16 sm:py-24">
+      <div className="container-x">
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="theme-dark rounded-[28px] bg-[linear-gradient(160deg,#7a2a0c_0%,#3a1a0c_50%,#141414_100%)] p-6 sm:p-8">
+            <p className="eyebrow text-brand-200">Why choose us</p>
+            <h2 className="headline mt-2 text-3xl text-white sm:text-4xl">Where clarity meets creativity.</h2>
+            <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+              {WHY_CHOOSE.slice(0, 4).map((w) => {
+                const Icon = w.icon;
+                return (
+                  <li key={w.title} className="flex gap-3">
+                    <Icon className="mt-0.5 h-5 w-5 shrink-0 text-brand-200" />
+                    <span>
+                      <span className="block text-sm font-semibold text-white">{w.title}</span>
+                      <span className="mt-0.5 block text-sm leading-relaxed text-white/70">{w.description}</span>
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          <div className="flex flex-col rounded-[28px] bg-card p-6 shadow-tile sm:p-8">
+            <p className="eyebrow">How we work</p>
+            <h2 className="headline mt-2 text-3xl sm:text-4xl">From idea to launch.</h2>
+            <ol className="mt-6 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3">
+              {PROCESS_STEPS.map((p, i) => (
+                <li key={p.title} className="flex items-baseline gap-2 text-sm text-fg">
+                  <span className="font-mono text-xs text-link">{String(i + 1).padStart(2, '0')}</span>
+                  {p.title}
+                </li>
+              ))}
+            </ol>
+            <a href="/process/" className="group mt-auto inline-flex min-h-[44px] items-center gap-1.5 pt-6 text-[15px] font-medium text-link">
+              See our process
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );

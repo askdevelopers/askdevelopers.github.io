@@ -5,7 +5,10 @@ import { COMPANY_LINKS } from '@/pages/routes';
 
 /** `home` is false on the stand-alone pages, where in-page anchors must point back at the home page. */
 export function Footer({ home = true }: { home?: boolean }) {
-  const to = (href: string) => (home || !href.startsWith('#') ? href : `/${href}`);
+  const to = (href: string) => {
+    if (home) return href.startsWith('/#') ? href.slice(1) : href;
+    return href.startsWith('#') ? `/${href}` : href;
+  };
   return (
     <footer className="theme-light relative overflow-hidden border-t border-line/10 pt-14">
       <div className="container-x">
@@ -38,7 +41,7 @@ export function Footer({ home = true }: { home?: boolean }) {
             <ul className="mt-2.5 space-y-0.5">
               {SERVICES.map((s) => (
                 <li key={s.title}>
-                  <a href={to('#services')} className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-fg">
+                  <a href={`/services/#${s.slug}`} className="inline-block py-1.5 text-sm text-muted transition-colors hover:text-fg">
                     {s.title}
                   </a>
                 </li>

@@ -1,6 +1,10 @@
 import type { ComponentType } from 'react';
 import type { PageKey } from './routes';
 import { PageShell } from './shell/PageShell';
+import { ServicesPage } from './content/ServicesPage';
+import { AIPage } from './content/AIPage';
+import { WorkPage } from './content/WorkPage';
+import { ProcessPage } from './content/ProcessPage';
 import { AboutPage } from './content/AboutPage';
 import { SupportPage } from './content/SupportPage';
 import { PrivacyPage } from './content/PrivacyPage';
@@ -10,6 +14,10 @@ import { DeleteAccountPage } from './content/DeleteAccountPage';
 import { NotFoundPage } from './content/NotFoundPage';
 
 const PAGES: Record<PageKey, ComponentType> = {
+  services: ServicesPage,
+  ai: AIPage,
+  work: WorkPage,
+  process: ProcessPage,
   about: AboutPage,
   support: SupportPage,
   privacy: PrivacyPage,

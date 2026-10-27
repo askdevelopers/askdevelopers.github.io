@@ -4,7 +4,7 @@ import { Robot } from './Robot';
 import { EASE } from './motion';
 
 /*
- * Product mock-ups for the pinned Platform story. Each is a `Frame` that fills its
+ * Product mock-ups for the "What we build" tabs. Each is a `Frame` that fills its
  * stage; children tagged with `item` stagger in when the stage becomes active.
  * They illustrate layouts and capabilities only — no figures, names or metrics.
  */

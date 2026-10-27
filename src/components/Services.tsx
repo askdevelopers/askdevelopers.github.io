@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
 import { EASE } from './motion';
 import { SERVICES, type Service } from '@/lib/data';
@@ -56,12 +56,13 @@ export function Services() {
             return (
               <motion.article
                 key={s.title}
+                id={s.slug}
                 initial={{ opacity: 0, y: 30, scale: 0.98 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true, margin: '0px 0px -10% 0px' }}
                 transition={{ duration: 0.8, ease: EASE, delay: (i % 3) * 0.08 }}
                 whileHover={{ y: -6 }}
-                className={`group relative flex flex-col overflow-hidden rounded-[28px] p-7 transition-shadow duration-300 hover:shadow-tile-hover ${t.card} ${
+                className={`group relative flex scroll-mt-24 flex-col overflow-hidden rounded-[28px] p-7 transition-shadow duration-300 hover:shadow-tile-hover ${t.card} ${
                   featured ? 'lg:col-span-2' : ''
                 }`}
               >
@@ -96,6 +97,49 @@ export function Services() {
             );
           })}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/** Home-page summary: one compact tile per service, each opening its full card on /services/. */
+export function ServicesOverview() {
+  return (
+    <section id="services" className="theme-light py-16 sm:py-24">
+      <div className="container-x">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="eyebrow">Services</p>
+            <h2 className="headline mt-2 text-3xl sm:text-5xl">Everything you need to ship.</h2>
+          </div>
+          <a href="/services/" className="group inline-flex min-h-[44px] items-center gap-1.5 text-[15px] font-medium text-link">
+            All services
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </a>
+        </div>
+
+        <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {SERVICES.map((s) => {
+            const Icon = s.icon;
+            return (
+              <li key={s.slug}>
+                <a
+                  href={`/services/#${s.slug}`}
+                  className="group flex h-full flex-col rounded-[24px] bg-card p-5 shadow-tile transition-shadow duration-300 hover:shadow-tile-hover"
+                >
+                  <span className="flex items-start justify-between">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-fg/5 text-fg">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <ArrowUpRight className="h-4 w-4 text-muted transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-link" />
+                  </span>
+                  <span className="mt-5 font-display text-lg font-semibold leading-snug tracking-tight text-fg">{s.title}</span>
+                  <span className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted">{s.description}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </section>
   );

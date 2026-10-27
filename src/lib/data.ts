@@ -26,26 +26,22 @@ import {
 /** Contact details and business identity live in business.ts (shared with the build and the policy pages). */
 export { CONTACT, BUSINESS } from './business';
 
+/** Header links: the inner pages, then the contact form on the home page. */
 export const NAV_LINKS = [
-  { label: 'Platform', href: '#platform' },
-  { label: 'Services', href: '#services' },
-  { label: 'AI', href: '#ai' },
-  { label: 'Work', href: '#work' },
-  { label: 'Case studies', href: '#case-studies' },
-  { label: 'Process', href: '#process' },
-  { label: 'Why us', href: '#why' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Services', href: '/services/' },
+  { label: 'AI', href: '/ai/' },
+  { label: 'Work', href: '/work/' },
+  { label: 'Process', href: '/process/' },
+  { label: 'About', href: '/about/' },
+  { label: 'Contact', href: '/#contact' },
 ];
 
-/** Stops on the scroll rail, in page order. */
+/** Stops on the scroll rail, in home-page order. */
 export const PAGE_SECTIONS = [
   { id: 'home', label: 'Start' },
-  { id: 'platform', label: 'Platform' },
+  { id: 'platform', label: 'What we build' },
   { id: 'services', label: 'Services' },
-  { id: 'ai', label: 'AI' },
   { id: 'work', label: 'Work' },
-  { id: 'case-studies', label: 'Case studies' },
-  { id: 'process', label: 'Process' },
   { id: 'why', label: 'Why us' },
   { id: 'contact', label: 'Contact' },
 ];
@@ -54,6 +50,8 @@ export const PAGE_SECTIONS = [
 export const PLATFORM_STEPS = [
   {
     key: 'ai',
+    href: '/ai/',
+    cta: 'Explore AI',
     eyebrow: 'AI platform',
     title: 'Intelligence, built in.',
     description:
@@ -62,6 +60,8 @@ export const PLATFORM_STEPS = [
   },
   {
     key: 'web',
+    href: '/services/#web-full-stack-development',
+    cta: 'Web & SaaS services',
     eyebrow: 'Web & SaaS',
     title: 'Platforms that run the business.',
     description:
@@ -70,6 +70,8 @@ export const PLATFORM_STEPS = [
   },
   {
     key: 'mobile',
+    href: '/work/#apps',
+    cta: 'See our apps',
     eyebrow: 'iOS · Android · Flutter',
     title: 'Apps people keep.',
     description:
@@ -78,6 +80,8 @@ export const PLATFORM_STEPS = [
   },
   {
     key: 'crm',
+    href: '/work/#case-studies',
+    cta: 'See CRM case study',
     eyebrow: 'CRM & business apps',
     title: 'Your workflow, as software.',
     description:
@@ -95,6 +99,8 @@ export const STATS = [
 
 export type Service = {
   icon: LucideIcon;
+  /** Anchor of the full card on /services/. */
+  slug: string;
   title: string;
   description: string;
   points: string[];
@@ -107,6 +113,7 @@ export type Service = {
 export const SERVICES: Service[] = [
   {
     icon: Smartphone,
+    slug: 'ios-android-app-development',
     title: 'iOS & Android App Development',
     description:
       'Native iOS (Swift) and Android (Kotlin) apps engineered for performance, security, and a polished user experience.',
@@ -116,6 +123,7 @@ export const SERVICES: Service[] = [
   },
   {
     icon: Layers,
+    slug: 'hybrid-app-development',
     title: 'Hybrid App Development',
     description: 'One codebase, every platform — Flutter and React Native apps that feel native on iOS and Android.',
     points: ['Shared codebase', 'Native modules', 'Fast iteration'],
@@ -123,6 +131,7 @@ export const SERVICES: Service[] = [
   },
   {
     icon: Globe,
+    slug: 'web-full-stack-development',
     title: 'Web & Full-Stack Development',
     description:
       'Business websites, SaaS platforms, dashboards and marketplaces — MERN, Next.js or Laravel, built to scale.',
@@ -131,6 +140,7 @@ export const SERVICES: Service[] = [
   },
   {
     icon: Server,
+    slug: 'backend-api-development',
     title: 'Backend & API Development',
     description: 'Secure, well-architected backends and APIs — authentication, payments, real-time and integrations.',
     points: ['REST & GraphQL APIs', 'Queues & microservices', 'Database design'],
@@ -138,6 +148,7 @@ export const SERVICES: Service[] = [
   },
   {
     icon: Sparkles,
+    slug: 'ai-generative-ai',
     title: 'AI & Generative AI',
     description:
       'Integrate GPT, Claude, and open-source LLMs into your product — chatbots, RAG, agents, and automation.',
@@ -147,6 +158,7 @@ export const SERVICES: Service[] = [
   },
   {
     icon: PenTool,
+    slug: 'ui-ux-design',
     title: 'UI/UX Design',
     description:
       'User-centered design that looks beautiful and converts — research, wireframes, prototypes, and design systems.',
@@ -155,6 +167,7 @@ export const SERVICES: Service[] = [
   },
   {
     icon: LayoutDashboard,
+    slug: 'crm-business-applications',
     title: 'CRM & Business Applications',
     description: 'Custom CRMs and admin panels built around your workflows — roles, permissions, leads and reporting.',
     points: ['RBAC & permissions', 'Lead management', 'Dashboards & reports'],
@@ -162,6 +175,7 @@ export const SERVICES: Service[] = [
   },
   {
     icon: ShoppingCart,
+    slug: 'e-commerce-development',
     title: 'E-commerce Development',
     description: 'Conversion-focused online stores with payments, shipments, inventory, and a powerful admin panel.',
     points: ['Payments & shipping', 'Inventory & orders', 'SEO-ready'],

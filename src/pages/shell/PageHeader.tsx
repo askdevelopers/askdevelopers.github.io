@@ -1,11 +1,7 @@
 import { Logo } from '@/components/Logo';
+import { NAV_LINKS } from '@/lib/data';
 
-const LINKS = [
-  { label: 'Services', href: '/#services' },
-  { label: 'Work', href: '/#work' },
-  { label: 'About', href: '/about/' },
-  { label: 'Support', href: '/support/' },
-];
+const LINKS = NAV_LINKS.filter((l) => l.href !== '/#contact');
 
 /** Thin dark bar for the stand-alone pages: logo home, a few links, and the call-to-action. */
 export function PageHeader() {
@@ -28,6 +24,16 @@ export function PageHeader() {
           Book a call
         </a>
       </nav>
+      {/* Phones: the same links as a scrollable row under the bar. */}
+      <ul className="no-scrollbar container-x flex gap-5 overflow-x-auto border-t border-white/10 sm:hidden">
+        {LINKS.map((l) => (
+          <li key={l.href}>
+            <a href={l.href} className="inline-flex min-h-[40px] items-center whitespace-nowrap text-[13px] text-white/80 hover:text-white">
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
     </header>
   );
 }
