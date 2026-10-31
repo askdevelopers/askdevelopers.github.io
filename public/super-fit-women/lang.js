@@ -6,7 +6,7 @@
    app.js runs inside SFW.ready(), after the page is translated. Tooling: tools/website-i18n/README.md */
 (function(){
   'use strict';
-  var LANGS=['en','gu','hi'],KEY='sfw-lang',V='573c233e',WAIT_MS=1500,GEO='https://get.geojs.io/v1/ip/geo.json';
+  var LANGS=['en','gu','hi'],KEY='sfw-lang',V='fd0f9ad5',WAIT_MS=1500,GEO='https://get.geojs.io/v1/ip/geo.json';
   // Indian state or territory (from the IP address) -> language; everywhere else gets English
   var STATES=[['gujarat','gu'],['daman','gu'],['dadra','gu'],
     ['rajasthan','hi'],['uttarpradesh','hi'],['madhyapradesh','hi'],['bihar','hi'],['jharkhand','hi'],['chhattisgarh','hi'],

@@ -317,6 +317,24 @@
   }
   var FS='projects/super-fit-women/databases/(default)/documents',JOINED='sfw-tester-joined',
       src=((location.search.match(/[?&]src=([^&]*)/)||[])[1]||'website').toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,30)||'website';
+  // Instant access (tools/testers/README.md › Automatic invites). With the group and opt-in links set, the success
+  // screen shows them straight away, and TESTER_HOOK (the Apps Script mailer's web app URL) emails them, with the
+  // automatic-Premium note, within seconds. All empty = the manual flow: "we'll email your invite within 1–2 days".
+  var TESTER_GROUP_URL='',
+      TESTER_OPTIN_URL='',
+      TESTER_HOOK='',
+      instant=!!(TESTER_GROUP_URL&&TESTER_OPTIN_URL);
+  function instantDone(done){
+    var link=function(href,label){return '<a class="btn btn-primary btn-sm" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">'+esc(label)+'</a>'};
+    done.querySelector('h3').textContent=T("You're in! Get the app now");
+    var ol=document.createElement('ol');ol.className='t-now';
+    ol.innerHTML='<li><span>'+esc(T('Join our tester group: tap Join group, with the Google account on your phone.'))+'</span>'+link(TESTER_GROUP_URL,T('Join the tester group'))+'</li>'+
+      '<li><span>'+esc(T('Open the test page, tap Become a tester, then install the app from Google Play.'))+'</span>'+link(TESTER_OPTIN_URL,T('Open the Google Play test page'))+'</li>';
+    var p=done.querySelector('p');done.insertBefore(ol,p);
+    p.textContent=T("We've also emailed you these links from askdevelopers001@gmail.com. Check your spam folder too.");
+  }
+  if(instant){var step=document.getElementById('tStepInvite');if(step)step.innerHTML='<span><b>'+esc(T('Get the app straight away:'))+'</b> '+
+    esc(T('join our tester group and open the Google Play test page. We email you both links too.'))+'</span>'}
   function testerForm(tf,status,done,source,onDone){
     var btn=tf.querySelector('button[type=submit]'),label=btn.textContent;
     var fail=function(input,msg){status.textContent=msg;if(input){input.setAttribute('aria-invalid','true');input.focus()}};
@@ -347,6 +365,8 @@
       }).then(function(r){
         if(!r.ok)throw new Error(String(r.status));
         putKey(JOINED,'1');
+        if(TESTER_HOOK)fetch(TESTER_HOOK,{method:'POST',mode:'no-cors',keepalive:true}).catch(function(){}); // wake the mailer now
+        if(instant)instantDone(done);
         tf.hidden=true;done.hidden=false;done.focus();
         if(onDone)onDone();
       }).catch(function(err){
@@ -384,7 +404,7 @@
         '<p class="t-status" role="status" aria-live="polite"></p>'+
       '</form>'+
       '<div class="t-done" hidden tabindex="-1"><span class="t-done-ic" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>'+
-        '<h3>'+esc(T("You're on the list!"))+'</h3><p>'+esc(T("We'll email your invite link and Premium code within 1–2 days from askdevelopers001@gmail.com. Check your spam folder too."))+'</p></div>'+
+        '<h3>'+esc(T("You're on the list!"))+'</h3><p>'+esc(T("We'll email your invite link within 1–2 days from askdevelopers001@gmail.com. Check your spam folder too."))+'</p></div>'+
       '<button class="t-pop-later" type="button">'+esc(T('Not now'))+'</button>'+
     '</div>';
     document.body.appendChild(d);

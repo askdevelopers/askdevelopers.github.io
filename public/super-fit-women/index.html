@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self' https://firestore.googleapis.com https://get.geojs.io; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self' https://firestore.googleapis.com https://get.geojs.io https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Super Fit Women — Your own kind of super</title>
 <meta name="description" content="Home workouts made for women: short guided sessions, a coach who cheers you on, and programs for every stage of life. No equipment, no account. Coming soon to Google Play.">
@@ -16,8 +16,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=995af70b">
-<script src="lang.js?v=fd4e61d4"></script>
+<link rel="stylesheet" href="styles.css?v=7ddcad71">
+<script src="lang.js?v=7ac6696f"></script>
 </head>
 <body>
 <nav class="top" aria-label="Main">
@@ -194,9 +194,9 @@
         <p class="lead">Join our small testing group before Super Fit Women reaches Google Play. Try the app with 1 month of Premium free, and tell us what you love and what to fix.</p>
         <ol class="t-steps">
           <li><span><b>Leave your Google account email.</b> Use the Gmail you're signed in with on the Play Store on your Android phone.</span></li>
-          <li><span><b>We add you to the test</b> within 1–2 days and email you the invite link and your Premium code.</span></li>
+          <li id="tStepInvite"><span><b>We add you to the test</b> within 1–2 days and email you the invite link.</span></li>
           <li><span><b>Open the link, tap "Become a tester"</b>, install the app from Google Play and keep it for 15 days.</span></li>
-          <li><span><b>Unlock Premium:</b> in the app, open Me › Redeem code and enter your code. Everything is free for the whole test.</span></li>
+          <li><span><b>Premium turns on by itself</b> when you open the app: every feature, free for 1 month.</span></li>
         </ol>
       </div>
       <div class="t-card">
@@ -212,7 +212,7 @@
         <div class="t-done" id="testerDone" hidden tabindex="-1">
           <span class="t-done-ic" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
           <h3>You're on the list!</h3>
-          <p>We'll email your invite link and Premium code within 1–2 days from <b>askdevelopers001@gmail.com</b>. Check your spam folder too.</p>
+          <p>We'll email your invite link within 1–2 days from <b>askdevelopers001@gmail.com</b>. Check your spam folder too.</p>
         </div>
       </div>
     </div>
@@ -239,6 +239,6 @@
     <span class="foot-links" aria-label="Policies"><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of use</a><a href="subscriptions.html">Subscriptions &amp; refunds</a><a href="disclaimer.html">Health disclaimer</a><a href="delete-data.html">Delete your data</a></span>
   </div>
 </footer>
-<script src="app.js?v=c304babe" defer></script>
+<script src="app.js?v=e998ce8e" defer></script>
 </body>
 </html>

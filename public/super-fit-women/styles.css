@@ -574,3 +574,8 @@ html.lang-wait body{opacity:0;animation:lang-show 0s linear 3s forwards}
 .t-pop-later:hover{color:var(--text)}
 @media (max-width:600px){.t-pop-in{padding:28px 18px 14px;border-radius:24px}.t-pop h2{font-size:22px}}
 @media (prefers-reduced-motion:reduce){.t-pop[open]{animation:none}}
+/* instant tester access: group + Play test links on the success screen (app.js › instantDone) */
+.t-now{list-style:none;counter-reset:n;display:grid;gap:14px;width:100%;text-align:left}
+.t-now li{counter-increment:n;display:grid;grid-template-columns:30px 1fr;gap:6px 12px;align-items:start;color:var(--text-2);font-size:15px}
+.t-now li::before{content:counter(n);grid-row:span 2;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--primary-100);color:var(--primary-600);font-weight:800}
+.t-now .btn{justify-self:start;height:auto;min-height:44px;padding:10px 18px;text-align:center}
