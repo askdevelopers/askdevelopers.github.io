@@ -3,6 +3,11 @@
   // Refuse to render inside someone else's frame (clickjacking), for hosts that can't send X-Frame-Options.
   if(window.top!==window.self){try{window.top.location=window.self.location.href}catch(e){document.documentElement.style.display='none'}return}
 
+  // T(text): English text -> the page language (lang.js, website/i18n/<lang>.json). Starts once the page is translated.
+  var T=window.SFW?SFW.t:function(s,v){return v?s.replace(/\{(\w+)\}/g,function(m,k){return k in v?v[k]:m}):s};
+  if(window.SFW)SFW.ready(init);else init();
+  function init(){
+
   var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hasIO='IntersectionObserver' in window;
   function $$(sel,root){return Array.prototype.slice.call((root||document).querySelectorAll(sel))}
@@ -25,7 +30,7 @@
   /* mobile menu */
   var nav=document.querySelector('nav.top'),menu=document.getElementById('menuBtn');
   if(nav&&menu){
-    var setMenu=function(open){nav.classList.toggle('open',open);menu.setAttribute('aria-expanded',open?'true':'false');menu.setAttribute('aria-label',open?'Close menu':'Open menu')};
+    var setMenu=function(open){nav.classList.toggle('open',open);menu.setAttribute('aria-expanded',open?'true':'false');menu.setAttribute('aria-label',open?T('Close menu'):T('Open menu'))};
     menu.addEventListener('click',function(){setMenu(!nav.classList.contains('open'))});
     $$('#links a').forEach(function(a){a.addEventListener('click',function(){setMenu(false)})});
     document.addEventListener('keydown',function(e){if(e.key==='Escape')setMenu(false)});
@@ -147,7 +152,7 @@
 
     if(live&&pauseBtn)pauseBtn.addEventListener('click',function(){
       userPaused=!userPaused;pauseBtn.classList.toggle('is-play',userPaused);
-      pauseBtn.setAttribute('aria-label',userPaused?'Play moments':'Pause moments');sync();
+      pauseBtn.setAttribute('aria-label',userPaused?T('Play moments'):T('Pause moments'));sync();
     });
 
     // stories gestures: short tap = skip (left 35% goes back), press and hold = pause
@@ -199,7 +204,7 @@
     if(!track||!slides.length)return;
     var active=0,timer=null,delay=parseInt(c.getAttribute('data-autoplay')||'0',10);
     if(dots)slides.forEach(function(_,i){
-      var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Go to slide '+(i+1));
+      var b=document.createElement('button');b.type='button';b.setAttribute('aria-label',T('Go to slide {n}',{n:i+1}));
       b.addEventListener('click',function(){go(i,true)});dots.appendChild(b);
     });
     function go(i,user){
@@ -249,25 +254,71 @@
     select(start);
   }
 
-  /* tester sign-up: one anonymous create in Cloud Firestore (testers collection).
-     firestore.rules allow create only, so nobody can read the list from the web.
-     Optional ?src=whatsapp on the link is saved as the source, to see which share worked. */
-  // TEMPORARY: once #tester's data-until passes, the section and its links go away on every page
-  // and the nav button goes back to "Get the app". Firestore refuses sign-ups from the same moment.
-  var TESTER_UNTIL=Date.parse('2026-12-01T00:00:00+05:30');
-  if(Date.now()>=TESTER_UNTIL){
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function getKey(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function putKey(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+
+  /* language menu next to the theme button. Choosing a language saves it and reloads the page (lang.js). */
+  var NAMES={en:['English','EN'],gu:['ગુજરાતી','ગુ'],hi:['हिन्दी','हि']};
+  if(window.SFW&&themeBtn){
+    var curLang=SFW.lang(),pick=document.createElement('div');pick.className='lang-pick';
+    pick.innerHTML='<button class="lang-btn" type="button" aria-haspopup="true" aria-expanded="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span></span></button><div class="lang-menu" role="menu" hidden></div>';
+    var langBtn=pick.firstChild,langMenu=pick.lastChild;
+    langBtn.lastChild.textContent=NAMES[curLang][1];
+    langBtn.setAttribute('aria-label',T('Language')+': '+NAMES[curLang][0]);
+    langMenu.setAttribute('aria-label',T('Language'));
+    SFW.langs.forEach(function(l){
+      var o=document.createElement('button');o.type='button';o.lang=l;o.textContent=NAMES[l][0];
+      o.setAttribute('role','menuitemradio');o.setAttribute('aria-checked',l===curLang?'true':'false');
+      o.addEventListener('click',function(){if(l===curLang)openLang(false,true);else SFW.setLang(l)});
+      langMenu.appendChild(o);
+    });
+    var langItems=$$('button',langMenu);
+    var openLang=function(open,focusBtn){
+      langMenu.hidden=!open;langBtn.setAttribute('aria-expanded',open?'true':'false');
+      if(open)langItems[Math.max(0,SFW.langs.indexOf(curLang))].focus();else if(focusBtn)langBtn.focus();
+    };
+    langBtn.addEventListener('click',function(){openLang(langMenu.hidden)});
+    langMenu.addEventListener('keydown',function(e){
+      var i=langItems.indexOf(document.activeElement);
+      if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();langItems[(i+(e.key==='ArrowDown'?1:-1)+langItems.length)%langItems.length].focus()}
+      else if(e.key==='Escape'){e.stopPropagation();openLang(false,true)}
+      else if(e.key==='Tab')openLang(false);
+    });
+    document.addEventListener('click',function(e){if(!pick.contains(e.target)&&!langMenu.hidden)openLang(false)});
+    themeBtn.parentNode.insertBefore(pick,themeBtn);
+  }
+
+  /* translated policy pages: say that the English text is the one that counts */
+  var legal=document.querySelector('main.legal');
+  if(legal&&window.SFW&&SFW.lang()!=='en'){
+    var note=document.createElement('p'),toEn=document.createElement('button');
+    note.className='lang-note';note.textContent=T('This page is translated for your convenience. If the translation differs from the English text, the English text applies.')+' ';
+    toEn.type='button';toEn.className='inline-link';toEn.lang='en';toEn.textContent='Read in English';
+    toEn.addEventListener('click',function(){SFW.setLang('en')});
+    note.appendChild(toEn);
+    var upd=legal.querySelector('.updated');
+    if(upd)upd.parentNode.insertBefore(note,upd.nextSibling);else legal.insertBefore(note,legal.firstChild);
+  }
+
+  /* tester sign-up: one anonymous create in Cloud Firestore (testers collection), from the form on the home page
+     (#tester) or the first-visit invite below. firestore.rules allow create only, so nobody can read the list from
+     the web. Optional ?src=whatsapp on the link is saved as the source, to see which share worked. */
+  // TEMPORARY: once TESTER_UNTIL passes, the section, its links and the invite go away on every page and the nav
+  // button goes back to "Get the app". Firestore refuses sign-ups from the same moment.
+  var TESTER_UNTIL=Date.parse('2026-12-01T00:00:00+05:30'),testerOpen=Date.now()<TESTER_UNTIL;
+  if(!testerOpen){
     var ts=document.getElementById('tester');if(ts)ts.parentNode.removeChild(ts);
     $$('[data-tester]').forEach(function(a){
-      if(a.getAttribute('data-tester')==='nav'){a.href='index.html#download';a.textContent='Get the app'}
+      if(a.getAttribute('data-tester')==='nav'){a.href='index.html#download';a.textContent=T('Get the app')}
       else a.parentNode.removeChild(a);
     });
   }
-  var tf=document.getElementById('testerForm');
-  if(tf){
-    var FS='projects/super-fit-women/databases/(default)/documents',
-        status=document.getElementById('testerStatus'),done=document.getElementById('testerDone'),
-        btn=tf.querySelector('button[type=submit]'),label=btn.textContent,
-        src=((location.search.match(/[?&]src=([^&]*)/)||[])[1]||'website').toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,40)||'website';
+  var FS='projects/super-fit-women/databases/(default)/documents',JOINED='sfw-tester-joined',
+      src=((location.search.match(/[?&]src=([^&]*)/)||[])[1]||'website').toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,30)||'website';
+  function testerForm(tf,status,done,source,onDone){
+    var btn=tf.querySelector('button[type=submit]'),label=btn.textContent;
     var fail=function(input,msg){status.textContent=msg;if(input){input.setAttribute('aria-invalid','true');input.focus()}};
     var newId=function(){
       var a=new Uint8Array(10);(window.crypto||window.msCrypto).getRandomValues(a);
@@ -277,15 +328,15 @@
     tf.addEventListener('submit',function(e){
       e.preventDefault();
       if(btn.disabled)return;
-      var f=tf.elements,email=f.email.value.trim().toLowerCase(),phone=f.phone.value.trim(),name=f.name.value.trim();
+      var f=tf.elements,email=f.email.value.trim().toLowerCase(),phone=f.phone?f.phone.value.trim():'',name=f.name?f.name.value.trim():'';
       if(f.website.value)return; // honeypot: bots fill every field
-      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return fail(f.email,'Please enter a valid email address.');
-      if(!/^[+0-9 ()-]{0,20}$/.test(phone))return fail(f.phone,'Please use only digits, spaces and + ( ) - in the phone number.');
-      if(!f.agree.checked)return fail(f.agree,'Please tick the box to confirm.');
-      var fields={email:{stringValue:email},source:{stringValue:src}};
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return fail(f.email,T('Please enter a valid email address.'));
+      if(!/^[+0-9 ()-]{0,20}$/.test(phone))return fail(f.phone,T('Please use only digits, spaces and + ( ) - in the phone number.'));
+      if(!f.agree.checked)return fail(f.agree,T('Please tick the box to confirm.'));
+      var fields={email:{stringValue:email},source:{stringValue:source}};
       if(phone)fields.phone={stringValue:phone};
       if(name)fields.name={stringValue:name.slice(0,60)};
-      btn.disabled=true;btn.textContent='Sending…';status.textContent='';
+      btn.disabled=true;btn.textContent=T('Sending…');status.textContent='';
       fetch('https://firestore.googleapis.com/v1/'+FS+':commit',{
         method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({writes:[{
@@ -295,11 +346,60 @@
         }]})
       }).then(function(r){
         if(!r.ok)throw new Error(String(r.status));
+        putKey(JOINED,'1');
         tf.hidden=true;done.hidden=false;done.focus();
+        if(onDone)onDone();
       }).catch(function(err){
         btn.disabled=false;btn.textContent=label;
-        fail(null,err&&err.message==='403'?'Please check your details and try again.':"We couldn't send that. Check your connection and try again, or email askdevelopers001@gmail.com.");
+        fail(null,err&&err.message==='403'?T('Please check your details and try again.'):T("We couldn't send that. Check your connection and try again, or email askdevelopers001@gmail.com."));
       });
     });
+  }
+  var tf=document.getElementById('testerForm');
+  if(tf)testerForm(tf,document.getElementById('testerStatus'),document.getElementById('testerDone'),src);
+
+  // First visit: invite to the test once, a few seconds after the page opens (not on policy pages, not to people who
+  // already joined). "First visit" is remembered in the browser, not by IP address: mobile networks put many
+  // people behind one IP, so an IP check would skip most real first-time visitors.
+  var ASKED='sfw-tester-asked';
+  function invite(){
+    if(document.hidden){document.addEventListener('visibilitychange',invite,{once:true});return}
+    if(getKey(ASKED)||getKey(JOINED))return;
+    putKey(ASKED,String(Date.now()));
+    var sec=document.getElementById('tester'),r=sec&&sec.getBoundingClientRect();
+    if(r&&r.top<innerHeight&&r.bottom>0)return; // already looking at the sign-up form
+    if(document.querySelector('dialog[open]'))return;
+    var d=document.createElement('dialog');d.className='t-pop';d.setAttribute('aria-labelledby','tpop-h');
+    d.innerHTML='<div class="t-pop-in">'+
+      '<button class="t-pop-x" type="button" aria-label="'+esc(T('Close'))+'"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>'+
+      '<span class="t-pop-ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>'+
+      '<p class="overline">'+esc(T('Early access · 15-day tester program'))+'</p>'+
+      '<h2 id="tpop-h">'+esc(T('Be one of our first testers'))+'</h2>'+
+      '<p class="t-pop-lead">'+esc(T('Get Super Fit Women before it reaches Google Play. Try it with 1 month of Premium free, and tell us what to improve.'))+'</p>'+
+      '<form novalidate>'+
+        '<label class="field"><span>'+esc(T('Google account email'))+'</span><input type="email" name="email" maxlength="120" autocomplete="email" inputmode="email" placeholder="you@gmail.com" required><small>'+esc(T('The account you use for the Play Store on your Android phone.'))+'</small></label>'+
+        '<label class="hp" aria-hidden="true">Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label>'+
+        '<label class="check"><input type="checkbox" name="agree" required><span>'+esc(T('I have an Android phone, and I agree to be contacted about the test.'))+' <a class="inline-link" href="privacy.html#testers">'+esc(T('Privacy policy'))+'</a></span></label>'+
+        '<button class="btn btn-primary" type="submit">'+esc(T('Join the test'))+'</button>'+
+        '<p class="t-status" role="status" aria-live="polite"></p>'+
+      '</form>'+
+      '<div class="t-done" hidden tabindex="-1"><span class="t-done-ic" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>'+
+        '<h3>'+esc(T("You're on the list!"))+'</h3><p>'+esc(T("We'll email your invite link and Premium code within 1–2 days from askdevelopers001@gmail.com. Check your spam folder too."))+'</p></div>'+
+      '<button class="t-pop-later" type="button">'+esc(T('Not now'))+'</button>'+
+    '</div>';
+    document.body.appendChild(d);
+    var form=d.querySelector('form'),later=d.querySelector('.t-pop-later');
+    testerForm(form,d.querySelector('.t-status'),d.querySelector('.t-done'),(src+'-popup').slice(0,40),function(){later.textContent=T('Close')});
+    var close=function(){d.close()};
+    d.querySelector('.t-pop-x').addEventListener('click',close);
+    later.addEventListener('click',close);
+    d.addEventListener('click',function(e){if(e.target===d)close()}); // tap outside the card
+    d.addEventListener('close',function(){d.parentNode.removeChild(d)});
+    d.showModal();
+  }
+  // no storage (blocked in some private modes): it couldn't remember the invite was shown, so don't show it at all
+  var canStore=function(){try{localStorage.setItem('sfw-t','1');localStorage.removeItem('sfw-t');return true}catch(e){return false}};
+  if(testerOpen&&canStore()&&!getKey(ASKED)&&!getKey(JOINED)&&!legal&&location.hash!=='#tester'&&typeof HTMLDialogElement==='function')
+    setTimeout(invite,3500);
   }
 })();
