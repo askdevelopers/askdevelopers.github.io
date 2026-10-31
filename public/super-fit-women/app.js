@@ -254,7 +254,7 @@
      Optional ?src=whatsapp on the link is saved as the source, to see which share worked. */
   // TEMPORARY: once #tester's data-until passes, the section and its links go away on every page
   // and the nav button goes back to "Get the app". Firestore refuses sign-ups from the same moment.
-  var TESTER_UNTIL=Date.parse('2026-11-16T00:00:00+05:30');
+  var TESTER_UNTIL=Date.parse('2026-11-14T00:00:00+05:30');
   if(Date.now()>=TESTER_UNTIL){
     var ts=document.getElementById('tester');if(ts)ts.parentNode.removeChild(ts);
     $$('[data-tester]').forEach(function(a){
