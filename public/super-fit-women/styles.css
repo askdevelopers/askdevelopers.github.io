@@ -502,3 +502,34 @@ footer .foot-legal .foot-links{width:100%;padding-top:18px;border-top:1px solid 
   .st-panel{padding:18px}
   .st-panel p{font-size:15px}
 }
+
+/* tester sign-up (index.html#tester): writes to Cloud Firestore, see firestore.rules */
+.tester{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:36px;padding:56px;box-shadow:var(--shadow)}
+.tester > *{min-width:0}
+.tester .lead{margin-top:16px}
+.t-steps{list-style:none;counter-reset:s;display:grid;gap:14px;margin-top:28px}
+.t-steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:start;color:var(--text-2);font-size:15px}
+.t-steps li::before{content:counter(s);display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--primary-100);color:var(--primary-600);font-weight:800}
+.t-steps b{color:var(--text)}
+.t-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px}
+#testerForm{display:grid;gap:16px}
+.field{display:grid;gap:6px;font-size:14px;font-weight:700}
+.field i{font-style:normal;font-weight:500;color:var(--text-3)}
+.field small{font-weight:500;font-size:13px;color:var(--text-3)}
+.field input{height:50px;padding:0 16px;border-radius:14px;border:1.5px solid var(--border-strong);background:var(--surface);color:var(--text);font:inherit;font-size:16px;font-weight:500}
+.field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-100)}
+.field input[aria-invalid="true"]{border-color:#D93A3A}
+.check{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;font-size:14px;color:var(--text-2)}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--primary)}
+.check .inline-link{font-weight:600}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+#testerForm .btn{width:100%}
+#testerForm .btn[disabled]{opacity:.7;cursor:progress;transform:none}
+.t-status{min-height:1.4em;font-size:14px;font-weight:600;color:#D93A3A}
+.t-done{display:grid;justify-items:center;text-align:center;gap:12px;padding:24px 8px}
+.t-done:focus{outline:none}
+.t-done-ic{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--success-soft);color:var(--success)}
+.t-done p{color:var(--text-2)}
+@media (max-width:980px){.tester{grid-template-columns:minmax(0,1fr);padding:40px 32px;gap:32px}}
+@media (max-width:600px){.tester{padding:28px 18px;border-radius:28px}.t-card{padding:20px 16px}}
+#testerForm[hidden],.t-done[hidden]{display:none}

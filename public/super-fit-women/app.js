@@ -248,4 +248,58 @@
     var key=(location.hash||'').slice(1),start=tabs.filter(function(t){return t.getAttribute('data-key')===key})[0]||tabs[0];
     select(start);
   }
+
+  /* tester sign-up: one anonymous create in Cloud Firestore (testers collection).
+     firestore.rules allow create only, so nobody can read the list from the web.
+     Optional ?src=whatsapp on the link is saved as the source, to see which share worked. */
+  // TEMPORARY: once #tester's data-until passes, the section and its links go away on every page
+  // and the nav button goes back to "Get the app". Firestore refuses sign-ups from the same moment.
+  var TESTER_UNTIL=Date.parse('2026-11-16T00:00:00+05:30');
+  if(Date.now()>=TESTER_UNTIL){
+    var ts=document.getElementById('tester');if(ts)ts.parentNode.removeChild(ts);
+    $$('[data-tester]').forEach(function(a){
+      if(a.getAttribute('data-tester')==='nav'){a.href='index.html#download';a.textContent='Get the app'}
+      else a.parentNode.removeChild(a);
+    });
+  }
+  var tf=document.getElementById('testerForm');
+  if(tf){
+    var FS='projects/super-fit-women/databases/(default)/documents',
+        status=document.getElementById('testerStatus'),done=document.getElementById('testerDone'),
+        btn=tf.querySelector('button[type=submit]'),label=btn.textContent,
+        src=((location.search.match(/[?&]src=([^&]*)/)||[])[1]||'website').toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,40)||'website';
+    var fail=function(input,msg){status.textContent=msg;if(input){input.setAttribute('aria-invalid','true');input.focus()}};
+    var newId=function(){
+      var a=new Uint8Array(10);(window.crypto||window.msCrypto).getRandomValues(a);
+      return Array.prototype.map.call(a,function(b){return('0'+b.toString(16)).slice(-2)}).join('');
+    };
+    $$('input',tf).forEach(function(i){i.addEventListener('input',function(){i.removeAttribute('aria-invalid');status.textContent=''})});
+    tf.addEventListener('submit',function(e){
+      e.preventDefault();
+      if(btn.disabled)return;
+      var f=tf.elements,email=f.email.value.trim().toLowerCase(),phone=f.phone.value.trim(),name=f.name.value.trim();
+      if(f.website.value)return; // honeypot: bots fill every field
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return fail(f.email,'Please enter a valid email address.');
+      if(!/^[+0-9 ()-]{0,20}$/.test(phone))return fail(f.phone,'Please use only digits, spaces and + ( ) - in the phone number.');
+      if(!f.agree.checked)return fail(f.agree,'Please tick the box to confirm.');
+      var fields={email:{stringValue:email},source:{stringValue:src}};
+      if(phone)fields.phone={stringValue:phone};
+      if(name)fields.name={stringValue:name.slice(0,60)};
+      btn.disabled=true;btn.textContent='Sending…';status.textContent='';
+      fetch('https://firestore.googleapis.com/v1/'+FS+':commit',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({writes:[{
+          update:{name:FS+'/testers/'+newId(),fields:fields},
+          currentDocument:{exists:false},
+          updateTransforms:[{fieldPath:'createdAt',setToServerValue:'REQUEST_TIME'}]
+        }]})
+      }).then(function(r){
+        if(!r.ok)throw new Error(String(r.status));
+        tf.hidden=true;done.hidden=false;done.focus();
+      }).catch(function(err){
+        btn.disabled=false;btn.textContent=label;
+        fail(null,err&&err.message==='403'?'Please check your details and try again.':"We couldn't send that. Check your connection and try again, or email askdevelopers001@gmail.com.");
+      });
+    });
+  }
 })();
