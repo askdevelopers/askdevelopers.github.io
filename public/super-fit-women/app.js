@@ -271,7 +271,7 @@
     SFW.langs.forEach(function(l){
       var o=document.createElement('button');o.type='button';o.lang=l;o.textContent=NAMES[l][0];
       o.setAttribute('role','menuitemradio');o.setAttribute('aria-checked',l===curLang?'true':'false');
-      o.addEventListener('click',function(){if(l===curLang)openLang(false,true);else SFW.setLang(l)});
+      o.addEventListener('click',function(){if(l===curLang)openLang(false,true);else{if(window.SFWtrack)SFWtrack('select_content',{content_type:'language',item_id:l});SFW.setLang(l)}});
       langMenu.appendChild(o);
     });
     var langItems=$$('button',langMenu);
@@ -365,6 +365,7 @@
       }).then(function(r){
         if(!r.ok)throw new Error(String(r.status));
         putKey(JOINED,'1');
+        if(window.SFWtrack)SFWtrack('sign_up',{method:'tester_form',source:source});
         if(TESTER_HOOK)fetch(TESTER_HOOK,{method:'POST',mode:'no-cors',keepalive:true}).catch(function(){}); // wake the mailer now
         if(instant)instantDone(done);
         tf.hidden=true;done.hidden=false;done.focus();
@@ -421,5 +422,49 @@
   var canStore=function(){try{localStorage.setItem('sfw-t','1');localStorage.removeItem('sfw-t');return true}catch(e){return false}};
   if(testerOpen&&canStore()&&!getKey(ASKED)&&!getKey(JOINED)&&!legal&&location.hash!=='#tester'&&typeof HTMLDialogElement==='function')
     setTimeout(invite,3500);
+
+  /* share bar on guides ([data-share]): WhatsApp, copy link and (phones) the system share sheet. Shared links carry
+     ?lang= (so friends get the same language) and ?src= (analytics.js reports it as the campaign source). */
+  var track=function(n,p){if(window.SFWtrack)SFWtrack(n,p)};
+  var page=location.pathname.split('/').pop()||'index.html';
+  function shareUrl(via){
+    var l=window.SFW?SFW.lang():'en';
+    return location.origin+location.pathname+'?'+(l!=='en'?'lang='+l+'&':'')+'src='+via;
+  }
+  var h1=document.querySelector('h1'),shareTitle=h1?h1.textContent.trim():document.title;
+  $$('[data-share]').forEach(function(bar){
+    var wa=bar.querySelector('[data-share-wa]'),copy=bar.querySelector('[data-share-copy]'),more=bar.querySelector('[data-share-more]');
+    if(wa){
+      wa.href='https://wa.me/?text='+encodeURIComponent(shareTitle+'\n'+shareUrl('whatsapp'));
+      wa.addEventListener('click',function(){track('share',{method:'whatsapp',content_type:'guide',item_id:page})});
+    }
+    if(copy)copy.addEventListener('click',function(){
+      var u=shareUrl('link'),lbl=copy.querySelector('span'),was=lbl.textContent;
+      var ok=function(){lbl.textContent=T('Link copied');setTimeout(function(){lbl.textContent=was},2000)};
+      if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(ok,function(){window.prompt('',u)});
+      else window.prompt('',u);
+      track('share',{method:'copy_link',content_type:'guide',item_id:page});
+    });
+    if(more&&navigator.share){
+      more.hidden=false;
+      more.addEventListener('click',function(){
+        navigator.share({title:shareTitle,url:shareUrl('share')}).then(function(){track('share',{method:'system',content_type:'guide',item_id:page})},function(){});
+      });
+    }
+  });
+
+  /* privacy.html › This website: switch Google Analytics off / on in this browser (analytics.js › SFWanalytics) */
+  var aBtn=document.querySelector('[data-analytics-toggle]'),aState=document.querySelector('[data-analytics-state]');
+  function aShow(){
+    var A=window.SFWanalytics;if(!A||!aBtn)return;
+    if(A.gpc){aBtn.hidden=true;aState.textContent=T('Your browser sends Global Privacy Control, so statistics are off.');return}
+    var off=A.off();
+    aBtn.textContent=off?T('Turn on statistics'):T('Turn off statistics');
+    aState.textContent=off?T('Statistics are off in this browser.'):T('Statistics are on in this browser.');
+  }
+  if(aBtn){
+    aShow();
+    aBtn.addEventListener('click',function(){var A=window.SFWanalytics;if(!A)return;A.set(A.off());aShow()});
+  }
   }
 })();

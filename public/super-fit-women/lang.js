@@ -6,7 +6,7 @@
    app.js runs inside SFW.ready(), after the page is translated. Tooling: tools/website-i18n/README.md */
 (function(){
   'use strict';
-  var LANGS=['en','gu','hi'],KEY='sfw-lang',V='fd0f9ad5',WAIT_MS=1500,GEO='https://get.geojs.io/v1/ip/geo.json';
+  var LANGS=['en','gu','hi'],KEY='sfw-lang',V='504c3fcb',WAIT_MS=1500,GEO='https://get.geojs.io/v1/ip/geo.json';
   // Indian state or territory (from the IP address) -> language; everywhere else gets English
   var STATES=[['gujarat','gu'],['daman','gu'],['dadra','gu'],
     ['rajasthan','hi'],['uttarpradesh','hi'],['madhyapradesh','hi'],['bihar','hi'],['jharkhand','hi'],['chhattisgarh','hi'],
@@ -31,6 +31,13 @@
   var extract=/[?&]i18n=extract\b/.test(location.search); // tools/website-i18n/extract.py
   var asked=ok((location.search.match(/[?&]lang=([a-z]{2})\b/)||[])[1]);
   if(asked)put(KEY,asked); // a shared ?lang=gu link counts as the visitor's choice
+  // Search engines: this page's canonical address keeps only ?lang= (drops ?src= and other share parameters), so
+  // each language version is indexed once. Matches the hreflang links in <head> and sitemap.xml.
+  if(/^https?:$/.test(location.protocol)&&!document.querySelector('link[rel=canonical]')){
+    var canon=document.createElement('link');canon.rel='canonical';
+    canon.href=location.origin+location.pathname.replace(/index\.html$/,'')+(asked&&asked!=='en'?'?lang='+asked:'');
+    document.head.appendChild(canon);
+  }
   var lang=extract?'en':asked||ok(get(KEY)),dict=null,domReady=false,langReady=false,done=false,cbs=[];
 
   /* ---------------------------------------------------------------- translate the page */
