@@ -307,7 +307,7 @@
      the web. Optional ?src=whatsapp on the link is saved as the source, to see which share worked. */
   // TEMPORARY: once TESTER_UNTIL passes, the section, its links and the invite go away on every page and the nav
   // button goes back to "Get the app". Firestore refuses sign-ups from the same moment.
-  var TESTER_UNTIL=Date.parse('2026-12-01T00:00:00+05:30'),testerOpen=Date.now()<TESTER_UNTIL;
+  var TESTER_UNTIL=Date.parse('2027-01-01T00:00:00+05:30'),testerOpen=Date.now()<TESTER_UNTIL;
   if(!testerOpen){
     var ts=document.getElementById('tester');if(ts)ts.parentNode.removeChild(ts);
     $$('[data-tester]').forEach(function(a){
