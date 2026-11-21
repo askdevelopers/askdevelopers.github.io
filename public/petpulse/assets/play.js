@@ -27,12 +27,12 @@
     flight: function (d) { return 0.55 + d / 950; }, arc: function (d) { return 38 + d * 0.3; } };
   var pet_ = function (base, o) { var r = {}; for (var k in base) r[k] = base[k]; for (k in o) r[k] = o[k]; return r; };
   var PETS = {
-    golden: pet_(DOG, { name: 'Bella', run: 'golden-retriever', avatar: 'golden-retriever', mouth: [0.395, 0.52] }),
-    lab: pet_(DOG, { name: 'Daisy', run: 'labrador', avatar: 'labrador', mouth: [0.395, 0.5] }),
-    shepherd: pet_(DOG, { name: 'Rex', run: 'german-shepherd', avatar: 'german-shepherd-pup', mouth: [0.395, 0.47] }),
-    white: pet_(CAT, { name: 'Snow', run: 'white-cat', avatar: 'white-cat', mouth: [0.395, 0.48] }),
-    ragdoll: pet_(CAT, { name: 'Luna', run: 'ragdoll', avatar: 'ragdoll-fluffy', mouth: [0.395, 0.43] }),
-    british: pet_(CAT, { name: 'Milo', run: 'british-shorthair', avatar: 'british-shorthair', mouth: [0.39, 0.47] })
+    golden: pet_(DOG, { name: 'Bella', run: 'golden-retriever', avatar: 'golden-retriever', mouth: [0.395, 0.52], voice: 0.96 }),
+    lab: pet_(DOG, { name: 'Daisy', run: 'labrador', avatar: 'labrador', mouth: [0.395, 0.5], voice: 1.02 }),
+    shepherd: pet_(DOG, { name: 'Rex', run: 'german-shepherd', avatar: 'german-shepherd-pup', mouth: [0.395, 0.47], voice: 0.86 }),
+    white: pet_(CAT, { name: 'Snow', run: 'white-cat', avatar: 'white-cat', mouth: [0.395, 0.48], voice: 1.1 }),
+    ragdoll: pet_(CAT, { name: 'Luna', run: 'ragdoll', avatar: 'ragdoll-fluffy', mouth: [0.395, 0.43], voice: 1.0 }),
+    british: pet_(CAT, { name: 'Milo', run: 'british-shorthair', avatar: 'british-shorthair', mouth: [0.39, 0.47], voice: 0.93 })
   };
   var runSrc = function (c) { return 'assets/img/run/' + c.run + '.webp'; };
   var avatarSrc = function (c) { return 'assets/img/doodles/' + c.avatar + '.webp'; };
@@ -120,6 +120,62 @@
     stat.best && (stat.best.textContent = score.best);
   }
 
+  /* ---------- sound: real, soft woofs and meows (CC0 recordings, same as the app) ---------- */
+  // Loaded on the first throw or tap of the sound button (a user gesture, so browsers allow audio).
+  var soundBtn = document.getElementById('soundBtn');
+  var sound = { on: true, ctx: null, gain: null, buf: {}, loading: null, last: 0 };
+  try { sound.on = localStorage.getItem('pp-fetch-sound') !== 'off'; } catch (e) {}
+  function soundUI() {
+    if (!soundBtn) return;
+    soundBtn.classList.toggle('off', !sound.on);
+    soundBtn.setAttribute('aria-pressed', sound.on ? 'true' : 'false');
+    soundBtn.setAttribute('aria-label', sound.on ? 'Sound on. Turn pet sounds off' : 'Sound off. Turn pet sounds on');
+    soundBtn.title = sound.on ? 'Sound on' : 'Sound off';
+  }
+  function loadSounds() {
+    if (sound.loading) return sound.loading;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return (sound.loading = Promise.resolve());
+    sound.ctx = new AC();
+    sound.gain = sound.ctx.createGain();
+    sound.gain.gain.value = 0.5; // the clips are already quiet; this keeps them gentle
+    sound.gain.connect(sound.ctx.destination);
+    var get = function (name, ext) {
+      return fetch('assets/sounds/' + name + '.' + ext).then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); })
+        .then(function (b) { return new Promise(function (ok, bad) { sound.ctx.decodeAudioData(b, ok, bad); }); });
+    };
+    sound.loading = Promise.all(['dog', 'cat'].map(function (n) {
+      return get(n, 'm4a').catch(function () { return get(n, 'wav'); }) // WAV if the browser can't decode AAC
+        .then(function (b) { sound.buf[n] = b; }).catch(function () {});
+    }));
+    return sound.loading;
+  }
+  function voice(vol) {
+    if (!sound.on) return;
+    var now = performance.now();
+    if (now - sound.last < 700) return; // never two in a row
+    sound.last = now;
+    var kindNow = kind, rate = cfg.voice || 1;
+    loadSounds().then(function () {
+      var b = sound.buf[kindNow];
+      if (!b || !sound.ctx) return;
+      if (sound.ctx.state === 'suspended') sound.ctx.resume();
+      var src = sound.ctx.createBufferSource(), g = sound.ctx.createGain();
+      src.buffer = b;
+      src.playbackRate.value = rate * (0.97 + Math.random() * 0.06); // a touch of natural variation
+      g.gain.value = vol == null ? 1 : vol;
+      src.connect(g); g.connect(sound.gain);
+      src.start();
+    });
+  }
+  if (soundBtn) soundBtn.addEventListener('click', function () {
+    sound.on = !sound.on;
+    try { localStorage.setItem('pp-fetch-sound', sound.on ? 'on' : 'off'); } catch (e) {}
+    soundUI();
+    if (sound.on) { loadSounds(); sound.last = 0; voice(0.8); } // a little hello so you know it works
+  });
+  soundUI();
+
   /* ---------- throwing ---------- */
   function clampTarget(x, y) {
     x = Math.max(30, Math.min(W - 30, x));
@@ -135,6 +191,7 @@
     var d = Math.hypot(t.x - P.x, t.y - P.y);
     toy.state = 'flight'; toy.t = 0; toy.sx = P.x; toy.sy = P.y; toy.tx = t.x; toy.ty = t.y; toy.dist = d;
     toy.T = cfg.flight(d); toy.arc = cfg.arc(d);
+    if (sound.on) loadSounds(); // the throw is a user gesture: unlock audio now
     toyEl.classList.add('spinning');
     field.classList.add('busy', 'played'); if (autoBtn) autoBtn.disabled = true;
     waitT = cfg.delay;
@@ -168,6 +225,7 @@
 
   function grab(inAir) {
     toy.state = 'carry';
+    voice(inAir ? 1 : 0.9);
     toyEl.classList.remove('spinning');
     if (inAir) {
       score.air++; pet.jumpT = 0;
@@ -246,6 +304,7 @@
       toy.h = toy.arc + (26 - toy.arc) * e;
       if (q >= 1) {
         toy.state = 'ready'; score.fetch++; updateStats();
+        if (Math.random() < 0.45) setTimeout(function () { voice(0.6); }, 250); // a soft 'again!'
         field.classList.remove('busy'); if (autoBtn) autoBtn.disabled = false;
         toast(pick(['Ready. Throw again!', 'Again, again!', cfg.name + ' wants another throw']), 1400);
       }
