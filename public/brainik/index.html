@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Brainik: Calm Daily Brain Games</title>
+<meta name="description" content="Brainik is eleven calm brain games in one app: logic, memory, focus, maths and more. A new garden puzzle every day, 50 levels per game at three difficulties, in 10 languages.">
+<link rel="canonical" href="https://askdevelopers.github.io/brainik/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Brainik">
+<meta property="og:title" content="Brainik: Calm Daily Brain Games">
+<meta property="og:description" content="Eleven calm brain games, a new garden puzzle every day. Logic, memory, focus and maths, ten minutes at a time.">
+<meta property="og:url" content="https://askdevelopers.github.io/brainik/">
+<meta property="og:image" content="https://askdevelopers.github.io/brainik/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="author" content="Ask Developers">
+<meta name="theme-color" content="#F4EFE6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1A1815" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/img/icon.svg">
+<link rel="apple-touch-icon" href="assets/img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css?v=a69a15c9">
+<script src="assets/theme.js?v=b19c82ba"></script>
+<script src="assets/site.js?v=c7adeb73" defer></script>
+<script src="assets/garden.js?v=e8661ca2" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "MobileApplication", "name": "Brainik", "url": "https://askdevelopers.github.io/brainik/", "operatingSystem": "iOS, Android", "applicationCategory": "GameApplication", "genre": "Puzzle", "description": "Eleven calm brain games in one app: logic, memory, focus and maths, with a new garden puzzle every day.", "inLanguage": ["en", "hi", "gu", "ar", "ur", "pt", "es", "fr", "de", "ru"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "Ask Developers", "url": "https://askdevelopers.github.io/", "email": "askdevelopers001@gmail.com"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header" id="top">
+  <div class="wrap nav">
+    <a class="brand" href="index.html"><img src="assets/img/icon.svg" alt="" width="34" height="34">Brainik</a>
+    <nav class="nav-links" id="links" aria-label="Main">
+      <a href="#play">Today’s garden</a>
+      <a href="#games">Games</a>
+      <a href="#habit">Daily habit</a>
+      <a href="#pro">Pro</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-end">
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch to dark mode">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z"/></svg>
+      </button>
+      <a class="btn btn-sm btn-ink nav-cta" href="#get">Get the app</a>
+      <button class="icon-btn menu-btn" id="menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="links">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- Hero: the pitch on the left, a real puzzle to play on the right -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="dot"></span>11 brain games · one calm app</p>
+        <h1>Ten quiet minutes.<br><em>A sharper mind.</em></h1>
+        <p class="lede">Brainik is a set of small, beautiful brain games for logic, memory, focus and maths. A fresh garden puzzle every morning, a streak worth keeping, and no flashing lights shouting at you.</p>
+        <div class="cta-row" id="get">
+          <span class="store" aria-disabled="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9s-1.9-.9-3.2-.8A4.7 4.7 0 0 0 4.2 9.5c-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8 2.1-1.2 2.9-2.4a10 10 0 0 0 1.3-2.7 4.2 4.2 0 0 1-2.5-4ZM14 5.4A4.2 4.2 0 0 0 15 2.3a4.3 4.3 0 0 0-2.8 1.4 4 4 0 0 0-1 3 3.6 3.6 0 0 0 2.8-1.3Z"/></svg>
+            <span><small>Coming soon on the</small>App Store</span>
+          </span>
+          <span class="store" aria-disabled="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3.3c-.2.2-.3.6-.3 1v15.4c0 .4.1.8.3 1l8.6-8.7L4 3.3Zm9.6 8.7 2.7-2.7L5.4 3.1l8.2 8.9Zm0 0-8.2 8.9 10.9-6.2-2.7-2.7Zm3.9-2-3 3 3 3 3.4-1.9c1-.6 1-1.6 0-2.2L17.5 10Z"/></svg>
+            <span><small>Coming soon on</small>Google Play</span>
+          </span>
+        </div>
+        <ul class="hero-facts" aria-label="At a glance">
+          <li><b>11</b> games</li>
+          <li><b>1,650</b> levels</li>
+          <li><b>10</b> languages</li>
+          <li><b>Free</b> to play</li>
+        </ul>
+      </div>
+
+      <!-- Playable Stones puzzle (assets/garden.js). Works without an account, nothing is sent anywhere. -->
+      <div class="play-card reveal" id="play">
+        <div class="play-head">
+          <div>
+            <p class="play-kicker" id="g-date">Today’s garden</p>
+            <h2 class="play-title">Stones</h2>
+          </div>
+          <div class="timer" aria-live="off"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg><span id="g-time">0:00</span></div>
+        </div>
+        <p class="play-rule">Place one stone in every <b>row</b>, every <b>column</b> and every <b>coloured plot</b>. Stones never touch, not even corner to corner.</p>
+        <div class="sizes" role="radiogroup" aria-label="Garden size">
+          <button type="button" role="radio" data-size="5" aria-checked="false">5×5 · Easy</button>
+          <button type="button" role="radio" data-size="6" aria-checked="true">6×6 · Medium</button>
+          <button type="button" role="radio" data-size="7" aria-checked="false">7×7 · Hard</button>
+        </div>
+        <div class="board-wrap">
+          <div class="board" id="board" role="grid" aria-label="Garden board"></div>
+          <div class="solved" id="solved" hidden>
+            <div class="solved-badge" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22"/><path d="m14 25 7 7 13-15"/></svg>
+            </div>
+            <p class="solved-title">Garden solved</p>
+            <p class="solved-meta" id="solved-meta">in 1:32 · no hints</p>
+            <div class="solved-actions">
+              <button class="btn btn-sm btn-ink" id="g-copy" type="button">Copy result</button>
+              <button class="btn btn-sm btn-ghost" id="g-again" type="button">Another garden</button>
+            </div>
+            <p class="solved-note">In the app this keeps your streak alive, with a bigger daily garden and 150 Stones levels.</p>
+          </div>
+        </div>
+        <div class="play-tools">
+          <button type="button" class="tool" id="g-undo" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Undo</button>
+          <button type="button" class="tool" id="g-hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg>Hint</button>
+          <button type="button" class="tool" id="g-clear"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Clear</button>
+        </div>
+        <p class="play-help" id="g-msg" role="status">Tap once to cross a cell out, twice to place a stone.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- The eleven games, each in its own colour family like in the app -->
+  <section class="section" id="games">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">The games</p>
+        <h2>Eleven rooms for eleven skills.</h2>
+        <p>Every game owns a colour and trains one thing well. Each has Easy, Moderate and Hard ladders of 50 levels, so there is always a next step that feels just within reach.</p>
+      </div>
+
+      <div class="games">
+        <article class="game g-stones reveal">
+          <div class="art art-stones" aria-hidden="true">
+            <i class="p1"></i><i class="p2"></i><i class="p2"></i><i class="p3"></i>
+            <i class="p1"></i><i class="p1 st"></i><i class="p2"></i><i class="p3"></i>
+            <i class="p4"></i><i class="p1"></i><i class="p3"></i><i class="p3 st"></i>
+            <i class="p4 st"></i><i class="p4"></i><i class="p4"></i><i class="p3"></i>
+          </div>
+          <div class="game-body"><h3>Stones</h3><span class="skill">Logic</span><p>One stone per row, column and plot. A new garden every day.</p></div>
+        </article>
+
+        <article class="game g-echo reveal">
+          <div class="art art-echo" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="game-body"><h3>Echo</h3><span class="skill">Memory</span><p>Watch the pads glow, then play the pattern back.</p></div>
+        </article>
+
+        <article class="game g-pairs reveal">
+          <div class="art art-pairs" aria-hidden="true"><i></i><i class="up">✿</i><i></i><i></i><i></i><i class="up">✿</i></div>
+          <div class="game-body"><h3>Pairs</h3><span class="skill">Recall</span><p>Turn two tiles at a time and match every pair.</p></div>
+        </article>
+
+        <article class="game g-lanterns reveal">
+          <div class="art art-lanterns" aria-hidden="true"><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i></div>
+          <div class="game-body"><h3>Lanterns</h3><span class="skill">Planning</span><p>Each tap flips a lantern and its neighbours. Light them all.</p></div>
+        </article>
+
+        <article class="game g-sums reveal">
+          <div class="art art-sums" aria-hidden="true"><b>12</b><i>5</i><i class="on">7</i><i>3</i><i class="on">5</i></div>
+          <div class="game-body"><h3>Sums</h3><span class="skill">Arithmetic</span><p>Pick tiles that add up to the target before time runs out.</p></div>
+        </article>
+
+        <article class="game g-hue reveal">
+          <div class="art art-hue" aria-hidden="true"><b>BLUE</b><span><i>✓</i><i>✕</i></span></div>
+          <div class="game-body"><h3>Hue</h3><span class="skill">Focus</span><p>Does the word match its ink? Answer fast, stay sharp.</p></div>
+        </article>
+
+        <article class="game g-trail reveal">
+          <div class="art art-trail" aria-hidden="true"><i>4</i><i class="on">1</i><i>6</i><i>3</i><i class="on">2</i><i>5</i></div>
+          <div class="game-body"><h3>Trail</h3><span class="skill">Scanning</span><p>Find the numbers in order as fast as your eyes can move.</p></div>
+        </article>
+
+        <article class="game g-spot reveal">
+          <div class="art art-spot" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i class="odd"></i><i></i><i></i></div>
+          <div class="game-body"><h3>Spot</h3><span class="skill">Perception</span><p>One tile is not like the others. Find it.</p></div>
+        </article>
+
+        <article class="game g-track reveal">
+          <div class="art art-track" aria-hidden="true"><i class="o1 mark"></i><i class="o2"></i><i class="o3 mark"></i><i class="o4"></i><i class="o5"></i></div>
+          <div class="game-body"><h3>Track</h3><span class="skill">Tracking</span><p>Keep your eyes on the marked orbs while they drift.</p></div>
+        </article>
+
+        <article class="game g-glimpse reveal">
+          <div class="art art-glimpse" aria-hidden="true"><i class="d1"></i><i class="d2"></i><i class="d3"></i><i class="d4"></i><i class="d5"></i><b>?</b></div>
+          <div class="game-body"><h3>Glimpse</h3><span class="skill">Speed</span><p>A flash, then gone. How many did you see?</p></div>
+        </article>
+
+        <article class="game g-series reveal">
+          <div class="art art-series" aria-hidden="true"><i>2</i><i>4</i><i>8</i><i>16</i><i class="q">?</i></div>
+          <div class="game-body"><h3>Series</h3><span class="skill">Reasoning</span><p>Crack the rule and pick what comes next.</p></div>
+        </article>
+
+        <article class="game game-more reveal">
+          <div class="ladder" aria-hidden="true">
+            <span class="rung r1">Easy</span><span class="rung r2">Moderate</span><span class="rung r3">Hard</span>
+          </div>
+          <div class="game-body"><h3>3 × 50 levels each</h3><p>Chapters of ten, a bigger boss level every tenth, and up to three stars on every level.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why people come back: daily garden, quests, trophies, skills -->
+  <section class="section section-tint" id="habit">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">A daily habit</p>
+        <h2>Small enough for a coffee. Rewarding enough to come back.</h2>
+      </div>
+
+      <div class="bento">
+        <article class="tile t-daily reveal">
+          <h3>The daily garden</h3>
+          <p>One new puzzle every day, always with exactly one answer you can reach by logic alone. Gentle on Monday, a proper challenge by the weekend.</p>
+          <ol class="week" aria-label="Example streak week">
+            <li class="done"><span>M</span></li><li class="done"><span>T</span></li><li class="done"><span>W</span></li><li class="done"><span>T</span></li><li class="today"><span>F</span></li><li><span>S</span></li><li><span>S</span></li>
+          </ol>
+          <p class="streak"><b>12</b> day streak · a freeze keeps it safe on busy days</p>
+        </article>
+
+        <article class="tile t-quests reveal">
+          <h3>Quests and workouts</h3>
+          <p>Three fresh goals a day and a three-game workout picked for you.</p>
+          <ul class="quests">
+            <li class="q-done"><i></i>Solve today’s garden<span>+2 hints</span></li>
+            <li class="q-half"><i></i>Play 3 different games<span>2 / 3</span></li>
+            <li><i></i>Repeat a 7-step pattern in Echo<span>+40 XP</span></li>
+          </ul>
+        </article>
+
+        <article class="tile t-skills reveal">
+          <h3>See your mind grow</h3>
+          <p>A skill map fills in as you play, and your rank climbs from Novice to Oracle.</p>
+          <svg class="radar" viewBox="0 0 220 200" role="img" aria-label="Example skill map: strongest in logic and memory">
+            <g class="radar-grid">
+              <polygon points="110,20 188,65 188,145 110,190 32,145 32,65"/>
+              <polygon points="110,48 164,79 164,131 110,162 56,131 56,79"/>
+              <polygon points="110,76 140,93 140,117 110,134 80,117 80,93"/>
+              <path d="M110 20V190M32 65l156 80M188 65 32 145"/>
+            </g>
+            <polygon class="radar-fill" points="110,30 176,72 158,133 110,168 62,128 50,75"/>
+            <g class="radar-labels"><text x="110" y="13">Logic</text><text x="196" y="62" text-anchor="start">Memory</text><text x="196" y="153" text-anchor="start">Focus</text><text x="110" y="200">Maths</text><text x="24" y="153" text-anchor="end">Speed</text><text x="24" y="62" text-anchor="end">Reasoning</text></g>
+          </svg>
+        </article>
+
+        <article class="tile t-trophies reveal">
+          <h3>A trophy cabinet</h3>
+          <p>17 trophies, each with its own shape, climbing Bronze, Silver and Gold up to three stars.</p>
+          <div class="shelf" aria-hidden="true">
+            <span class="tro bronze"><svg viewBox="0 0 40 40"><path d="M12 6h16v8a8 8 0 0 1-16 0Z"/><path d="M12 9H7a5 5 0 0 0 5 6M28 9h5a5 5 0 0 1-5 6"/><path d="M17 22h6l1 8h-8Z"/><rect x="12" y="30" width="16" height="4" rx="1"/></svg></span>
+            <span class="tro silver"><svg viewBox="0 0 40 40"><path d="M13 3h14l-4 12h-6Z"/><circle cx="20" cy="25" r="10"/><path d="m20 19 1.8 3.7 4 .5-3 2.8.8 4-3.6-2-3.6 2 .8-4-3-2.8 4-.5Z" class="cut"/></svg></span>
+            <span class="tro gold"><svg viewBox="0 0 40 40"><path d="M6 14 12 20l8-12 8 12 6-6-3 18H9Z"/><rect x="9" y="33" width="22" height="3" rx="1"/></svg></span>
+            <span class="tro gold"><svg viewBox="0 0 40 40"><path d="M20 4 33 9v10c0 8-6 13-13 17C13 32 7 27 7 19V9Z"/><path d="m20 13 2.2 4.5 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.5 5-.7Z" class="cut"/></svg></span>
+          </div>
+        </article>
+
+        <article class="tile t-quiet reveal">
+          <h3>Calm by design</h3>
+          <ul class="ticks">
+            <li>No lives and no waiting to play</li>
+            <li>Soft paper look with a night mode</li>
+            <li>Hints that teach, not just reveal</li>
+            <li>Play offline, sign in only if you want a backup</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brainik Pro -->
+  <section class="section" id="pro">
+    <div class="wrap pro">
+      <div class="pro-copy reveal">
+        <p class="eyebrow">Brainik Pro</p>
+        <h2>Free to play. Pro if you love it.</h2>
+        <p>Every game and every level is free. Brainik is supported by a few ads, and Pro takes them away and adds bigger rewards. Weekly, monthly and yearly plans, priced in your local currency on the store.</p>
+      </div>
+      <ul class="perks reveal">
+        <li><span class="perk-i">✕</span><div><b>No ads, ever</b><small>No banners, no videos between games.</small></div></li>
+        <li><span class="perk-i">▶</span><div><b>Rewards without videos</b><small>Free hints, gems and ×2 coins at a tap.</small></div></li>
+        <li><span class="perk-i">2×</span><div><b>Double coins</b><small>Every game pays twice as much.</small></div></li>
+        <li><span class="perk-i">★</span><div><b>Premium season pass</b><small>The gold reward track, every month.</small></div></li>
+        <li><span class="perk-i">◆</span><div><b>Daily Pro chest</b><small>Hints and gems waiting each morning.</small></div></li>
+        <li><span class="perk-i">❄</span><div><b>Weekly streak freeze</b><small>A free freeze every seven days.</small></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Languages -->
+  <section class="section section-tint langs-section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Your language</p>
+        <h2>Speaks ten languages.</h2>
+        <p>Brainik follows your phone’s language, with right-to-left layouts for Arabic and Urdu. You can switch any time in Settings.</p>
+      </div>
+      <ul class="langs reveal" aria-label="Languages">
+        <li lang="en">English</li><li lang="hi">हिन्दी</li><li lang="gu">ગુજરાતી</li><li lang="ar" dir="rtl">العربية</li><li lang="ur" dir="rtl">اردو</li>
+        <li lang="pt">Português</li><li lang="es">Español</li><li lang="fr">Français</li><li lang="de">Deutsch</li><li lang="ru">Русский</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="wrap faq-wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Questions</p>
+        <h2>Good to know.</h2>
+      </div>
+      <div class="faq reveal">
+        <details>
+          <summary>Is Brainik really free?</summary>
+          <p>Yes. All eleven games, every level and the daily garden are free. The free version shows some ads. Brainik Pro is optional and removes them.</p>
+        </details>
+        <details>
+          <summary>Do I need an account?</summary>
+          <p>No. You can play straight away and your progress stays on your phone. If you want a backup or to play on another device, sign in with Apple, Google or Facebook.</p>
+        </details>
+        <details>
+          <summary>Does it work offline?</summary>
+          <p>Yes, the games run on your device. You only need a connection to back up progress, make purchases or see ads.</p>
+        </details>
+        <details>
+          <summary>Is it good for kids?</summary>
+          <p>Brainik is made for adults first, but the Easy ladders are friendly for older kids too. There is no chat and no contact with other players.</p>
+        </details>
+        <details>
+          <summary>Will it make me smarter?</summary>
+          <p>We make no medical claims. Brainik is a set of games that ask you to practise logic, memory, attention and mental maths in a calm way. Most people simply find it a pleasant daily habit.</p>
+        </details>
+        <details>
+          <summary>How do I delete my data?</summary>
+          <p>Delete your account inside the app from Settings, or follow the steps on our <a href="delete-account.html">account deletion page</a>. Read the <a href="privacy.html">privacy policy</a> for what we collect and why.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Closing call to action -->
+  <section class="section">
+    <div class="wrap">
+      <div class="closer reveal">
+        <img src="assets/img/icon.svg" alt="" width="84" height="84">
+        <h2>Tomorrow’s garden is already growing.</h2>
+        <p>Brainik is coming soon to iPhone, iPad and Android.</p>
+        <div class="cta-row">
+          <a class="btn btn-ink" href="#play">Play today’s garden</a>
+          <a class="btn btn-ghost" href="mailto:askdevelopers001@gmail.com?subject=Brainik">Contact us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap foot">
+    <div class="foot-brand">
+      <a class="brand" href="index.html"><img src="assets/img/icon.svg" alt="" width="28" height="28">Brainik</a>
+      <p>Calm daily brain games by Ask Developers.</p>
+    </div>
+    <nav aria-label="Legal">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="delete-account.html">Delete your account</a>
+      <a href="mailto:askdevelopers001@gmail.com?subject=Brainik%20support">Support</a>
+    </nav>
+    <p class="copy">© <span id="year">2026</span> Ask Developers</p>
+  </div>
+</footer>
+</body>
+</html>
