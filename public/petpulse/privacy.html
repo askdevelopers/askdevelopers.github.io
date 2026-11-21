@@ -108,6 +108,15 @@
       <p>If you host a playdate, the title, time, place name, the place's map coordinates, your first name, your pet's name and species, and any notes are visible to other signed-in PetPulse users nearby. When you join a playdate, your name and your pet's name are shown to other attendees. Please only choose public places.</p>
       <h3>Purchases</h3>
       <p>Subscriptions are paid through Apple or Google; we never see your card details. Our subscription provider, RevenueCat, receives your purchase receipts, your PetPulse user ID and basic device information so it can confirm your Premium access on every device.</p>
+      <h3>How you use the app (usage statistics)</h3>
+      <p>Unless you turn it off, the app sends <strong>usage statistics</strong> so we can see which features are used and which aren't, and improve or remove them. This includes which screens you open and for how long, which features you use (for example "added a vaccination" or "opened the vet finder"), your plan (free or Premium), how many pets you have and their species, your app language and version, device model and operating system, and an approximate country and city derived from your IP address. If you are signed in, it is linked to your PetPulse user ID.</p>
+      <p>It <strong>never</strong> includes your name, email address, phone numbers, your pets' names, notes or anything you type, health values such as weights or symptoms, photos, or your precise location. We don't record your screen. You can turn it off any time in <strong>More → Share usage stats</strong>.</p>
+      <h3>Crash reports</h3>
+      <p>If the app crashes or hits an unexpected error, it sends a crash report so we can fix the problem: what went wrong in the app's code, the screens opened just before, your app version, language and plan, device model, operating system and free memory, and, if you are signed in, your PetPulse user ID. Crash reports never include your name, email address, your pets' names, notes, photos or health values. You can turn them off any time in More → Send crash reports.</p>
+
+      <h3>Notifications from us</h3>
+      <p>To send announcements, such as a new version being available, the app registers your phone with Firebase Cloud Messaging and receives a push token. The token is grouped by platform, app language, app version and plan (free or Premium), so a message reaches the right people. If you are signed in, we also store the token with your user ID, platform, app version and language, so a message can reach your account. Whether notifications appear is up to you in your phone's settings.</p>
+
       <h3>Support emails</h3>
       <p>If you email us, we keep the message and your email address so we can reply.</p>
 
@@ -118,7 +127,7 @@
         <li>Photos in a pet's photo gallery</li>
         <li>Service Dog Hub records (your working dog's profile, alert log, training and application tracker)</li>
         <li>Photos of vaccine cards. Text is read by your phone's built-in text recognition</li>
-        <li>Reminders, which are scheduled as local notifications on your phone</li>
+        <li>Care reminders, which are scheduled as local notifications on your phone (no server is involved)</li>
         <li>Calendar events you choose to add to your phone's calendar</li>
       </ul>
       <p>If you delete the app without signing in, this information is deleted with it.</p>
@@ -130,10 +139,13 @@
         <tr><td>Provide Premium and restore purchases</td><td>User ID, purchase receipts</td><td>Performing our contract with you</td></tr>
         <tr><td>Show nearby vets, places and playdates</td><td>Approximate or precise location, when you allow it</td><td>Your consent (device permission)</td></tr>
         <tr><td>Show ads on the free plan</td><td>Device and advertising identifiers (see section 6)</td><td>Your consent, or legitimate interests for non-personalised ads</td></tr>
+        <tr><td>Understand which features are used, so we can improve or remove them</td><td>Usage statistics (section 2)</td><td>Legitimate interests; you can opt out in the app</td></tr>
+        <tr><td>Find and fix crashes and errors</td><td>Crash reports (section 2)</td><td>Legitimate interests; you can opt out in the app</td></tr>
+        <tr><td>Send announcements, such as a new version being available</td><td>Push token, platform, app version, language, plan</td><td>Legitimate interests; you control notifications in your phone's settings</td></tr>
         <tr><td>Answer support requests and keep the service secure</td><td>Email, messages, technical logs</td><td>Legitimate interests</td></tr>
         <tr><td>Meet legal obligations</td><td>Purchase and account records</td><td>Legal obligation</td></tr>
       </table>
-      <p>PetPulse does not include analytics or crash-reporting tools, and we don't use your pet records to build advertising profiles.</p>
+      <p>Usage statistics are only used to improve PetPulse. They are not used for advertising, and we don't use your pet records to build advertising profiles.</p>
 
       <h2 id="share">5. Who we share it with</h2>
       <p>We <strong>never sell</strong> your personal information or share it for cross-context behavioural advertising, except through the ad choices described in section 6. We use these service providers, who process data on our behalf:</p>
@@ -143,6 +155,8 @@
         <tr><td>Apple and Google sign-in</td><td>Signing in, if you choose those options</td></tr>
         <tr><td>RevenueCat</td><td>Managing subscriptions</td></tr>
         <tr><td>Google AdMob</td><td>Ads on the free plan</td></tr>
+        <tr><td>Google Firebase (Crashlytics, Cloud Messaging, Remote Config)</td><td>Crash reports, notifications, and switching app settings (such as an update notice) on or off without a new release</td></tr>
+        <tr><td>PostHog</td><td>Usage statistics (section 2). Data is stored in the United States.</td></tr>
         <tr><td>Geoapify (OpenStreetMap data)</td><td>Finding vets and pet-friendly places near a location. We send the map coordinates you search around, not your account.</td></tr>
       </table>
       <p>When you open news stories, guides or links in the app, your phone connects directly to those publishers, who will see your IP address under their own privacy policies. Celebrity-pet posts are public Instagram content that we display; Instagram does not receive your PetPulse details.</p>
@@ -165,6 +179,9 @@
         <li><strong>Account and cloud records:</strong> until you delete them or your account. Deleted records are removed from our database straight away. Backup copies kept by our cloud provider expire within about 30 days.</li>
         <li><strong>Playdates:</strong> until the host cancels, or when the host's account is deleted.</li>
         <li><strong>Purchase records:</strong> as long as tax and accounting law requires.</li>
+        <li><strong>Usage statistics:</strong> up to 12 months, then deleted. When you delete your account, we delete the usage statistics linked to your user ID within 30 days.</li>
+        <li><strong>Crash reports:</strong> 90 days, then deleted automatically.</li>
+        <li><strong>Push tokens:</strong> until you sign out or delete your account. Tokens a phone stops using expire on their own.</li>
         <li><strong>Support emails:</strong> up to 2 years after the conversation ends.</li>
       </ul>
 
@@ -173,6 +190,7 @@
       <ul>
         <li><strong>Correct:</strong> edit any record or your name in the app.</li>
         <li><strong>Download:</strong> share a vet report from any pet's profile, or email us for a full copy.</li>
+        <li><strong>Usage statistics:</strong> turn off More → Share usage stats.</li>
         <li><strong>Delete:</strong> More → your name → Delete account, or <a href="delete-account.html">request deletion here</a>.</li>
         <li><strong>Anything else:</strong> email <a href="mailto:askdevelopers001@gmail.com">askdevelopers001@gmail.com</a>. We will reply within 30 days and won't treat you differently for using your rights.</li>
       </ul>
