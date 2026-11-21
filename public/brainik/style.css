@@ -4,3 +4,4 @@
 main{max-width:760px;margin:0 auto;padding:40px 16px 80px}h1{font-family:Georgia,serif;font-size:34px;margin:0 0 4px}h2{font-family:Georgia,serif;font-size:22px;margin:36px 0 8px}
 .meta{color:var(--ink2);margin:0 0 28px}a{color:var(--moss)}table{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:16px 0}nav{margin-bottom:28px;font-size:14px}nav a{margin-right:14px}
+h3{font-family:Georgia,serif;font-size:18px;margin:22px 0 6px}.card h2.first{margin-top:0}
