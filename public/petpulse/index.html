@@ -25,9 +25,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=29e3f84d">
+<link rel="stylesheet" href="assets/site.css?v=f406b400">
 <script src="assets/theme.js?v=f1f7ee67"></script>
-<script src="assets/site.js?v=87bc17c1" defer></script>
+<script src="assets/site.js?v=6d82eb5a" defer></script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "MobileApplication", "name": "PetPulse", "url": "https://askdevelopers.github.io/petpulse/", "operatingSystem": "iOS, Android", "applicationCategory": "LifestyleApplication", "description": "Vaccines, weight, medicines and vet visits for all your pets in one calm place.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "Ask Developers", "url": "https://askdevelopers.github.io/", "email": "askdevelopers001@gmail.com"}}</script>
 </head>
 <body>
@@ -49,11 +49,7 @@
   </div>
 </header>
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="ring">
-    <div class="paws"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="orbit"><div class="op"><span><img src="assets/img/doodles/golden-retriever.webp" alt=""></span></div><div class="op"><span><img src="assets/img/doodles/british-shorthair.webp" alt=""></span></div><div class="op"><span><img src="assets/img/doodles/hamster.webp" alt=""></span></div></div>
-    <div class="center"><img src="assets/img/icon.png" alt=""></div>
-  </div>
+  <div class="gather"><svg viewBox="0 0 220 220"><circle class="track" cx="110" cy="110" r="86"/><circle class="prog" cx="110" cy="110" r="86"/></svg><img class="logo" src="assets/img/icon.png" alt=""><span class="gp glass"><img src="assets/img/doodles/golden-retriever.webp" alt=""></span><span class="gp glass"><img src="assets/img/doodles/ginger-tabby.webp" alt=""></span><span class="gp glass"><img src="assets/img/doodles/holland-lop.webp" alt=""></span><span class="gp glass"><img src="assets/img/doodles/budgie.webp" alt=""></span><span class="gp glass"><img src="assets/img/doodles/french-bulldog.webp" alt=""></span></div>
   <div class="loader-name">PetPulse</div>
   <div class="loader-sub">Rounding up the pets…</div>
 </div>
@@ -82,16 +78,19 @@
             <li>Vet-ready reports in one tap</li>
           </ul>
         </div>
-        <div class="hero-art" aria-hidden="true">
-          <div class="phone back left"><img class="shot-light" src="assets/img/screens/vaccines.webp" alt=""><img class="shot-dark" src="assets/img/screens/vaccines-dark.webp" alt="" loading="lazy"></div>
-          <div class="phone main"><img class="shot-light" src="assets/img/screens/home.webp" alt=""><img class="shot-dark" src="assets/img/screens/home-dark.webp" alt="" loading="lazy"></div>
-          <div class="phone back right"><img class="shot-light" src="assets/img/screens/weight.webp" alt=""><img class="shot-dark" src="assets/img/screens/weight-dark.webp" alt="" loading="lazy"></div>
-          <img class="doodle d1" src="assets/img/doodles/golden-retriever.webp" alt="">
-          <img class="doodle d2" src="assets/img/doodles/ginger-tabby.webp" alt="">
+        <div class="stage" id="stage" aria-hidden="true">
+          <div class="stage-glow"></div>
+          <div class="fl back b4"><div class="drift c"><div class="bubble sm glass"><img src="assets/img/doodles/budgie.webp" alt=""></div></div></div>
+          <div class="tilt"><div class="phone main"><img class="shot-light" src="assets/img/screens/home.webp" alt=""><img class="shot-dark" src="assets/img/screens/home-dark.webp" alt="" loading="lazy"></div></div>
+          <div class="fl n1"><div class="drift"><div class="glass note"><img class="av" src="assets/img/doodles/golden-retriever.webp" alt=""><div><b>Rabies booster</b><span>Bella · due in 3 days</span></div><span class="pill">Soon</span></div></div></div>
+          <div class="fl n2"><div class="drift b"><div class="glass weight"><div class="wt-head"><span>Bella's weight</span><b>29.2 kg</b></div><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div></div>
+          <div class="fl n3"><div class="drift c"><div class="glass note small"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>Dose given</b><span>Milo · Omega-3</span></div></div></div></div>
+          <div class="fl b1"><div class="drift b"><div class="bubble lg glass"><img src="assets/img/doodles/ginger-tabby.webp" alt=""></div></div></div>
+          <div class="fl b2"><div class="drift"><div class="bubble glass"><img src="assets/img/doodles/holland-lop.webp" alt=""></div></div></div>
+          <div class="fl b3"><div class="drift c"><div class="bubble sm glass"><img src="assets/img/doodles/goldfish.webp" alt=""></div></div></div>
         </div>
       </div>
     </section>
-  <div class="meadow" aria-hidden="true"><div class="runner " data-face="right" data-speed="150" data-size="104"><span class="flip"><img src="assets/img/doodles/dachshund.webp" alt="" loading="lazy"></span></div><div class="runner waddle" data-face="front" data-speed="105" data-size="78"><span class="flip"><img src="assets/img/doodles/french-bulldog.webp" alt="" loading="lazy"></span></div><div class="runner waddle" data-face="front" data-speed="95" data-size="80"><span class="flip"><img src="assets/img/doodles/maine-coon.webp" alt="" loading="lazy"></span></div><div class="runner hop" data-face="front" data-speed="85" data-size="76"><span class="flip"><img src="assets/img/doodles/holland-lop.webp" alt="" loading="lazy"></span></div><div class="runner " data-face="right" data-speed="70" data-size="70"><span class="flip"><img src="assets/img/doodles/guinea-pig.webp" alt="" loading="lazy"></span></div></div>
   </div>
 
   <!-- FEATURES -->
@@ -217,16 +216,9 @@
         <h2>Dogs, cats, and the whole crew.</h2>
         <p>Rabbits, birds, fish, hamsters, guinea pigs, turtles and horses too, each with their own care.</p>
       </div>
-      <div class="species reveal">
-        <figure><img src="assets/img/doodles/beagle.webp" alt="" loading="lazy"><figcaption>Dogs</figcaption></figure>
-        <figure><img src="assets/img/doodles/siamese.webp" alt="" loading="lazy"><figcaption>Cats</figcaption></figure>
-        <figure><img src="assets/img/doodles/holland-lop.webp" alt="" loading="lazy"><figcaption>Rabbits</figcaption></figure>
-        <figure><img src="assets/img/doodles/budgie.webp" alt="" loading="lazy"><figcaption>Birds</figcaption></figure>
-        <figure><img src="assets/img/doodles/goldfish.webp" alt="" loading="lazy"><figcaption>Fish</figcaption></figure>
-        <figure><img src="assets/img/doodles/hamster.webp" alt="" loading="lazy"><figcaption>Hamsters</figcaption></figure>
-        <figure><img src="assets/img/doodles/guinea-pig.webp" alt="" loading="lazy"><figcaption>Guinea pigs</figcaption></figure>
-        <figure><img src="assets/img/doodles/turtle.webp" alt="" loading="lazy"><figcaption>Turtles</figcaption></figure>
-        <figure><img src="assets/img/doodles/pony.webp" alt="" loading="lazy"><figcaption>Horses</figcaption></figure>
+      <div class="marquee reveal">
+        <div class="mq-row"><div class="mq-track"><figure class="tile"><img src="assets/img/doodles/golden-retriever.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>Golden Retriever</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/ginger-tabby.webp" alt="" loading="lazy"><figcaption><b>Cats</b><span>Ginger tabby</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/german-shepherd.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>German Shepherd</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/siamese.webp" alt="" loading="lazy"><figcaption><b>Cats</b><span>Siamese</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/husky.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>Husky</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/maine-coon.webp" alt="" loading="lazy"><figcaption><b>Cats</b><span>Maine Coon</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/poodle.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>Poodle</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/ragdoll.webp" alt="" loading="lazy"><figcaption><b>Cats</b><span>Ragdoll</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/dachshund.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>Dachshund</span></figcaption></figure><div class="mq-dup" aria-hidden="true"><figure class="tile"><img src="assets/img/doodles/golden-retriever.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>Golden Retriever</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/ginger-tabby.webp" alt="" loading="lazy"><figcaption><b>Cats</b><span>Ginger tabby</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/german-shepherd.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>German Shepherd</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/siamese.webp" alt="" loading="lazy"><figcaption><b>Cats</b><span>Siamese</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/husky.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>Husky</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/maine-coon.webp" alt="" loading="lazy"><figcaption><b>Cats</b><span>Maine Coon</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/poodle.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>Poodle</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/ragdoll.webp" alt="" loading="lazy"><figcaption><b>Cats</b><span>Ragdoll</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/dachshund.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>Dachshund</span></figcaption></figure></div></div></div>
+        <div class="mq-row rev"><div class="mq-track"><figure class="tile"><img src="assets/img/doodles/holland-lop.webp" alt="" loading="lazy"><figcaption><b>Rabbits</b><span>Holland Lop</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/budgie.webp" alt="" loading="lazy"><figcaption><b>Birds</b><span>Budgie</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/goldfish.webp" alt="" loading="lazy"><figcaption><b>Fish</b><span>Goldfish</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/hamster.webp" alt="" loading="lazy"><figcaption><b>Hamsters</b><span>Syrian hamster</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/guinea-pig.webp" alt="" loading="lazy"><figcaption><b>Guinea pigs</b><span>Abyssinian</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/turtle.webp" alt="" loading="lazy"><figcaption><b>Turtles</b><span>Red-eared slider</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/pony.webp" alt="" loading="lazy"><figcaption><b>Horses</b><span>Pony</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/cockatiel.webp" alt="" loading="lazy"><figcaption><b>Parrots</b><span>Cockatiel</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/french-bulldog.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>French Bulldog</span></figcaption></figure><div class="mq-dup" aria-hidden="true"><figure class="tile"><img src="assets/img/doodles/holland-lop.webp" alt="" loading="lazy"><figcaption><b>Rabbits</b><span>Holland Lop</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/budgie.webp" alt="" loading="lazy"><figcaption><b>Birds</b><span>Budgie</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/goldfish.webp" alt="" loading="lazy"><figcaption><b>Fish</b><span>Goldfish</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/hamster.webp" alt="" loading="lazy"><figcaption><b>Hamsters</b><span>Syrian hamster</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/guinea-pig.webp" alt="" loading="lazy"><figcaption><b>Guinea pigs</b><span>Abyssinian</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/turtle.webp" alt="" loading="lazy"><figcaption><b>Turtles</b><span>Red-eared slider</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/pony.webp" alt="" loading="lazy"><figcaption><b>Horses</b><span>Pony</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/cockatiel.webp" alt="" loading="lazy"><figcaption><b>Parrots</b><span>Cockatiel</span></figcaption></figure><figure class="tile"><img src="assets/img/doodles/french-bulldog.webp" alt="" loading="lazy"><figcaption><b>Dogs</b><span>French Bulldog</span></figcaption></figure></div></div></div>
       </div>
     </div>
   </section>
@@ -241,6 +233,7 @@
       </div>
       <div class="plans">
         <article class="card plan free reveal">
+          <div class="peek top right" aria-hidden="true"><img src="assets/img/doodles/holland-lop.webp" alt=""></div>
           <h3>Free</h3>
           <p class="soft">Everything you need to care for one pet.</p>
           <ul class="list">
@@ -253,6 +246,7 @@
           </ul>
         </article>
         <article class="card plan premium reveal">
+          <div class="peek top left" aria-hidden="true"><img src="assets/img/doodles/ginger-tabby.webp" alt=""></div>
           <span class="tag">Most loved</span>
           <h3>Premium</h3>
           <p class="soft">Everything in Free, plus the tools that make pet care effortless.</p>
@@ -322,8 +316,8 @@
   <section class="pt-0">
     <div class="wrap">
       <div class="card cta reveal">
-        <img class="doodle l" src="assets/img/doodles/poodle.webp" alt="" aria-hidden="true" loading="lazy">
-        <img class="doodle r" src="assets/img/doodles/british-shorthair.webp" alt="" aria-hidden="true" loading="lazy">
+        <div class="peek bottom l" aria-hidden="true"><img src="assets/img/doodles/golden-retriever.webp" alt=""></div>
+        <div class="peek bottom r" aria-hidden="true"><img src="assets/img/doodles/british-shorthair.webp" alt=""></div>
         <span class="eyebrow">Coming soon</span>
         <h2>Give your pets the calm care they deserve.</h2>
         <p class="soft">PetPulse is coming to iPhone and Android.</p>
@@ -340,8 +334,6 @@
       </div>
     </div>
   </section>
-
-  <div class="meadow small" aria-hidden="true"><div class="runner " data-face="left" data-speed="130" data-size="96"><span class="flip"><img src="assets/img/doodles/pony.webp" alt="" loading="lazy"></span></div><div class="runner waddle" data-face="front" data-speed="110" data-size="72"><span class="flip"><img src="assets/img/doodles/beagle.webp" alt="" loading="lazy"></span></div><div class="runner waddle" data-face="front" data-speed="90" data-size="70"><span class="flip"><img src="assets/img/doodles/siamese.webp" alt="" loading="lazy"></span></div><div class="runner slow" data-face="right" data-speed="28" data-size="72"><span class="flip"><img src="assets/img/doodles/turtle.webp" alt="" loading="lazy"></span></div></div>
 </main>
 <footer class="site-footer">
   <div class="wrap">

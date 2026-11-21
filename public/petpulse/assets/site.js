@@ -69,94 +69,68 @@
   document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
 })();
 
-/* ---------- loader: shown once per visit on the home page, fades out when the page has loaded ---------- */
+/* ---------- loader: once per visit, fades out when the page has loaded ---------- */
 (function () {
   var loader = document.getElementById('loader');
   if (!loader) return;
-  var root = document.documentElement;
-  if (root.classList.contains('seen-loader')) { loader.remove(); return; }
+  if (document.documentElement.classList.contains('seen-loader')) { loader.remove(); return; }
   try { sessionStorage.setItem('pp-loader', '1'); } catch (e) {}
   var started = Date.now();
   var hide = function () {
-    var wait = Math.max(0, 1400 - (Date.now() - started)); // long enough to see the pets run one lap
-    setTimeout(function () {
-      loader.classList.add('done');
-      setTimeout(function () { loader.remove(); }, 700);
-    }, wait);
+    var wait = Math.max(0, 1900 - (Date.now() - started)); // ring closes and every pet has arrived
+    setTimeout(function () { loader.classList.add('done'); setTimeout(function () { loader.remove(); }, 800); }, wait);
   };
   if (document.readyState === 'complete') hide(); else window.addEventListener('load', hide);
 })();
 
-/* ---------- pet meadow: each pet picks a spot, trots there, rests a little, and sets off again ---------- */
+/* ---------- hero stage: phone tilts toward the cursor, cards float at their own depth ---------- */
 (function () {
+  var stage = document.getElementById('stage');
+  if (!stage) return;
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll('.meadow').forEach(function (meadow) {
-    var runners = Array.prototype.slice.call(meadow.querySelectorAll('.runner'));
-    var visible = false;
-    var W = function () { return meadow.clientWidth; };
+  var loaderUp = document.getElementById('loader') && !document.documentElement.classList.contains('seen-loader');
+  setTimeout(function () { stage.classList.add('ready'); }, loaderUp ? 1900 : 150);
+  if (reduce) return;
 
-    runners.forEach(function (r, i) {
-      var size = parseFloat(r.dataset.size || '84');
-      r.style.setProperty('--size', size + 'px');
-      r.style.zIndex = String(2 + i);
-      var face = r.dataset.face || 'front';          // which way the doodle looks: right, left or front
-      var speed = parseFloat(r.dataset.speed || '110'); // px per second
-      var flip = r.querySelector('.flip');
-      // spread the pets out to start with
-      var x = Math.round(((i + 0.5) / runners.length) * (W() - size)) - size / 2;
-      x = Math.max(0, Math.min(W() - size, x));
-      r.style.transform = 'translateX(' + x + 'px)';
-      r._x = x;
-      if (reduce) return;
-
-      var lastPaw = 0;
-      var pawUp = false;
-      var trail = function () {
-        if (!r.classList.contains('moving')) return;
-        var now = Date.now();
-        if (now - lastPaw > 260 && visible) {
-          lastPaw = now;
-          var box = r.getBoundingClientRect(), mb = meadow.getBoundingClientRect();
-          var p = document.createElement('span');
-          p.className = 'paw' + (pawUp ? ' up' : '');
-          pawUp = !pawUp;
-          p.style.left = Math.round(box.left - mb.left + box.width / 2 - 6) + 'px';
-          meadow.appendChild(p);
-          setTimeout(function () { p.remove(); }, 2500);
-        }
-        requestAnimationFrame(trail);
-      };
-
-      var step = function () {
-        if (!visible || document.hidden) { setTimeout(step, 800); return; }
-        var w = W() - size;
-        var target = Math.round(Math.random() * w);
-        if (Math.abs(target - r._x) < w * 0.22) target = r._x > w / 2 ? Math.round(Math.random() * w * 0.35) : Math.round(w * 0.65 + Math.random() * w * 0.35);
-        var goingRight = target > r._x;
-        var scale = face === 'front' ? 1 : (face === 'right') === goingRight ? 1 : -1;
-        if (flip) flip.style.transform = 'scaleX(' + scale + ')';
-        var dur = Math.max(1.2, Math.abs(target - r._x) / speed);
-        r.style.transition = 'transform ' + dur.toFixed(2) + 's cubic-bezier(.45,.05,.55,.95)';
-        r.classList.add('moving');
-        requestAnimationFrame(trail);
-        r.style.transform = 'translateX(' + target + 'px)';
-        r._x = target;
-        setTimeout(function () {
-          r.classList.remove('moving');
-          setTimeout(step, 700 + Math.random() * 2600); // a little rest, then off again
-        }, dur * 1000);
-      };
-      setTimeout(step, 400 + i * 450);
+  var tx = 0, ty = 0, x = 0, y = 0, sy = 0, tsy = 0, running = false;
+  var fine = window.matchMedia && matchMedia('(pointer: fine)').matches;
+  var hero = stage.closest('section') || document.body;
+  if (fine) {
+    hero.addEventListener('pointermove', function (e) {
+      var r = stage.getBoundingClientRect();
+      tx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 1.2)));
+      ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 1.2)));
+      kick();
     });
+    hero.addEventListener('pointerleave', function () { tx = 0; ty = 0; kick(); });
+  }
+  var onScroll = function () {
+    var r = stage.getBoundingClientRect();
+    tsy = Math.max(0, Math.min(1, -r.top / (r.height || 1)));
+    kick();
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
 
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(meadow);
-    } else { visible = true; }
-    window.addEventListener('resize', function () {
-      runners.forEach(function (r) {
-        var size = parseFloat(r.dataset.size || '84');
-        if (r._x > W() - size) { r._x = Math.max(0, W() - size); r.style.transition = 'none'; r.style.transform = 'translateX(' + r._x + 'px)'; }
-      });
+  function kick() { if (!running) { running = true; requestAnimationFrame(frame); } }
+  function frame() {
+    // ease toward the target (smooth, no overshoot)
+    x += (tx - x) * 0.07; y += (ty - y) * 0.07; sy += (tsy - sy) * 0.12;
+    stage.style.setProperty('--mx', x.toFixed(4));
+    stage.style.setProperty('--my', y.toFixed(4));
+    stage.style.setProperty('--sy', sy.toFixed(4));
+    if (Math.abs(tx - x) > 0.001 || Math.abs(ty - y) > 0.001 || Math.abs(tsy - sy) > 0.001) requestAnimationFrame(frame);
+    else running = false;
+  }
+})();
+
+/* ---------- feature cards: soft light follows the cursor ---------- */
+(function () {
+  if (!(window.matchMedia && matchMedia('(pointer: fine)').matches)) return;
+  document.querySelectorAll('.feature').forEach(function (card) {
+    card.addEventListener('pointermove', function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--x', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--y', (e.clientY - r.top) + 'px');
     });
   });
 })();
