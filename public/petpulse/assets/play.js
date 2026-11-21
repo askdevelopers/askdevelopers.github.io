@@ -1,6 +1,6 @@
 // PetPulse website mini game: play fetch.
-// Tap/click the lawn to throw (hold and drag to see the arc). Biscuit the dachshund runs for the frisbee and can
-// catch it mid-air; Milo the cat waits a moment, chases the rolling ball, pounces and brings it back.
+// Pick a pet, then tap/click the lawn to throw (hold and drag to see the arc). Dogs run for the frisbee and can catch
+// it mid-air; cats wait a moment, chase the rolling ball, pounce and bring it back.
 // Runs only while something is moving (no idle loop). Pets and toys are moved with transforms set from JS.
 (function () {
   var game = document.getElementById('playGame');
@@ -19,15 +19,29 @@
   var stat = {};
   game.querySelectorAll('[data-stat]').forEach(function (el) { stat[el.getAttribute('data-stat')] = el; });
 
+  // Your pets: a front-facing avatar while waiting, a side-view runner while fetching. mouth = where the toy sits
+  // (x from the centre and height from the bottom, as a fraction of the sprite width; measured from the artwork).
+  var DOG = { kind: 'dog', faces: 'right', size: 128, speed: 0.42, delay: 0,
+    flight: function (d) { return 0.7 + d / 1100; }, arc: function (d) { return 60 + d * 0.22; } };
+  var CAT = { kind: 'cat', faces: 'right', size: 118, speed: 0.6, delay: 0.45,
+    flight: function (d) { return 0.55 + d / 950; }, arc: function (d) { return 38 + d * 0.3; } };
+  var pet_ = function (base, o) { var r = {}; for (var k in base) r[k] = base[k]; for (k in o) r[k] = o[k]; return r; };
   var PETS = {
-    dog: { name: 'Biscuit', img: 'assets/img/doodles/dachshund.webp', size: 104, faces: 'right', speed: 0.42, delay: 0, mouth: [0.36, 0.56],
-      flight: function (d) { return 0.7 + d / 1100; }, arc: function (d) { return 60 + d * 0.22; } },
-    cat: { name: 'Milo', img: 'assets/img/doodles/maine-coon.webp', size: 78, faces: 'front', speed: 0.6, delay: 0.45, mouth: [0, 0.38],
-      flight: function (d) { return 0.55 + d / 950; }, arc: function (d) { return 38 + d * 0.3; } }
+    golden: pet_(DOG, { name: 'Bella', run: 'golden-retriever', avatar: 'golden-retriever', mouth: [0.395, 0.52] }),
+    lab: pet_(DOG, { name: 'Daisy', run: 'labrador', avatar: 'labrador', mouth: [0.395, 0.5] }),
+    shepherd: pet_(DOG, { name: 'Rex', run: 'german-shepherd', avatar: 'german-shepherd-pup', mouth: [0.395, 0.47] }),
+    white: pet_(CAT, { name: 'Snow', run: 'white-cat', avatar: 'white-cat', mouth: [0.395, 0.48] }),
+    ragdoll: pet_(CAT, { name: 'Luna', run: 'ragdoll', avatar: 'ragdoll-fluffy', mouth: [0.395, 0.43] }),
+    british: pet_(CAT, { name: 'Milo', run: 'british-shorthair', avatar: 'british-shorthair', mouth: [0.39, 0.47] })
   };
+  var runSrc = function (c) { return 'assets/img/run/' + c.run + '.webp'; };
+  var avatarSrc = function (c) { return 'assets/img/doodles/' + c.avatar + '.webp'; };
+  // warm the image cache so the first switch to running is instant
+  Object.keys(PETS).forEach(function (k) { var i = new Image(); i.src = runSrc(PETS[k]); });
 
-  var W = 0, H = 0, P = { x: 0, y: 0 }, HOME = { x: 0, y: 0 };
-  var kind = 'dog', cfg = PETS.dog, toyEl = toys.dog;
+  var W = 0, H = 0, P = { x: 0, y: 0 }, HOME = { x: 0, y: 0 }, K = 1;
+  var petId = 'golden', cfg = PETS.golden, kind = 'dog', toyEl = toys.dog;
+  var shownSrc = '';
   var pet = { x: 0, y: 0, face: 1, faceVis: 1, jump: 0, jumpT: -1, moving: false, gx: 0, gy: 0 };
   var toy = { x: 0, y: 0, h: 26, vx: 0, vy: 0, state: 'ready', t: 0, T: 1, sx: 0, sy: 0, tx: 0, ty: 0, arc: 0, dist: 0, drop: 0 };
   var waitT = 0, running = false, last = 0;
@@ -37,21 +51,22 @@
   /* ---------- layout ---------- */
   function measure() {
     W = field.clientWidth; H = field.clientHeight;
+    K = Math.max(0.72, Math.min(1, W / 760)); // smaller pets on small screens
+    if (cfg) petEl.style.width = Math.round(cfg.size * K) + 'px';
     P = { x: W / 2, y: H - 27 };
     HOME = { x: P.x + (W < 520 ? 64 : 86), y: P.y - 12 };
   }
   var depth = function (y) { return 0.68 + 0.32 * Math.max(0, Math.min(1, y / H)); };
 
-  function choose(k) {
-    kind = k; cfg = PETS[k]; toyEl = toys[k];
-    game.classList.toggle('cat', k === 'cat');
-    game.querySelectorAll('.seg-btn').forEach(function (b) {
-      var on = b.getAttribute('data-pet') === k;
-      b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
+  function choose(id) {
+    petId = id; cfg = PETS[id]; kind = cfg.kind; toyEl = toys[kind];
+    game.classList.toggle('cat', kind === 'cat');
+    game.querySelectorAll('.pick-btn').forEach(function (b) {
+      var on = b.getAttribute('data-pet') === id;
+      b.classList.toggle('on', on); b.setAttribute('aria-checked', on ? 'true' : 'false');
     });
-    petImg.src = cfg.img;
-    petEl.style.width = cfg.size + 'px';
-    petEl.classList.toggle('cat', k === 'cat');
+    petEl.classList.toggle('cat', kind === 'cat');
+    shownSrc = '';
     reset();
   }
 
@@ -66,12 +81,17 @@
 
   /* ---------- drawing ---------- */
   function render() {
+    // sit as the avatar while waiting for a throw; run side-on while fetching
+    var idle = toy.state === 'ready' && !pet.moving && pet.jumpT < 0;
+    var src = idle ? avatarSrc(cfg) : runSrc(cfg);
+    if (src !== shownSrc) { petImg.src = src; shownSrc = src; petEl.classList.toggle('sitting', idle); }
     var s = depth(pet.y);
     petEl.classList.toggle('run', pet.moving);
     petEl.style.transform = 'translate(' + pet.x.toFixed(1) + 'px,' + (pet.y - pet.jump).toFixed(1) + 'px) translate(-50%,-100%) scale(' + s.toFixed(3) + ')';
     petEl.style.transformOrigin = '50% 100%';
     petEl.style.zIndex = String(Math.round(pet.y));
-    if (cfg.faces !== 'front') petFlip.style.transform = 'scaleX(' + (cfg.faces === 'right' ? pet.faceVis : -pet.faceVis).toFixed(3) + ')';
+    if (petEl.classList.contains('sitting')) petFlip.style.transform = 'none';
+    else if (cfg.faces !== 'front') petFlip.style.transform = 'scaleX(' + (cfg.faces === 'right' ? pet.faceVis : -pet.faceVis).toFixed(3) + ')';
     else petFlip.style.transform = 'none';
 
     var ts = depth(toy.y);
@@ -118,12 +138,12 @@
     toyEl.classList.add('spinning');
     field.classList.add('busy', 'played'); if (autoBtn) autoBtn.disabled = true;
     waitT = cfg.delay;
-    var f = t.x > pet.x ? 1 : -1, mw = cfg.faces === 'front' ? 0 : cfg.mouth[0] * cfg.size * depth(t.y);
+    var f = t.x > pet.x ? 1 : -1, mw = cfg.faces === 'front' ? 0 : cfg.mouth[0] * cfg.size * K * depth(t.y);
     pet.gx = t.x - f * mw; pet.gy = t.y;
     var meters = Math.max(1, Math.round((d / W) * 30));
     if (meters > score.best) { score.best = meters; try { localStorage.setItem('pp-fetch-best', String(meters)); } catch (e) {} }
     updateStats();
-    if (kind === 'cat' && Math.random() < 0.5) toast(pick(['Milo is thinking about it…', 'Milo watches it go…']), 1000);
+    if (kind === 'cat' && Math.random() < 0.5) toast(pick([cfg.name + ' is thinking about it…', cfg.name + ' watches it go…']), 1000);
     start();
   }
 
@@ -141,7 +161,7 @@
   }
 
   function mouth() {
-    var s = depth(pet.y), w = cfg.size * s;
+    var s = depth(pet.y), w = cfg.size * K * s;
     var mx = cfg.faces === 'front' ? 0 : cfg.mouth[0] * w * pet.faceVis;
     return { x: pet.x + mx, y: pet.y, h: cfg.mouth[1] * w + pet.jump };
   }
@@ -151,9 +171,9 @@
     toyEl.classList.remove('spinning');
     if (inAir) {
       score.air++; pet.jumpT = 0;
-      toast(pick(['Mid-air catch!', 'What a leap!', 'Biscuit nailed it!']));
+      toast(pick(['Mid-air catch!', 'What a leap!', cfg.name + ' nailed it!']));
     } else {
-      toast(kind === 'cat' ? pick(['Pounce! Milo has it.', 'Got it! Milo trots back.']) : pick(['Got it! Bringing it back…', 'Good find, Biscuit!']));
+      toast(kind === 'cat' ? pick(['Pounce! ' + cfg.name + ' has it.', 'Got it! ' + cfg.name + ' trots back.']) : pick(['Got it! Bringing it back…', 'Good find, ' + cfg.name + '!']));
     }
     updateStats();
   }
@@ -260,11 +280,11 @@
   if (autoBtn) autoBtn.addEventListener('click', function () {
     throwTo(40 + Math.random() * (W - 80), 70 + Math.random() * (H * 0.5));
   });
-  game.querySelectorAll('.seg-btn').forEach(function (b) {
-    b.addEventListener('click', function () { if (b.getAttribute('data-pet') !== kind) choose(b.getAttribute('data-pet')); });
+  game.querySelectorAll('.pick-btn').forEach(function (b) {
+    b.addEventListener('click', function () { if (b.getAttribute('data-pet') !== petId) choose(b.getAttribute('data-pet')); });
   });
   window.addEventListener('resize', function () { if (toy.state === 'ready') reset(); else measure(); });
 
   updateStats();
-  choose('dog');
+  choose('golden');
 })();

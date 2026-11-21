@@ -615,3 +615,21 @@ html { overflow-x: clip; }
 .stats i { font-style: normal; }
 @media (pointer: coarse) { .field { touch-action: pan-y; } }
 .spot span { position: static; font-size: .62rem; }
+
+/* game: pet picker (avatars) */
+.pick { display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px; max-width: 100%; }
+.pick::-webkit-scrollbar { display: none; }
+.pick-label { flex: none; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text-faint); padding: 0 4px 0 6px; }
+.pick-label + .pick-btn { margin-left: 0; }
+.pick-sep { flex: none; width: 1px; height: 30px; background: var(--border); margin: 0 6px; }
+.pick-btn {
+  flex: none; display: inline-flex; flex-direction: column; align-items: center; gap: 4px; border: 0; cursor: pointer; padding: 6px 8px 8px; border-radius: 18px;
+  background: transparent; color: var(--text-soft); font: 700 .78rem/1 var(--font-body); transition: background-color .3s ease, color .3s ease, box-shadow .3s ease;
+}
+.pick-btn img { width: 52px; height: 52px; object-fit: contain; border-radius: 16px; background: var(--bg-alt); padding: 3px; transition: transform .35s ease; }
+.pick-btn:hover img { transform: translateY(-2px); }
+.pick-btn.on { background: var(--card); color: var(--text); box-shadow: var(--shadow), inset 0 0 0 2px var(--primary); }
+.pick-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.play-bar { align-items: flex-end; }
+.pet.sitting img { transform: translateY(7%); }
+@media (max-width: 640px) { .pick-label { display: none; } .pick-btn img { width: 46px; height: 46px; } }
