@@ -271,7 +271,7 @@ section { padding: 72px 0; }
 .steps { counter-reset: s; list-style: none; padding: 0; display: grid; gap: 12px; }
 .steps li { counter-increment: s; position: relative; padding: 16px 18px 16px 60px; background: var(--card); border-radius: 16px; box-shadow: var(--shadow); color: var(--text); margin: 0; }
 .steps li::before { content: counter(s); position: absolute; left: 16px; top: 14px; width: 30px; height: 30px; border-radius: 50%; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; font-weight: 800; font-size: 0.9rem; }
-.note { border-radius: 16px; padding: 16px 18px; background: var(--bg-alt); color: var(--text); margin: 20px 0; }
+.callout { display: block; border-radius: 16px; padding: 16px 18px; background: var(--bg-alt); color: var(--text); margin: 20px 0; line-height: 1.6; }
 mark.todo { background: var(--highlight); color: var(--on-highlight); padding: 0 4px; border-radius: 4px; }
 .support-grid { display: grid; gap: 16px; margin: 28px 0 8px; }
 @media (min-width: 700px) { .support-grid { grid-template-columns: 1fr 1fr; } }
