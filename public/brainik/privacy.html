@@ -4,12 +4,43 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Brainik Privacy Policy</title>
-<link rel="stylesheet" href="style.css?v=abfefac1">
+<meta name="theme-color" content="#F4EFE6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1A1815" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/img/icon.svg">
+<link rel="apple-touch-icon" href="assets/img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css?v=7f2a6708">
+<script src="assets/theme.js?v=4a9f2cfa"></script>
+<script src="assets/site.js?v=c7adeb73" defer></script>
 </head>
-<body><main>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="index.html"><img src="assets/img/icon.svg" alt="" width="34" height="34">Brainik</a>
+    <nav class="nav-links" id="links" aria-label="Main">
+      <a href="index.html#play">Today’s garden</a>
+      <a href="index.html#games">Games</a>
+      <a href="index.html#warmup">Warm-up</a>
+      <a href="support.html">Support</a>
+    </nav>
+    <div class="nav-end">
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch to dark mode">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z"/></svg>
+      </button>
+      <button class="icon-btn menu-btn" id="menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="links">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+<main id="main" class="legal"><div class="wrap"><article class="legal-doc">
 <h1>Privacy Policy</h1>
 <p class="meta">Brainik · last updated 21 November 2026</p>
-<nav><a href="index.html">Home</a><a href="terms.html">Terms of Use</a><a href="delete-account.html">Delete your account</a><a href="support.html">Support</a></nav>
+<nav class="doc-nav" aria-label="Related pages"><a href="index.html">Home</a><a href="terms.html">Terms of Use</a><a href="delete-account.html">Delete your account</a><a href="support.html">Support</a></nav>
 
 <p>Brainik ("the app") is developed and published by Ask Developers ("we", "us"), a software development company based in India. Ask Developers is responsible for the app and for this policy, and is the controller ("data fiduciary" under Indian law) of the personal information described here. This policy explains what information the app collects, why, who it is shared with, and the choices you have. Contact: <a href="mailto:askdevelopers001@gmail.com">askdevelopers001@gmail.com</a>.</p>
 
@@ -70,5 +101,21 @@
 
 <h2>10. Changes</h2>
 <p>If we change this policy we will update the date above, and tell you in the app if the change is significant.</p>
-</main></body>
+</article></div></main>
+<footer class="site-footer">
+  <div class="wrap foot">
+    <div class="foot-brand">
+      <a class="brand" href="index.html"><img src="assets/img/icon.svg" alt="" width="28" height="28">Brainik</a>
+      <p>Calm daily brain games by Ask Developers.</p>
+    </div>
+    <nav aria-label="Legal">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="delete-account.html">Delete your account</a>
+      <a href="support.html">Support</a>
+    </nav>
+    <p class="copy">© <span id="year">2026</span> Ask Developers</p>
+  </div>
+</footer>
+</body>
 </html>

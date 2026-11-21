@@ -368,7 +368,7 @@
     setFam(r.id);
     setStep(idx);
     stopTimer(true);
-    scoreEl.textContent = 'Round ' + (idx + 1) + ' of 6';
+    scoreEl.textContent = (idx + 1) + ' / 6';
     clear(stage);
     var box = el('div', 'wu-intro');
     var ring = el('div', 'wu-ring'); ring.appendChild(el('span', null, String(idx + 1)));

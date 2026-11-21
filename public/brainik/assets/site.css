@@ -657,3 +657,28 @@ button { font: inherit; color: inherit; }
 :root[data-theme="dark"] .t-quiet { background: var(--moss-tint); color: var(--ink); }
 :root[data-theme="dark"] .t-quiet h3 { color: var(--ink); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .t-quiet { background: var(--moss-tint); color: var(--ink); } :root:not([data-theme="light"]) .t-quiet h3 { color: var(--ink); } }
+
+/* ---------- Legal and support pages (privacy, terms, delete-account, support) ---------- */
+.legal { padding: 48px 0 88px; }
+.legal-doc { max-width: 760px; margin: 0 auto; }
+.legal-doc h1 { font-size: clamp(36px, 6vw, 52px); margin: 0 0 8px; }
+.legal-doc .meta { color: var(--muted); font-weight: 600; font-size: 15px; margin: 0 0 22px; }
+.legal-doc h2 { font-size: 26px; margin: 44px 0 12px; }
+.legal-doc h3 { font-size: 19px; margin: 26px 0 8px; }
+.legal-doc h2.first { margin-top: 0; }
+.legal-doc p, .legal-doc li { color: var(--ink2); font-size: 16.5px; line-height: 1.7; }
+.legal-doc p + p { margin-top: 12px; }
+.legal-doc ul, .legal-doc ol { padding-left: 22px; margin: 10px 0; }
+.legal-doc li + li { margin-top: 6px; }
+.legal-doc strong, .legal-doc b { color: var(--ink); }
+.doc-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 30px; }
+.doc-nav a { text-decoration: none; font-weight: 700; font-size: 14px; color: var(--ink2) !important; padding: 7px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--card); }
+.doc-nav a:hover { color: var(--ink) !important; border-color: var(--track); }
+.legal-doc .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 22px 24px; margin: 18px 0; }
+.legal-doc table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin: 14px 0; display: block; overflow-x: auto; }
+.legal-doc th, .legal-doc td { text-align: left; padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink2); }
+.legal-doc th { color: var(--ink); font-weight: 700; background: var(--paper2); }
+
+/* ---------- Touch: taps in the games never select text or open "Touch to Search" ---------- */
+.console, .play-card { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+.wu-score { white-space: nowrap; }
