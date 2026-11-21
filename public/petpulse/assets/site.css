@@ -538,3 +538,80 @@ html { overflow-x: clip; }
   .weight { width: 196px; } .weight .wt-head b { font-size: 1.1rem; }
   .fl.n1 { top: 0; } .fl.b1 { top: 14%; right: -2%; } .fl.b3 { top: 42%; right: 0; } .fl.b2 { top: 50%; }
 }
+
+/* =====================================================================
+   MINI GAME: play fetch (play.js). Field is a soft glass lawn; pets and
+   toys are positioned by JS with transforms (CSSOM is CSP-safe).
+   ===================================================================== */
+.play { padding: 14px; border-radius: 28px; }
+.play-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 4px 14px; }
+.seg { display: inline-flex; padding: 4px; gap: 4px; border-radius: 999px; background: var(--bg-alt); }
+.seg-btn {
+  display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer; border-radius: 999px; padding: 6px 14px 6px 6px;
+  font: 700 .92rem/1 var(--font-body); color: var(--text-soft); background: transparent; transition: background-color .3s ease, color .3s ease, box-shadow .3s ease;
+}
+.seg-btn img { width: 30px; height: 30px; object-fit: contain; border-radius: 50%; background: var(--card); }
+.seg-btn small { font-weight: 600; color: var(--text-faint); font-size: .76rem; }
+.seg-btn.on { background: var(--card); color: var(--text); box-shadow: var(--shadow); }
+.stats { display: flex; gap: 8px; flex-wrap: wrap; }
+.stats span { font-size: .82rem; color: var(--text-soft); background: var(--bg-alt); padding: 6px 12px; border-radius: 999px; }
+.stats b { font-family: var(--font-display); color: var(--text); font-size: .98rem; margin-right: 2px; }
+.play.cat .air-stat { display: none; }
+
+.field {
+  position: relative; height: 380px; border-radius: 22px; overflow: hidden; cursor: crosshair; touch-action: none; user-select: none; -webkit-user-select: none;
+  background:
+    radial-gradient(70% 90% at 50% 105%, color-mix(in srgb, var(--primary) 16%, transparent), transparent 70%),
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--primary) 22%, transparent) 1px, transparent 1.6px) 0 0 / 26px 26px,
+    linear-gradient(180deg, var(--bg-alt), var(--card-alt));
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+@media (max-width: 640px) { .field { height: 330px; } }
+.field.busy { cursor: default; }
+.aim { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.aim path { fill: none; stroke: var(--primary); stroke-width: 2.5; stroke-dasharray: 2 9; stroke-linecap: round; opacity: 0; transition: opacity .25s ease; }
+.aim.on path { opacity: .75; }
+.hint { position: absolute; left: 0; right: 0; top: 16px; text-align: center; font-size: .86rem; font-weight: 600; color: var(--text-soft); transition: opacity .5s ease; pointer-events: none; }
+.hint span { color: var(--text-faint); font-weight: 500; }
+.field.played .hint { opacity: 0; }
+@media (pointer: coarse) { .hint span { display: none; } }
+.toast {
+  position: absolute; left: 50%; top: 14px; transform: translate(-50%, -8px); opacity: 0; pointer-events: none; white-space: nowrap;
+  padding: 8px 14px; border-radius: 999px; font-size: .86rem; font-weight: 700; color: var(--text);
+  background: var(--glass); border: 1px solid var(--glass-line); box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: opacity .4s ease, transform .4s ease;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.spot { position: absolute; left: 50%; bottom: 14px; width: 74px; height: 26px; margin-left: -37px; border-radius: 50%; border: 2px dashed color-mix(in srgb, var(--primary) 45%, transparent); display: grid; place-items: center; }
+.spot span { position: absolute; top: 28px; font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-faint); }
+
+.pet, .toy, .toy-shadow { position: absolute; left: 0; top: 0; will-change: transform; pointer-events: none; }
+.pet .pet-flip { display: block; }
+.pet img { display: block; width: 100%; height: auto; transform-origin: 50% 100%; filter: drop-shadow(0 8px 10px rgba(54, 32, 130, .18)); }
+.pet.run img { animation: p-trot .36s ease-in-out infinite; }
+.pet.cat.run img { animation-duration: .3s; }
+@keyframes p-trot { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-5px) rotate(2deg); } }
+.toy { width: 34px; height: 34px; }
+.toy svg { width: 100%; height: 100%; display: block; }
+.toy-spin { display: block; width: 100%; height: 100%; }
+.toy.frisbee .toy-spin { transform: scaleY(.55); }
+.toy.frisbee svg { animation: spin .45s linear infinite paused; }
+.toy.ball svg { animation: spin .7s linear infinite paused; }
+.toy.spinning svg { animation-play-state: running; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.fr-disc { fill: var(--primary); }
+.fr-ring { fill: none; stroke: rgba(255, 255, 255, .45); stroke-width: 2; }
+.fr-ring2 { fill: #FFCE3A; }
+.fr-shine, .ba-shine { fill: none; stroke: rgba(255, 255, 255, .7); stroke-width: 2.5; stroke-linecap: round; }
+.ba-body { fill: #E86AA6; }
+.ba-yarn { fill: none; stroke: rgba(255, 255, 255, .55); stroke-width: 1.6; stroke-linecap: round; }
+.toy-shadow { width: 34px; height: 12px; border-radius: 50%; background: rgba(35, 29, 51, .18); filter: blur(2px); }
+:root[data-theme="dark"] .toy-shadow { background: rgba(0, 0, 0, .45); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .toy-shadow { background: rgba(0, 0, 0, .45); } }
+.play:not(.cat) .toy.ball, .play.cat .toy.frisbee { display: none; }
+.play-foot { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 14px 4px 2px; font-size: .88rem; }
+.play-foot .btn:disabled { opacity: .5; cursor: default; }
+@media (prefers-reduced-motion: reduce) { .pet.run img, .toy svg { animation: none !important; } }
+.stats i { font-style: normal; }
+@media (pointer: coarse) { .field { touch-action: pan-y; } }
+.spot span { position: static; font-size: .62rem; }
