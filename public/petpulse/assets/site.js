@@ -134,3 +134,57 @@
     });
   });
 })();
+
+/* ---------- Service Dog Hub spotlight: screen reel, rotating place, counters ---------- */
+(function () {
+  var spot = document.getElementById('service');
+  if (!spot) return;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var frames = spot.querySelectorAll('.reel .frame');
+  var dots = spot.querySelectorAll('.reel-dots i');
+  var placeBox = spot.querySelector('.c-place .place');
+  var PLACES = ['Texas', 'Ontario', 'New South Wales', 'Scotland', 'California', 'Maharashtra', 'British Columbia', 'Victoria', 'New York', 'Wales', 'Florida', 'Karnataka'];
+  var visible = false, timer = 0, reelIx = 0, placeIx = 0, counted = false;
+
+  function show(i) {
+    frames.forEach(function (f, j) { f.classList.toggle('on', j === i); });
+    dots.forEach(function (d, j) { d.classList.toggle('on', j === i); });
+  }
+  function nextPlace() {
+    if (!placeBox) return;
+    var cur = placeBox.querySelector('b:not(.out)');
+    placeIx = (placeIx + 1) % PLACES.length;
+    var nb = document.createElement('b');
+    nb.className = 'in'; nb.textContent = PLACES[placeIx];
+    placeBox.appendChild(nb);
+    requestAnimationFrame(function () { requestAnimationFrame(function () { nb.classList.remove('in'); if (cur) cur.classList.add('out'); }); });
+    setTimeout(function () { if (cur && cur.parentNode) cur.remove(); }, 800);
+  }
+  function count() {
+    if (counted) return; counted = true;
+    spot.querySelectorAll('[data-count]').forEach(function (el) {
+      var to = parseInt(el.getAttribute('data-count'), 10), t0 = performance.now(), dur = 1500;
+      if (reduce) { el.textContent = to; return; }
+      (function step(now) {
+        var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(to * e);
+        if (p < 1) requestAnimationFrame(step);
+      })(t0);
+    });
+  }
+  function tick() {
+    if (!visible || document.hidden) return;
+    reelIx = (reelIx + 1) % frames.length; show(reelIx);
+    nextPlace();
+  }
+  show(0);
+  if (reduce) { count(); return; }
+  spot.querySelectorAll('[data-count]').forEach(function (el) { el.textContent = '0'; });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (e) {
+      visible = e[0].isIntersecting;
+      if (visible) { count(); if (!timer) timer = setInterval(tick, 3600); }
+      else if (timer) { clearInterval(timer); timer = 0; }
+    }, { threshold: 0.25 }).observe(spot);
+  } else { visible = true; count(); timer = setInterval(tick, 3600); }
+})();
