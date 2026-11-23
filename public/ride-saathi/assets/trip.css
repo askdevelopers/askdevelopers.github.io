@@ -77,6 +77,29 @@
 .trip-snd.muted .off { display: inline; }
 .trip-snd:focus-visible { outline: 2px solid var(--line); outline-offset: 2px; }
 
+/* Night (dark theme): the car drives with its headlights on and flashes them as it pulls up for a rider, the tail
+   lights glow, and street lamps light pools on the road. --trip-night is 0 by day, so none of it shows. */
+:root { --trip-night: 0; --trip-beam: #FFE6A6; --trip-lamp: #FFD47E; --trip-glow-tail: #FF3B1F; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --trip-night: 1; } }
+:root[data-theme="dark"] { --trip-night: 1; }
+
+.trip-car .tc-lights { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; filter: none; }
+.tc-beam { opacity: calc(var(--trip-night) * .85); transition: opacity .8s ease-in-out; }
+.tc-b0 { stop-color: var(--trip-beam); stop-opacity: .75; } .tc-b1 { stop-color: var(--trip-beam); stop-opacity: 0; }
+.tc-tg0 { stop-color: var(--trip-glow-tail); stop-opacity: .7; } .tc-tg1 { stop-color: var(--trip-glow-tail); stop-opacity: 0; }
+.tc-tailglow { opacity: calc(var(--trip-night) * .35); transition: opacity .3s ease-in-out; }
+.trip-car.brake .tc-tailglow { opacity: calc(var(--trip-night) * .9); }
+.trip-car .tc-hl { fill: #FFF8E1; opacity: var(--trip-night); transition: opacity .8s ease-in-out; }
+/* The flash: quick on purpose (it is a signal), but a soft fade, no hard blink */
+.trip-car.flash .tc-beam { opacity: var(--trip-night); transition-duration: .12s; }
+
+.tm-lamps { opacity: var(--trip-night); transition: opacity .8s ease-in-out; }
+.tm-l0 { stop-color: var(--trip-lamp); stop-opacity: .42; } .tm-lmid { stop-opacity: .22; } .tm-l1 { stop-color: var(--trip-lamp); stop-opacity: 0; }
+.tm-arm { stroke: #5A6660; stroke-width: 1.6; stroke-linecap: round; }
+.tm-post { fill: #5A6660; }
+.tm-bulb { fill: #FFF3CC; }
+
 @media (prefers-reduced-motion: reduce) {
-  .trip-who, .trip-who.exit, .trip-car .tc-av, .trip-car .tc-door, .trip-car .tc-slot, .trip-lab, .trip-tag { transition: none; }
+  .trip-who, .trip-who.exit, .trip-car .tc-av, .trip-car .tc-door, .trip-car .tc-slot, .trip-lab, .trip-tag,
+  .tc-beam, .tc-tailglow, .trip-car .tc-hl, .tm-lamps { transition: none; }
 }

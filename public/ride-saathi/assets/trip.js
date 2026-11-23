@@ -11,16 +11,23 @@
   /* The route, top to bottom. `cross` = the road crosses the page in the gap between two sections.
      Riders always stand on the outer side of the road (towards the screen edge), so the door they use follows from
      the lane: left lane = car's right side, right lane = car's left side (the car drives down the page). */
+  // Home-page sections the route is laid out around. Scoped to <main>'s own sections, because other scripts add
+  // short classes such as "in" to revealed elements.
+  var S = {
+    board: 'main > section.db-band', line: 'main > section#line', fare: 'main > section.fs', impact: 'main > section.zs',
+    safety: 'main > section.sx', india: 'main > section[aria-labelledby="inTitle"]', langs: 'main > section.lx',
+    faq: 'main > section.fq', next: 'main > section.nx'
+  };
   var PLAN = [
-    { home: '.db-band', lane: 'R', name: "Rahul's home", time: '07:40' },
-    { cross: ['.db-band', '#line'] },
-    { stop: '#line', f: 0.55, name: 'You', time: '07:52', pc: 'pc-sun', sk: 'sk-1', seat: 'br', color: 'var(--sun)' },
-    { cross: ['.fs', '.zs'] },
-    { stop: '.sx', f: 0.36, name: 'Anita', time: '08:01', pc: 'pc-lilac', sk: 'sk-2', seat: 'bl', color: 'var(--lilac)' },
-    { cross: ['.sx', '.in'] },
-    { cross: ['.in', '.lx'] },
-    { stop: '.lx', f: 0.5, name: 'Vikram', time: '08:09', pc: 'pc-mint', sk: 'sk-3', seat: 'fl', color: 'var(--mint)' },
-    { office: ['.lx', '.fq'], name: 'Office', time: '08:30' }
+    { home: S.board, lane: 'R', name: "Rahul's home", time: '07:40' },
+    { cross: [S.board, S.line] },
+    { stop: S.line, f: 0.8, name: 'You', time: '07:52', pc: 'pc-sun', sk: 'sk-1', seat: 'br', color: 'var(--sun)' },
+    { cross: [S.fare, S.impact] },
+    { stop: S.safety, f: 0.36, name: 'Anita', time: '08:01', pc: 'pc-lilac', sk: 'sk-2', seat: 'bl', color: 'var(--lilac)' },
+    { cross: [S.safety, S.india] },
+    { cross: [S.india, S.langs] },
+    { stop: S.langs, f: 0.3, name: 'Vikram', time: '08:09', pc: 'pc-mint', sk: 'sk-3', seat: 'fl', color: 'var(--mint)' },
+    { office: [S.langs, S.faq], name: 'Office', time: '08:30' }
   ];
 
   /* Car drawing (#car, viewBox 200×404, nose up). Seats: front left, driver (front right, India drives on the
@@ -29,6 +36,9 @@
   var DOOR = { fl: ['l', 164, 76], bl: ['l', 246, 62], fr: ['r', 164, 76], br: ['r', 246, 62] };
   var DOOR_OF = { fl: 'fl', bl: 'bl', br: 'br', dr: 'fr' };
   var BASE_W = 52; // car width in px on a wide screen
+  // On straight runs the car rides a little below the middle of the screen, leaving room above it for pickups
+  // and for catching up when you scroll quickly.
+  var LEAD = 0.62;
 
   /* ---------- Sound: two short CC0 recordings, played only after the visitor has clicked or tapped something ---------- */
   var KEY = 'rs-trip-sound';
@@ -136,8 +146,23 @@
     layer.setAttribute('aria-hidden', 'true');
     var map = svgEl('svg', { 'class': 'trip-map' }, layer);
     var car = div('trip-car', layer);
+    // Night lights, under the car and outside its shadow filter: two soft headlight beams ahead (the drawing's nose
+    // points up, so "ahead" is negative y) and a red glow behind the tail lights. Hidden by day (trip.css).
+    var lights = svgEl('svg', { 'class': 'tc-lights', viewBox: '0 0 200 404' }, car);
+    lights.innerHTML = '<defs><radialGradient id="tcBeamG" cx=".5" cy=".5" r=".5" fx=".5" fy=".97"><stop offset="0" class="tc-b0"/><stop offset="1" class="tc-b1"/></radialGradient>' +
+      '<radialGradient id="tcTailG"><stop offset="0" class="tc-tg0"/><stop offset="1" class="tc-tg1"/></radialGradient></defs>' +
+      '<g class="tc-beam"><ellipse cx="58" cy="-112" rx="62" ry="128" fill="url(#tcBeamG)"/><ellipse cx="142" cy="-112" rx="62" ry="128" fill="url(#tcBeamG)"/></g>' +
+      '<g class="tc-tailglow"><ellipse cx="62" cy="394" rx="30" ry="20" fill="url(#tcTailG)"/><ellipse cx="138" cy="394" rx="30" ry="20" fill="url(#tcTailG)"/></g>';
     var csvg = svgEl('svg', { viewBox: '0 0 200 404' }, car);
     svgEl('use', { href: '#car' }, csvg);
+    svgEl('rect', { 'class': 'tc-hl', x: 50, y: 13, width: 22, height: 6, rx: 3 }, csvg);
+    svgEl('rect', { 'class': 'tc-hl', x: 128, y: 13, width: 22, height: 6, rx: 3 }, csvg);
+    // Flash the headlights twice as the car pulls up for a rider (shows at night only).
+    var flashT = [];
+    function flash() {
+      flashT.forEach(clearTimeout); flashT = [];
+      [0, 150, 330, 480].forEach(function (ms, i) { flashT.push(setTimeout(function () { car.classList.toggle('flash', i % 2 === 0); }, ms)); });
+    }
     var slots = {}, doors = {}, avs = {};
     Object.keys(DOOR).forEach(function (k) {
       var d = DOOR[k], x = d[0] === 'l' ? 18 : 168;
@@ -239,7 +264,6 @@
 
       pieces = []; anchors = [];
       var crossings = []; // anchor index where each crossing starts, and the gap's centre line
-      var stopAnchors = []; // anchor index of each rider's stop
       var lane = home.p.lane, x = lanes[lane];
       var houseH = 54 * k, y0 = secs[home.p.home].top + houseH + 4, y = y0, len = 0;
       var marks = []; // places with drawings next to the road (no trees there)
@@ -252,7 +276,7 @@
           var pair = p.cross || p.office, yc = gapY(pair[0], pair[1]);
           var nx = lanes[lane === 'R' ? 'L' : 'R'], dir = nx > x ? 1 : -1;
           down(yc - r);
-          crossings.push({ a: anchors.length - 1, yc: yc });
+          crossings.push({ a: anchors.length - 1, yc: yc, end: !!p.office });
           // Quarter turn out of the lane, across the gap, and (except at the office) a quarter turn back down.
           push(new Arc(x + dir * r, yc - r, r, dir > 0 ? Math.PI : 0, Q));
           // At the office the road runs on past the lane so the parked car sits right in front of the door.
@@ -268,7 +292,6 @@
           var next = PLAN[i + 1], limit = next && (next.cross || next.office) ? gapY((next.cross || next.office)[0], (next.cross || next.office)[1]) - r - CL : want;
           var sy = Math.max(y + CL * 1.3, Math.min(want, limit));
           down(sy);
-          stopAnchors.push({ a: anchors.length - 1, y: sy });
           stopAt[p.name] = { L: len, x: x, y: sy, lane: lane };
         }
       });
@@ -292,6 +315,10 @@
       map.innerHTML = '';
       svgEl('path', { 'class': 'tm-road', d: d, 'stroke-width': RW }, map);
       svgEl('path', { 'class': 'tm-lane', d: d, 'stroke-dasharray': (9 * k).toFixed(1) + ' ' + (12 * k).toFixed(1) }, map);
+      // Street lamps (night only, see trip.css): filled in after the trees, drawn above the road and below the car.
+      var defs = svgEl('defs', {}, map);
+      defs.innerHTML = '<radialGradient id="tmLampG"><stop offset="0" class="tm-l0"/><stop offset=".55" class="tm-l0 tm-lmid"/><stop offset="1" class="tm-l1"/></radialGradient>';
+      var lampG = svgEl('g', { 'class': 'tm-lamps' }, map);
 
       // Home: a small house whose door opens onto the road.
       var hx = lanes[home.p.lane], hy = y0 - houseH - 2;
@@ -359,18 +386,37 @@
         }
       });
 
-      /* Scroll → distance along the road. Anchors start as page heights (the car sits level with the middle of the
-         screen on the straight runs). Each crossing then gets its own, longer stretch of scrolling: the car sets off
-         when the gap is 85% of the way down the screen and is across by the time the gap is 20% from the top, so
-         the whole crossing plays out in view at normal reading speed. Straight runs share what is left. */
-      var maxScroll = Math.max(1, docH - vh), maxC = maxScroll + vh / 2;
-      crossings.forEach(function (cr) {
-        anchors[cr.a][0] = cr.yc - 0.35 * vh;
-        anchors[cr.a + 1][0] = cr.yc + 0.3 * vh;
+      // Street lamps on the straight runs, on the side towards the screen edge, in every other gap between that
+      // side's trees: a post at the kerb, an arm over the road and a warm pool of light on the tarmac.
+      var pools = svgEl('g', {}, lampG), poles = svgEl('g', {}, lampG);
+      pieces.forEach(function (pc) {
+        if (!(pc instanceof Line) || pc.x0 !== pc.x1) return;
+        var sd = pc.x0 < W / 2 ? -1 : 1;
+        for (var ly = pc.y0 + step * (sd < 0 ? 1 : 0.5); ly < pc.y1 - 18 * k; ly += step * 2) {
+          var px = pc.x0 + sd * (RW / 2 + 4 * k), hx = pc.x0 + sd * (RW / 2 - 8 * k);
+          if (px - 4 < 0 || px + 4 > W) continue;
+          var hit = false;
+          for (var m = 0; m < marks.length; m++) if (Math.abs(marks[m][0] - pc.x0) < 4 && ly > marks[m][1] - 14 && ly < marks[m][1] + marks[m][2] + 14) hit = true;
+          if (hit) continue;
+          svgEl('circle', { cx: (pc.x0 + sd * RW * 0.1).toFixed(1), cy: ly.toFixed(1), r: (RW * 0.9).toFixed(1), fill: 'url(#tmLampG)' }, pools);
+          svgEl('path', { 'class': 'tm-arm', d: 'M' + px.toFixed(1) + ' ' + ly.toFixed(1) + 'H' + hx.toFixed(1) }, poles);
+          svgEl('circle', { 'class': 'tm-post', cx: px.toFixed(1), cy: ly.toFixed(1), r: (2.2 * k).toFixed(1) }, poles);
+          svgEl('circle', { 'class': 'tm-bulb', cx: hx.toFixed(1), cy: ly.toFixed(1), r: (2.6 * k).toFixed(1) }, poles);
+        }
       });
-      // Riders: the car reaches them while their stop is still low on the screen (75% down), so the pickup
-      // has the lower half of the screen to play out even if you keep scrolling.
-      stopAnchors.forEach(function (st) { anchors[st.a][0] = st.y - 0.25 * vh; });
+
+      /* Scroll → distance along the road. Anchors start as page heights (on the straight runs the car sits LEAD of
+         the way down the screen). Each crossing then gets its own, longer stretch of scrolling: the car sets off
+         when the gap is 85% of the way down the screen and is across by the time the gap is 30% from the top, so
+         the whole crossing plays out in view at normal reading speed. Straight runs share what is left. */
+      var maxScroll = Math.max(1, docH - vh), maxC = maxScroll + LEAD * vh;
+      crossings.forEach(function (cr) {
+        // The drive into the office runs earlier (gap from the bottom edge to just above the middle), so the
+        // drop-off plays in view even if you scroll straight on to the questions.
+        // (Anchor = scrollY + LEAD·vh, so "gap at f of the screen" is anchor yc + (LEAD − f)·vh.)
+        anchors[cr.a][0] = cr.yc + (LEAD - (cr.end ? 0.95 : 0.85)) * vh;
+        anchors[cr.a + 1][0] = cr.yc + (LEAD - (cr.end ? 0.45 : 0.3)) * vh;
+      });
       var lastA = anchors.length - 1;
       anchors[lastA][0] = Math.min(anchors[lastA][0], maxC - 8);
       // Crossings keep their windows (only nudged apart if two would overlap); stops and straight runs fit in
@@ -397,7 +443,7 @@
     }
 
     function target() {
-      var c = window.scrollY + window.innerHeight / 2, t;
+      var c = window.scrollY + window.innerHeight * LEAD, t;
       if (c <= anchors[0][0]) t = 0;
       else {
         t = anchors[anchors.length - 1][1];
@@ -450,6 +496,7 @@
       s.who.classList.toggle('quick', !!quick);
       var t = quick ? [0, 80, 330, 420, 560, 850] : [150, 450, 1000, 1130, 1300, 1700];
       hold = now + t[5];
+      flash();
       later(s, t[0], function () { doors[s.door].classList.add('open'); slots[s.door].classList.add('open'); play('door-open'); });
       later(s, t[1], function () { s.who.classList.add('walk'); });
       later(s, t[2], function () { s.who.classList.add('gone'); });
@@ -502,7 +549,7 @@
       tag.style.transform = 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) translateX(-50%)';
     }
 
-    var ACC = 1800, VMAX = 1450, DEC = 650;
+    var ACC = 2400, VMAX = 1600, DEC = 1000;
     var scrollSpeed = 0, lastScroll = window.scrollY;
     function frame(now) {
       raf = 0;
@@ -541,11 +588,11 @@
       } else {
         // Head for the scroll position, braking early enough never to overshoot it (no reversing). The further
         // behind the car is, the faster it may go, so it catches up instead of dropping off the screen.
-        var gap = Math.abs(T - L), behind = Math.max(0, T - L - 0.3 * vh);
+        var gap = Math.abs(T - L), behind = Math.max(0, T - L - 0.2 * vh);
         var nearTop = T > L && pointAt(L)[1] - window.scrollY < 0.25 * vh; // about to be left behind
         if (nearTop) behind = Math.max(behind, 0.3 * vh);
         var vmax = Math.min(3600, VMAX + behind * 5), dec = behind > 0 ? 1600 : DEC;
-        var vd = Math.sign(T - L) * Math.min(vmax, gap * 4.2, Math.sqrt(2 * ACC * 0.8 * gap));
+        var vd = Math.sign(T - L) * Math.min(vmax, gap * 5, Math.sqrt(2 * ACC * 0.8 * gap));
         // Ease into the next waiting rider and into the office.
         if (vd > 0) {
           var stopL = Lmax;
