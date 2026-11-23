@@ -226,6 +226,57 @@
       if (soundOn) play('door-close');
     });
 
+    /* ---------- Watch the trip: the page scrolls itself at a calm reading pace and waits for the car at every
+       pickup, so you can sit back and see the whole ride. Any wheel, touch, key or click of yours takes over. ---------- */
+    var watch = document.createElement('button');
+    watch.type = 'button';
+    watch.className = 'trip-watch';
+    watch.title = 'Watch the trip';
+    watch.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path class="pl" d="M8 5.5v13l10.5-6.5z"/><path class="pa" d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></svg><span>Watch the trip</span>';
+    document.body.appendChild(watch);
+    var auto = null; // { y: where we put the page, v: speed px/s, rewind, wait, last }
+    function paintWatch() {
+      watch.classList.toggle('playing', !!auto);
+      watch.setAttribute('aria-pressed', auto ? 'true' : 'false');
+      watch.setAttribute('aria-label', auto ? 'Pause the trip' : 'Watch the trip');
+      watch.querySelector('span').textContent = auto ? 'Pause' : 'Watch the trip';
+    }
+    paintWatch();
+    function stopWatch() { if (auto) { auto = null; paintWatch(); } }
+    function startWatch(fromTop) {
+      if (!on || reduce) { window.scrollTo({ top: 0, behavior: 'auto' }); return; }
+      var max = Math.max(0, root.scrollHeight - window.innerHeight);
+      auto = { y: window.scrollY, v: 0, rewind: fromTop || window.scrollY >= max - 4, wait: 0, last: 0 };
+      paintWatch();
+      requestAnimationFrame(autoStep);
+    }
+    function autoStep(now) {
+      if (!auto) return;
+      var dt = auto.last ? Math.min(0.05, (now - auto.last) / 1000) : 0;
+      auto.last = now;
+      if (Math.abs(window.scrollY - auto.y) > 3) { stopWatch(); return; } // you scrolled: you're driving now
+      var vh = window.innerHeight, max = Math.max(0, root.scrollHeight - vh), want;
+      if (auto.rewind) {
+        // Back to the start at a brisk glide, a short pause at Rahul's home, then the ride begins.
+        want = -Math.min(4000, 300 + auto.y * 2.4);
+        if (auto.y <= 0.5) { auto.y = 0; auto.v = 0; auto.rewind = false; auto.wait = now + 900; }
+      } else {
+        // Reading pace; hold still while the car stops for a rider or is catching up.
+        var lag = target() - L;
+        want = hold || lag > 0.12 * vh || now < auto.wait ? 0 : lag > 0.06 * vh ? 70 : 170;
+        if (auto.y >= max - 0.5) { stopWatch(); return; } // the office: the end of the ride
+      }
+      auto.v += (want - auto.v) * Math.min(1, dt * (auto.rewind ? 6 : 2.5));
+      auto.y = Math.max(0, Math.min(max, auto.y + auto.v * dt));
+      window.scrollTo({ top: auto.y, behavior: 'instant' }); // auto.y keeps the fraction; the page rounds it
+      requestAnimationFrame(autoStep);
+    }
+    watch.addEventListener('click', function () { if (auto) stopWatch(); else startWatch(false); });
+    window.addEventListener('wheel', stopWatch, { passive: true });
+    window.addEventListener('touchstart', stopWatch, { passive: true });
+    window.addEventListener('keydown', function (e) { if (e.target !== watch) stopWatch(); });
+    window.addEventListener('pointerdown', function (e) { if (!watch.contains(e.target)) stopWatch(); });
+
     // Riders, stops and the two buildings (built once; positions are set in layout()).
     var stops = [], home = null, office = null;
     PLAN.forEach(function (p) {
@@ -265,9 +316,7 @@
       sum.querySelector('[data-rate]').textContent = '₹' + (rate % 1 ? rate.toFixed(1) : rate);
     }
     fillSummary();
-    sum.querySelector('.tsum-again').addEventListener('click', function () {
-      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-    });
+    sum.querySelector('.tsum-again').addEventListener('click', function (e) { e.stopPropagation(); startWatch(true); });
 
     var on = false, pieces = [], total = 0, anchors = [], k = 1, CW = BASE_W, CL = BASE_W * 2.02, Lmin = 0, Lmax = 0;
     var L = 0, v = 0, hold = 0, raf = 0, last = 0, tagTimer = 0, ready = false;
@@ -373,6 +422,8 @@
 
       on = true;
       root.classList.add('trip-on');
+      // The watch button shows its label only where the left margin has room for it; otherwise just the icon.
+      watch.classList.toggle('compact', cL - 24 < 150);
       layer.style.setProperty('--k', k.toFixed(3));
       layer.style.setProperty('--cw', CW.toFixed(1) + 'px');
       layer.style.setProperty('--cl', CL.toFixed(1) + 'px');
@@ -779,7 +830,7 @@
             var sy = pointAt(s.L)[1];
             if (onScreen(sy)) {
               var room = (sy - window.scrollY - 0.15 * vh) / Math.max(1, scrollSpeed);
-              next = s.L; v = 0; pickup(s, now, scrollSpeed > 60 && room < 1.8); braking = true;
+              next = s.L; v = 0; pickup(s, now, !auto && scrollSpeed > 60 && room < 1.8); braking = true;
             }
             else boardNow(s, true);
           } else if (s.inside && next < s.L - 1 && L >= s.L - 1) boardNow(s, false);

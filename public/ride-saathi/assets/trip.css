@@ -191,3 +191,21 @@
 @media (prefers-reduced-motion: reduce) {
   .trip-ghost, .trip-on .trip-sum, .tm-bwin, .tm-glow { transition: none; }
 }
+
+/* ---------- Watch the trip: above the sound button. Both sit bottom left, because on arrival the bottom right is
+   where Rahul's home and the parked car are. ---------- */
+.trip-on .trip-snd { left: 16px; right: auto; }
+.trip-watch { display: none; }
+.trip-on .trip-watch { display: inline-flex; align-items: center; gap: 7px; position: fixed; left: 16px; bottom: 58px; z-index: 15; height: 34px; padding: 0 12px 0 10px;
+  border-radius: 10px; background: var(--surface); color: var(--text); border: 1px solid var(--hairline); box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+  font: 500 10px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; cursor: pointer;
+  transition: border-color .4s ease-in-out, color .4s ease-in-out; }
+.trip-watch svg { width: 12px; height: 12px; fill: currentColor; flex: none; }
+.trip-watch .pa { display: none; }
+.trip-watch.playing { border-color: var(--line); color: var(--line-text, var(--line)); }
+.trip-watch.playing .pl { display: none; }
+.trip-watch.playing .pa { display: inline; }
+.trip-watch.compact { width: 34px; padding: 0; justify-content: center; border-radius: 50%; }
+.trip-watch.compact span { display: none; }
+.trip-watch:focus-visible { outline: 2px solid var(--line); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .trip-on .trip-watch { display: none; } }
