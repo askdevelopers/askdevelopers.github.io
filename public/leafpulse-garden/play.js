@@ -1,287 +1,401 @@
-// LeafPulse website mini game: "Tend the windowsill".
-// Five pots ask for water, mist, feed or a turn. Pick the matching tool, tap the plant, and it grows a step;
-// six good jobs and it blooms. A plant left waiting droops a little and perks up as soon as you help.
-// One-minute rounds; the loop only runs while a round is on. No images: every plant is drawn in SVG.
+// LeafPulse website mini game: "Pest Patrol".
+// Four planter boxes, pests crawling in from the right toward your houseplants on the left. Spend water drops on
+// defenders based on real pest control: a mister sprays, a Venus flytrap snaps a bug and chews, marigolds block,
+// rain barrels collect more drops. Six waves; every pest that gets through eats one of your five leaves.
+// Drawn entirely in SVG. The loop runs only during a round, and pauses off screen or in a hidden tab.
 (function () {
   'use strict';
-  var game = document.getElementById('gardenGame');
+  var game = document.getElementById('pestGame');
   if (!game) return;
   var NS = 'http://www.w3.org/2000/svg';
-  var svg = game.querySelector('.gm-scene'), plantsG = svg.querySelector('#gmPlants'), fxG = svg.querySelector('#gmFx');
-  var toastEl = game.querySelector('.gm-toast'), timerBar = game.querySelector('.gm-timer i');
-  var startCard = game.querySelector('.gm-start'), endCard = game.querySelector('.gm-end');
-  var soundBtn = game.querySelector('.gm-sound');
-  var ROUND = 60, BLOOM_AT = 6;
-  var stat = {};
-  game.querySelectorAll('[data-gstat]').forEach(function (el) { stat[el.getAttribute('data-gstat')] = el; });
+  var svg = game.querySelector('.pt-scene');
+  var G = {}; ['ptBoard', 'ptHome', 'ptGhost', 'ptUnits', 'ptPests', 'ptShots', 'ptFx'].forEach(function (id) { G[id] = svg.querySelector('#' + id); });
+  var hud = {}; game.querySelectorAll('[data-pt]').forEach(function (e) { hud[e.getAttribute('data-pt')] = e; });
+  var banner = game.querySelector('.pt-banner');
+  var cards = {}; game.querySelectorAll('.pt-card').forEach(function (c) { cards[c.getAttribute('data-kind')] = c; });
+  var startCard = game.querySelector('.pt-start'), pauseCard = game.querySelector('.pt-pause'), endCard = game.querySelector('.pt-end');
 
-  function el(tag, attrs, parent) {
-    var e = document.createElementNS(NS, tag);
-    for (var k in attrs) e.setAttribute(k, attrs[k]);
-    if (parent) parent.appendChild(e);
-    return e;
-  }
+  function el(tag, a, p) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
   function rand(a, b) { return a + Math.random() * (b - a); }
-  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function tf(e, x, y) { e.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ')'); }
 
-  /* ---------- tools ---------- */
-  var TOOLS = { water: 'Water', mist: 'Mist', feed: 'Feed', turn: 'Turn' };
-  var ICON = { // small glyphs drawn inside the need bubbles (24-unit boxes)
-    water: 'M4 9h11v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM15 12l5-4M6 9V7a3.5 3.5 0 0 1 7 0v2',
-    mist: 'M9 9h6v11a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zM10 9V6h4l2-2M19 7h.01M21 5h.01M21 9h.01',
-    feed: 'M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3M7.5 15h9',
-    turn: 'M20 11a8 8 0 0 0-14.3-4.9L4 8M4 3v5h5M4 13a8 8 0 0 0 14.3 4.9L20 16M20 21v-5h-5'
-  };
-  var tool = 'water';
-  var toolBtns = game.querySelectorAll('.gm-tool');
-  function setTool(t) {
-    tool = t;
-    toolBtns.forEach(function (b) { var on = b.getAttribute('data-tool') === t; b.classList.toggle('on', on); b.setAttribute('aria-checked', on ? 'true' : 'false'); });
+  /* ---------- board ---------- */
+  var COLS = 8, LANES = 4, CELL = 90, GX = 108, GY = 74, HOME_X = 54;
+  var cx = function (c) { return GX + c * CELL + CELL / 2; }, cy = function (l) { return GY + l * CELL + CELL / 2; };
+  for (var l = 0; l < LANES; l++) {
+    var y0 = GY + l * CELL;
+    el('rect', { x: GX - 8, y: y0 + 4, width: 900 - GX + 20, height: CELL - 8, rx: 10, fill: 'url(#ptWood)' }, G.ptBoard);
+    el('rect', { x: GX - 2, y: y0 + 10, width: 900 - GX + 10, height: CELL - 20, rx: 7, fill: l % 2 ? 'url(#ptSoilB)' : 'url(#ptSoilA)' }, G.ptBoard);
+    for (var c = 1; c < COLS; c++) el('path', { d: 'M' + (GX + c * CELL) + ' ' + (y0 + 14) + ' v' + (CELL - 28), stroke: '#FFE8C8', 'stroke-width': 1, 'stroke-dasharray': '2 6', opacity: .25 }, G.ptBoard);
+    for (var k = 0; k < 14; k++) el('circle', { cx: rand(GX, 890), cy: rand(y0 + 18, y0 + CELL - 18), r: rand(1, 2.2), fill: '#4A2E1A', opacity: .35 }, G.ptBoard);
   }
-  toolBtns.forEach(function (b) { b.addEventListener('click', function () { setTool(b.getAttribute('data-tool')); }); });
-  game.addEventListener('keydown', function (e) {
-    var k = { '1': 'water', '2': 'mist', '3': 'feed', '4': 'turn' }[e.key];
-    if (k) { setTool(k); e.preventDefault(); }
-  });
+  el('rect', { x: 0, y: GY - 2, width: GX - 12, height: LANES * CELL + 4, rx: 12, class: 'pt-shelf' }, G.ptBoard);
 
-  /* ---------- sound (soft CC0 recordings; off with one tap, remembered) ---------- */
-  var soundOn = true;
-  try { soundOn = localStorage.getItem('lp-game-sound') !== 'off'; } catch (e) { /* private mode */ }
-  var clips = {};
-  function play(name, vol) {
-    if (!soundOn) return;
-    try {
-      var a = clips[name] || (clips[name] = new Audio('assets/sounds/' + name + '.m4a'));
-      a.volume = vol; a.currentTime = 0; var p = a.play(); if (p && p.catch) p.catch(function () {});
-      clearTimeout(a._stop); a._stop = setTimeout(function () { a.pause(); }, 1400);
-    } catch (e) { /* no audio */ }
+  /* ---------- art ---------- */
+  var INK = '#2A3A26';
+  function pot(g, s) {
+    s = s || 1;
+    el('ellipse', { cx: 0, cy: 38 * s, rx: 22 * s, ry: 4 * s, fill: '#2B1A0E', opacity: .3 }, g);
+    el('path', { d: 'M' + (-17 * s) + ' ' + (14 * s) + ' H' + (17 * s) + ' L' + (13 * s) + ' ' + (37 * s) + ' H' + (-13 * s) + 'Z', fill: 'url(#ptPot)', stroke: '#7E3A22', 'stroke-width': 1.2 }, g);
+    el('rect', { x: -20 * s, y: 8 * s, width: 40 * s, height: 8 * s, rx: 3, fill: 'url(#ptRim)', stroke: '#7E3A22', 'stroke-width': 1.2 }, g);
   }
-  function paintSound() {
-    soundBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
-    soundBtn.setAttribute('aria-label', soundOn ? 'Sound on. Turn garden sounds off' : 'Sound off. Turn garden sounds on');
-  }
-  soundBtn.addEventListener('click', function () {
-    soundOn = !soundOn; paintSound();
-    try { localStorage.setItem('lp-game-sound', soundOn ? 'on' : 'off'); } catch (e) { /* private mode */ }
-  });
-  paintSound();
-
-  /* ---------- the plants ---------- */
-  // Each plant is drawn around its pot rim (0,0), growing upward. Parts: st1 seedling, st2 more leaves,
-  // st3 bud, st4 bloom. needs = what it may ask for (cacti ask for a turn more than a drink).
-  var X = [112, 256, 400, 544, 688], RIM = 250;
-  var KINDS = [
-    { name: 'Tilly', kind: 'tulip', needs: ['water', 'water', 'feed', 'turn'] },
-    { name: 'Sunny', kind: 'sunflower', needs: ['water', 'feed', 'turn', 'turn'] },
-    { name: 'Daisy', kind: 'daisy', needs: ['water', 'mist', 'mist', 'feed'] },
-    { name: 'Spike', kind: 'cactus', needs: ['turn', 'turn', 'feed', 'water'] },
-    { name: 'Gerry', kind: 'geranium', needs: ['water', 'feed', 'mist', 'turn'] }
-  ];
-  var LEAF = '#5DA84A', LEAF2 = '#7DBE58', EDGE = '#2F6A34', STEM = '#3F8A3C';
-  function leaf(g, d, fill) { el('path', { d: d, fill: fill || LEAF, stroke: EDGE, 'stroke-width': 1.2 }, g); }
-  function draw(kind, body) {
-    var s1 = el('g', { class: 'st st1' }, body), s2 = el('g', { class: 'st st2' }, body), s3 = el('g', { class: 'st st3' }, body), s4 = el('g', { class: 'st st4' }, body);
-    var k;
-    if (kind === 'tulip') {
-      el('path', { d: 'M0 0 Q-4 -60 0 -122', stroke: STEM, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, s1);
-      leaf(s1, 'M0 -6 C-30 -26 -36 -66 -22 -94 C-14 -60 -8 -30 0 -6Z');
-      leaf(s1, 'M0 -6 C24 -22 30 -52 20 -72 C12 -48 6 -26 0 -6Z', LEAF2);
-      leaf(s2, 'M0 -40 C28 -58 36 -88 26 -110 C16 -82 8 -60 0 -40Z');
-      el('path', { d: 'M-8 -122 C-10 -138 -4 -146 0 -142 C4 -146 10 -138 8 -122 C4 -116 -4 -116 -8 -122Z', fill: '#9BCB72', stroke: EDGE, 'stroke-width': 1 }, s3);
-      el('path', { d: 'M-17 -120 C-19 -146 -8 -158 0 -150 C8 -158 19 -146 17 -120 C10 -110 -10 -110 -17 -120Z', fill: 'url(#gmTulip)', stroke: '#9B4B36', 'stroke-width': 1.2 }, s4);
-      el('path', { d: 'M-5 -144 Q-7 -130 -5 -118', stroke: '#FFE3D8', 'stroke-width': 2, fill: 'none', 'stroke-linecap': 'round' }, s4);
-    } else if (kind === 'sunflower') {
-      el('path', { d: 'M0 0 Q-6 -80 0 -150', stroke: STEM, 'stroke-width': 5, fill: 'none', 'stroke-linecap': 'round' }, s1);
-      leaf(s1, 'M-1 -30 C-26 -32 -40 -50 -40 -64 C-22 -62 -8 -48 -1 -30Z');
-      leaf(s1, 'M1 -46 C24 -48 36 -64 36 -78 C18 -76 6 -62 1 -46Z', LEAF2);
-      leaf(s2, 'M-1 -92 C-22 -94 -34 -108 -34 -120 C-18 -118 -6 -106 -1 -92Z');
-      leaf(s2, 'M1 -104 C20 -106 30 -118 30 -130 C16 -128 6 -118 1 -104Z', LEAF2);
-      el('circle', { cx: 0, cy: -156, r: 10, fill: '#8CC266', stroke: EDGE, 'stroke-width': 1.2 }, s3);
-      var hd = el('g', { transform: 'translate(0 -160)' }, s4);
-      for (k = 0; k < 14; k++) el('ellipse', { rx: 5.5, ry: 14, transform: 'rotate(' + (k * 360 / 14) + ') translate(0 -18)', fill: 'url(#gmPetal)', stroke: '#C98A2A', 'stroke-width': .8 }, hd);
-      el('circle', { r: 15, fill: '#6E4426', stroke: '#4A2E16', 'stroke-width': 1 }, hd);
-    } else if (kind === 'daisy') {
-      [[-16, -70, -1], [2, -84, 1], [18, -64, 1]].forEach(function (p, i) {
-        el('path', { d: 'M' + (p[0] * .3) + ' 0 Q' + (p[0] * .6) + ' ' + (p[1] / 2) + ' ' + p[0] + ' ' + p[1], stroke: STEM, 'stroke-width': 2.6, fill: 'none', 'stroke-linecap': 'round' }, i === 1 ? s2 : s1);
+  var ART = {
+    mister: function (g) {
+      pot(g);
+      el('path', { d: 'M0 9 V-2', stroke: '#6B4A33', 'stroke-width': 3 }, g);
+      var b = el('g', { class: 'pt-bottle' }, g);
+      el('rect', { x: -11, y: -36, width: 22, height: 36, rx: 6, fill: 'url(#ptBottle)', stroke: '#2F5E54', 'stroke-width': 1.3 }, b);
+      el('path', { d: 'M-8 -36 V-44 H8 L16 -46 V-40 H8 V-36Z', fill: '#E8F1EC', stroke: '#2F5E54', 'stroke-width': 1.2 }, b);
+      el('path', { d: 'M3 -36 q-2 6 -8 7', stroke: '#2F5E54', 'stroke-width': 2, fill: 'none', 'stroke-linecap': 'round' }, b);
+      el('rect', { x: -7, y: -26, width: 4, height: 20, rx: 2, fill: '#fff', opacity: .55 }, b);
+      el('circle', { cx: -1, cy: -14, r: 2, fill: INK }, b); el('circle', { cx: 6, cy: -14, r: 2, fill: INK }, b);
+      el('path', { d: 'M-1 -8 q3.5 3 7 0', stroke: INK, 'stroke-width': 1.4, fill: 'none', 'stroke-linecap': 'round' }, b);
+    },
+    barrel: function (g) {
+      el('ellipse', { cx: 0, cy: 36, rx: 24, ry: 4, fill: '#2B1A0E', opacity: .3 }, g);
+      el('path', { d: 'M-18 -18 C-24 0 -24 18 -18 34 H18 C24 18 24 0 18 -18Z', fill: 'url(#ptBarrel)', stroke: '#4A2E16', 'stroke-width': 1.3 }, g);
+      el('path', { d: 'M-21 -4 H21 M-22 18 H22', stroke: '#4F5A5F', 'stroke-width': 3.2 }, g);
+      el('ellipse', { cx: 0, cy: -18, rx: 18, ry: 5, fill: '#7FC6E4', stroke: '#4A2E16', 'stroke-width': 1.3 }, g);
+      el('ellipse', { cx: -5, cy: -19, rx: 6, ry: 1.6, fill: '#fff', opacity: .7 }, g);
+      el('circle', { cx: -6, cy: 6, r: 2, fill: INK }, g); el('circle', { cx: 6, cy: 6, r: 2, fill: INK }, g);
+      el('path', { d: 'M-4 12 q4 3.5 8 0', stroke: INK, 'stroke-width': 1.4, fill: 'none', 'stroke-linecap': 'round' }, g);
+    },
+    trap: function (g) {
+      pot(g);
+      el('path', { d: 'M0 10 C-2 -4 4 -14 2 -22', stroke: '#3F8A3C', 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, g);
+      el('path', { d: 'M-2 6 C-18 2 -24 -8 -22 -16 C-12 -10 -6 -4 -2 6Z', fill: 'url(#ptLeaf)', stroke: '#2F6A34', 'stroke-width': 1 }, g);
+      var h = el('g', { class: 'pt-jaws', transform: 'translate(4 -26)' }, g);
+      var up = el('g', { class: 'pt-jaw up' }, h), dn = el('g', { class: 'pt-jaw dn' }, h);
+      el('path', { d: 'M0 0 C6 -20 24 -24 34 -10 C24 -8 12 -4 0 0Z', fill: '#E35B4A', stroke: '#2F6A34', 'stroke-width': 1.6 }, up);
+      el('path', { d: 'M0 0 C6 -20 24 -24 34 -10', fill: 'none', stroke: '#7DBE58', 'stroke-width': 5, 'stroke-linecap': 'round' }, up);
+      el('path', { d: 'M8 -14 l2 -6 M16 -18 l1 -6 M24 -18 l2 -6 M31 -13 l4 -4', stroke: '#E9F6C4', 'stroke-width': 1.6, 'stroke-linecap': 'round' }, up);
+      el('path', { d: 'M0 0 C6 20 24 24 34 10 C24 8 12 4 0 0Z', fill: '#E35B4A', stroke: '#2F6A34', 'stroke-width': 1.6 }, dn);
+      el('path', { d: 'M0 0 C6 20 24 24 34 10', fill: 'none', stroke: '#7DBE58', 'stroke-width': 5, 'stroke-linecap': 'round' }, dn);
+      el('path', { d: 'M8 14 l2 6 M16 18 l1 6 M24 18 l2 6 M31 13 l4 4', stroke: '#E9F6C4', 'stroke-width': 1.6, 'stroke-linecap': 'round' }, dn);
+      el('circle', { cx: 6, cy: -8, r: 2.4, fill: '#fff' }, up); el('circle', { cx: 6.6, cy: -8, r: 1.3, fill: INK }, up);
+    },
+    marigold: function (g) {
+      pot(g, 1.08);
+      var bush = el('g', { class: 'pt-bush' }, g);
+      [[-16, 2, 13], [16, 2, 13], [0, -2, 15], [-9, -14, 12], [10, -14, 12]].forEach(function (b) { el('circle', { cx: b[0], cy: b[1], r: b[2], fill: 'url(#ptLeaf)', stroke: '#2F6A34', 'stroke-width': 1 }, bush); });
+      [[-14, -6], [12, -8], [-1, -20], [2, 2], [-18, 6], [18, 4]].forEach(function (f, i) {
+        var fl = el('g', { class: 'pt-bloom', transform: 'translate(' + f[0] + ' ' + f[1] + ')' }, bush);
+        el('circle', { r: i < 3 ? 9 : 7, fill: 'url(#ptMari)', stroke: '#B85B12', 'stroke-width': .8 }, fl);
+        el('circle', { r: i < 3 ? 5 : 4, fill: 'none', stroke: '#C2621A', 'stroke-width': 1.2, 'stroke-dasharray': '2 2' }, fl);
       });
-      leaf(s1, 'M-2 -6 C-24 -12 -32 -30 -28 -40 C-16 -32 -6 -20 -2 -6Z');
-      leaf(s1, 'M2 -8 C22 -14 30 -30 28 -42 C16 -32 6 -22 2 -8Z', LEAF2);
-      leaf(s2, 'M0 -30 C-20 -40 -26 -56 -20 -66 C-12 -54 -4 -44 0 -30Z', LEAF2);
-      [[-16, -70], [2, -84], [18, -64]].forEach(function (p) {
-        el('circle', { cx: p[0], cy: p[1], r: 5, fill: '#B9DB8F', stroke: EDGE, 'stroke-width': 1 }, s3);
-        var f = el('g', { transform: 'translate(' + p[0] + ' ' + p[1] + ')' }, s4);
-        for (k = 0; k < 8; k++) el('ellipse', { rx: 3, ry: 8, transform: 'rotate(' + (k * 45) + ') translate(0 -7)', fill: '#fff', stroke: '#D9D3E6', 'stroke-width': .8 }, f);
-        el('circle', { r: 4.4, fill: '#F5B83D', stroke: '#C98A2A', 'stroke-width': .8 }, f);
-      });
-    } else if (kind === 'cactus') {
-      el('ellipse', { cx: 0, cy: -28, rx: 18, ry: 28, fill: 'url(#gmCactus)', stroke: EDGE, 'stroke-width': 1.4 }, s1);
-      el('path', { d: 'M0 -54 V-4 M-9 -48 Q-12 -28 -9 -8 M9 -48 Q12 -28 9 -8', stroke: '#2F6A34', 'stroke-width': 1, fill: 'none', opacity: .6 }, s1);
-      el('path', { d: 'M18 -50 C30 -50 34 -60 34 -76 C34 -84 26 -84 26 -76 C26 -66 24 -62 18 -62Z', fill: 'url(#gmCactus)', stroke: EDGE, 'stroke-width': 1.3 }, s2);
-      el('ellipse', { cx: 0, cy: -46, rx: 24, ry: 46, fill: 'url(#gmCactus)', stroke: EDGE, 'stroke-width': 1.4 }, s2);
-      el('path', { d: 'M0 -88 V-6 M-12 -80 Q-16 -46 -12 -12 M12 -80 Q16 -46 12 -12', stroke: '#2F6A34', 'stroke-width': 1, fill: 'none', opacity: .6 }, s2);
-      el('ellipse', { cx: 0, cy: -96, rx: 6, ry: 8, fill: '#F7A7BE', stroke: '#B8556F', 'stroke-width': 1 }, s3);
-      var fl = el('g', { transform: 'translate(0 -98)' }, s4);
-      for (k = 0; k < 9; k++) el('ellipse', { rx: 4.4, ry: 11, transform: 'rotate(' + (k * 40) + ') translate(0 -8)', fill: '#F9B8CC', stroke: '#C2607D', 'stroke-width': .8 }, fl);
-      el('circle', { r: 4, fill: '#FFE07A' }, fl);
-    } else { // geranium
-      [[-20, -18, 16], [18, -22, 15], [0, -30, 17]].forEach(function (c) { el('circle', { cx: c[0], cy: c[1], r: c[2], fill: LEAF, stroke: EDGE, 'stroke-width': 1.2 }, s1); el('circle', { cx: c[0], cy: c[1], r: c[2] * .55, fill: 'none', stroke: '#2F6A34', 'stroke-width': 2.4, opacity: .3 }, s1); });
-      el('path', { d: 'M0 -30 Q-3 -70 0 -104', stroke: STEM, 'stroke-width': 3, fill: 'none' }, s2);
-      [[-22, -52, 14], [22, -58, 13]].forEach(function (c) { el('circle', { cx: c[0], cy: c[1], r: c[2], fill: LEAF2, stroke: EDGE, 'stroke-width': 1.2 }, s2); });
-      [[-6, -108], [4, -112], [0, -102], [7, -104]].forEach(function (c) { el('circle', { cx: c[0], cy: c[1], r: 4, fill: '#9BCB72', stroke: EDGE, 'stroke-width': .8 }, s3); });
-      [[-10, -110], [0, -118], [10, -110], [-6, -100], [7, -100], [0, -108]].forEach(function (c) { el('circle', { cx: c[0], cy: c[1], r: 7.5, fill: 'url(#gmGer)', stroke: '#9E2F2A', 'stroke-width': .8 }, s4); });
+    },
+    trowel: function (g) {
+      el('path', { d: 'M-4 -30 C-16 -18 -14 4 0 14 C14 4 16 -18 4 -30Z', fill: '#C9D1D6', stroke: '#5B6670', 'stroke-width': 1.4 }, g);
+      el('path', { d: 'M0 -26 V8', stroke: '#fff', 'stroke-width': 1.6, opacity: .7 }, g);
+      el('rect', { x: -5, y: 12, width: 10, height: 26, rx: 4, fill: '#B87A47', stroke: '#6E4326', 'stroke-width': 1.3 }, g);
     }
-  }
-
-  var plants = KINDS.map(function (k, i) {
-    var g = el('g', { class: 'gm-plant', transform: 'translate(' + X[i] + ' ' + RIM + ')', tabindex: 0, role: 'button' }, plantsG);
-    el('rect', { x: -70, y: -238, width: 140, height: 300, fill: 'transparent' }, g); // the whole column is the tap target
-    el('ellipse', { cx: 0, cy: 50, rx: 44, ry: 6, fill: '#2E3A20', opacity: .18 }, g);
-    var body = el('g', { class: 'gm-body' }, g);
-    draw(k.kind, body);
-    el('path', { d: 'M-34 6 H34 L28 50 H-28 Z', fill: 'url(#gmPot)', stroke: '#7E3A22', 'stroke-width': 1.3 }, g);
-    el('rect', { x: -38, y: -4, width: 76, height: 13, rx: 5, fill: 'url(#gmRim)', stroke: '#7E3A22', 'stroke-width': 1.3 }, g);
-    var tag = el('text', { class: 'gm-name', x: 0, y: 34, 'text-anchor': 'middle' }, g); tag.textContent = k.name;
-    // need bubble, sitting above the plant
-    var bub = el('g', { class: 'gm-bubble', transform: 'translate(0 -208)' }, g);
-    el('circle', { r: 25, class: 'gm-bub-bg' }, bub);
-    var ring = el('circle', { r: 29, class: 'gm-ring', pathLength: 100 }, bub);
-    var ic = el('path', { class: 'gm-bub-ic', transform: 'translate(-12 -12)' }, bub);
-    el('path', { d: 'M-6 24 L0 33 L6 24', class: 'gm-bub-tail' }, bub);
-    var p = { i: i, k: k, g: g, body: body, bub: bub, ring: ring, ic: ic, stage: 1, care: 0, need: null, wilt: false, bloomed: false };
-    g.addEventListener('click', function () { tap(p); });
-    g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tap(p); } });
-    return p;
+  };
+  game.querySelectorAll('[data-art]').forEach(function (span) { // tray icons
+    var s = el('svg', { viewBox: '-36 -56 72 100', 'aria-hidden': 'true' }); ART[span.getAttribute('data-art')](el('g', {}, s)); span.appendChild(s);
   });
-  function label(p) {
-    var s = p.k.name + ' the ' + p.k.kind + (p.need ? ', asking for ' + TOOLS[p.need.type].toLowerCase() : ', happy') + (p.wilt ? ', drooping' : '');
-    p.g.setAttribute('aria-label', s);
-  }
-  function setStage(p, n) {
-    p.stage = n;
-    for (var s = 2; s <= 4; s++) p.g.classList.toggle('g' + s, n >= s);
-  }
-  function reset() {
-    plants.forEach(function (p) { p.care = 0; p.need = null; p.wilt = false; p.bloomed = false; setStage(p, 1); p.g.classList.remove('asking', 'wilt', 'urgent'); label(p); });
-  }
-  reset();
 
-  // small screens: trim the empty edges so the plants are bigger
-  function fitScene() { svg.setAttribute('viewBox', game.clientWidth < 560 ? '44 0 712 336' : '0 0 800 360'); }
+  var PEST_ART = {
+    aphid: function (g) {
+      var b = el('g', { class: 'pt-walk' }, g);
+      el('path', { d: 'M-6 6 l-5 8 M0 7 l-2 9 M6 6 l3 9', stroke: '#4C7A22', 'stroke-width': 1.6, 'stroke-linecap': 'round' }, b);
+      el('ellipse', { cx: 2, cy: 0, rx: 14, ry: 10, fill: 'url(#ptAphid)', stroke: '#4C7A22', 'stroke-width': 1.2 }, b);
+      el('path', { d: 'M-10 -6 q-10 -10 -16 -8 M-8 -8 q-4 -12 -10 -14', stroke: '#4C7A22', 'stroke-width': 1.3, fill: 'none', 'stroke-linecap': 'round' }, b);
+      el('circle', { cx: -7, cy: -2, r: 2.6, fill: '#fff' }, b); el('circle', { cx: -7.6, cy: -2, r: 1.4, fill: INK }, b);
+      el('ellipse', { cx: 6, cy: -5, rx: 5, ry: 2, fill: '#fff', opacity: .5 }, b);
+    },
+    cat: function (g) {
+      for (var i = 5; i >= 1; i--) {
+        var sgm = el('g', { class: 'pt-seg' }, g);
+        sgm.style.animationDelay = (-i * .14) + 's';
+        var inner = el('g', { transform: 'translate(' + (i * 11) + ' 0)' }, sgm);
+        el('circle', { r: 9.5, fill: 'url(#ptCat)', stroke: '#3F6E2A', 'stroke-width': 1 }, inner);
+        el('circle', { cx: 1, cy: -4, r: 1.8, fill: '#FFE27A' }, inner);
+      }
+      var hd = el('g', { class: 'pt-seg' }, g);
+      el('path', { d: 'M-3 -9 q-3 -9 -9 -10 M2 -10 q1 -9 -3 -12', stroke: '#3F6E2A', 'stroke-width': 1.3, fill: 'none', 'stroke-linecap': 'round' }, hd);
+      el('circle', { r: 11, fill: 'url(#ptCat)', stroke: '#3F6E2A', 'stroke-width': 1.1 }, hd);
+      el('circle', { cx: -4.5, cy: -2.5, r: 3.4, fill: '#fff' }, hd); el('circle', { cx: -5.4, cy: -2.4, r: 1.8, fill: INK }, hd);
+      el('path', { d: 'M-8 4 q3 2.6 6 0', stroke: INK, 'stroke-width': 1.3, fill: 'none', 'stroke-linecap': 'round' }, hd);
+    },
+    snail: function (g) {
+      var b = el('g', { class: 'pt-slide' }, g);
+      el('path', { d: 'M-26 10 C-24 2 -6 0 20 6 C28 8 28 14 18 14 H-22 C-28 14 -28 12 -26 10Z', fill: '#E0CDA6', stroke: '#9C8560', 'stroke-width': 1.2 }, b);
+      el('path', { d: 'M-18 4 L-24 -14 M-12 3 L-14 -15', stroke: '#9C8560', 'stroke-width': 2, 'stroke-linecap': 'round' }, b);
+      el('circle', { cx: -24, cy: -15, r: 2.6, fill: INK }, b); el('circle', { cx: -14, cy: -16, r: 2.6, fill: INK }, b);
+      el('circle', { cx: 4, cy: -8, r: 17, fill: 'url(#ptShell)', stroke: '#8A5A30', 'stroke-width': 1.4 }, b);
+      el('path', { d: 'M4 -8 m-8 0 a8 8 0 1 1 8 8 a5 5 0 1 1 -4 -5 a2.4 2.4 0 1 1 2 2', stroke: '#8A5A30', 'stroke-width': 1.4, fill: 'none' }, b);
+      el('ellipse', { cx: -3, cy: -18, rx: 5, ry: 2.4, fill: '#fff', opacity: .55 }, b);
+    }
+  };
+
+  /* ---------- rules ---------- */
+  var UNIT = {
+    mister: { cost: 50, hp: 5, cd: 4 },
+    barrel: { cost: 50, hp: 5, cd: 6 },
+    trap: { cost: 125, hp: 7, cd: 12 },
+    marigold: { cost: 50, hp: 22, cd: 16 }
+  };
+  var PEST = {
+    aphid: { hp: 3, speed: 24, bite: 1, reward: 10, y: 22 },
+    cat: { hp: 7, speed: 17, bite: 1, reward: 15, y: 20 },
+    snail: { hp: 16, speed: 10, bite: 1.4, reward: 30, y: 16 }
+  };
+  var WAVES = [
+    ['aphid', 'aphid', 'aphid', 'aphid'],
+    ['aphid', 'aphid', 'cat', 'aphid', 'cat', 'aphid'],
+    ['aphid', 'cat', 'aphid', 'cat', 'snail', 'aphid', 'cat', 'aphid'],
+    ['cat', 'aphid', 'snail', 'aphid', 'cat', 'aphid', 'snail', 'cat', 'aphid', 'aphid'],
+    ['snail', 'cat', 'aphid', 'cat', 'aphid', 'snail', 'cat', 'aphid', 'snail', 'cat', 'aphid', 'aphid'],
+    ['aphid', 'aphid', 'cat', 'snail', 'aphid', 'cat', 'snail', 'aphid', 'cat', 'snail', 'aphid', 'cat', 'snail', 'aphid', 'aphid', 'cat']
+  ];
+
+  /* ---------- your houseplants (the leaves you protect) ---------- */
+  var HOMES = [];
+  ['Monty', 'Goldie', 'Basil', 'Fern'].forEach(function (name, ln) {
+    var g = el('g', { class: 'pt-homeplant' }, G.ptHome); tf(g, HOME_X, cy(ln) - 2);
+    pot(g, .95);
+    var body = el('g', { class: 'pt-hbody' }, g);
+    if (ln === 0) [[-12, -16, -30], [12, -18, 30], [0, -30, 0]].forEach(function (a) { el('path', { d: 'M0 10 Q' + (a[0] / 2) + ' ' + (a[1] / 2) + ' ' + a[0] + ' ' + a[1], stroke: '#3F7F37', 'stroke-width': 2.4, fill: 'none' }, body); el('ellipse', { cx: a[0], cy: a[1], rx: 14, ry: 10, transform: 'rotate(' + a[2] + ' ' + a[0] + ' ' + a[1] + ')', fill: 'url(#ptLeaf)', stroke: '#2F6A34', 'stroke-width': 1 }, body); });
+    else if (ln === 1) [[-12, -2], [12, -4], [-4, -16], [8, -22]].forEach(function (a) { el('path', { d: 'M' + a[0] + ' ' + a[1] + ' c-6 -4 -9 -10 -5 -14 c3 -2 5 0 5 2 c0 -2 2 -4 5 -2 c4 4 1 10 -5 14z', fill: '#7DBE58', stroke: '#2F6A34', 'stroke-width': .9 }, body); });
+    else if (ln === 2) [[-10, -2, 9], [10, -2, 9], [0, -14, 10], [-8, -24, 8], [8, -24, 8]].forEach(function (a) { el('ellipse', { cx: a[0], cy: a[1], rx: a[2], ry: a[2] * .7, fill: '#86C65E', stroke: '#2F6A34', 'stroke-width': 1 }, body); });
+    else for (var f = -2; f <= 2; f++) el('path', { d: 'M0 10 Q' + (f * 7) + ' -10 ' + (f * 14) + ' -22', stroke: '#4E9A47', 'stroke-width': 5, fill: 'none', 'stroke-linecap': 'round', 'stroke-dasharray': '3 2' }, body);
+    var t = el('text', { x: 0, y: 30, 'text-anchor': 'middle', class: 'pt-hname' }, g); t.textContent = name;
+    HOMES.push({ g: g });
+  });
+
+  // phones: trim the sky strip so the planters get the room
+  function fitScene() { svg.setAttribute('viewBox', game.clientWidth < 560 ? '0 46 900 400' : '0 0 900 446'); }
   fitScene(); window.addEventListener('resize', fitScene);
 
-  /* ---------- round ---------- */
-  var playing = false, t = 0, last = 0, nextSpawn = 0, score = { jobs: 0, blooms: 0, best: 0 }, missed = 0;
-  try { score.best = parseInt(localStorage.getItem('lp-game-best') || '0', 10) || 0; } catch (e) { /* private mode */ }
-  function paintStats() { stat.jobs.textContent = score.jobs; stat.blooms.textContent = score.blooms; stat.best.textContent = score.best; }
-  paintStats();
+  /* ---------- state ---------- */
+  var S, sel = null, running = false, paused = false, last = 0, visible = true;
+  var best = 0; try { best = parseInt(localStorage.getItem('lp-pest-best') || '0', 10) || 0; } catch (e) { /* private mode */ }
+  function fresh() {
+    return { t: 0, drops: 150, leaves: 5, wave: 0, queue: [], spawnT: 0, waveGap: 4, units: {}, pests: [], shots: [], caught: 0, passiveT: 0, cool: { mister: 0, barrel: 0, trap: 0, marigold: 0 } };
+  }
+  function key(c, ln) { return c + ',' + ln; }
 
-  var toastT = null;
-  function toast(msg) {
-    toastEl.textContent = msg; toastEl.classList.add('on');
-    clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove('on'); }, 1800);
+  /* ---------- sound ---------- */
+  var soundOn = true; try { soundOn = localStorage.getItem('lp-game-sound') !== 'off'; } catch (e) { /* private mode */ }
+  var clips = {}, lastSnd = {};
+  function snd(name, vol) {
+    if (!soundOn || (lastSnd[name] && performance.now() - lastSnd[name] < 500)) return;
+    lastSnd[name] = performance.now();
+    try { var a = clips[name] || (clips[name] = new Audio('assets/sounds/' + name + '.m4a')); a.volume = vol; a.currentTime = 0; var p = a.play(); if (p && p.catch) p.catch(function () {}); clearTimeout(a._s); a._s = setTimeout(function () { a.pause(); }, 900); } catch (e) { /* no audio */ }
   }
+  var sb = game.querySelector('.pt-sound');
+  function paintSound() { sb.setAttribute('aria-pressed', soundOn ? 'true' : 'false'); sb.setAttribute('aria-label', soundOn ? 'Sound on. Turn game sounds off' : 'Sound off. Turn game sounds on'); }
+  sb.addEventListener('click', function () { soundOn = !soundOn; paintSound(); try { localStorage.setItem('lp-game-sound', soundOn ? 'on' : 'off'); } catch (e) { /* private mode */ } });
+  paintSound();
 
-  function ask(p) {
-    var type = pick(p.k.needs);
-    var patience = Math.max(4.6, 8.5 - t * 0.06); // waits less as the minute goes on
-    p.need = { type: type, t: 0, T: patience };
-    p.ic.setAttribute('d', ICON[type]);
-    p.g.classList.add('asking'); p.g.classList.remove('urgent');
-    label(p);
-  }
-  function spawn() {
-    var free = plants.filter(function (p) { return !p.need; });
-    var asking = plants.length - free.length, cap = t < 15 ? 2 : t < 35 ? 3 : 4;
-    if (!free.length || asking >= cap) return;
-    ask(pick(free));
-  }
-
-  function tap(p) {
-    if (!playing) { if (endCard.hidden && !startCard.hidden) start(); return; }
-    if (!p.need) { toast(p.k.name + ' is happy right now'); return; }
-    if (p.need.type !== tool) { toast(p.k.name + ' would like ' + (p.need.type === 'turn' ? 'a turn' : p.need.type === 'feed' ? 'some food' : p.need.type === 'mist' ? 'a mist' : 'some water')); nudge(p); return; }
-    fx(p, tool);
-    p.need = null; p.g.classList.remove('asking', 'urgent');
-    if (p.wilt) { p.wilt = false; p.g.classList.remove('wilt'); }
-    score.jobs++; p.care++;
-    var target = Math.min(4, 1 + Math.floor(p.care / 2));
-    if (target > p.stage) setStage(p, target);
-    if (p.stage === 4 && !p.bloomed) { p.bloomed = true; score.blooms++; sparkle(p, true); toast(p.k.name + ' is in bloom!'); }
-    label(p); paintStats();
-  }
-  function nudge(p) { p.g.classList.remove('nudge'); void p.g.getBBox(); p.g.classList.add('nudge'); }
-
-  /* ---------- little effects ---------- */
-  function fx(p, type) {
-    var x = X[p.i], g = el('g', { class: 'gm-fx fx-' + type }, fxG);
-    var k;
-    if (type === 'water') {
-      play('pour', .35);
-      for (k = 0; k < 9; k++) {
-        var d = el('ellipse', { cx: x + rand(-26, 26), cy: RIM - 120 + rand(-10, 10), rx: 2.4, ry: 4, class: 'drop' }, g);
-        d.style.animationDelay = (k * 0.05).toFixed(2) + 's';
-      }
-    } else if (type === 'mist') {
-      play('spray', .4);
-      for (k = 0; k < 7; k++) {
-        var m = el('circle', { cx: x + rand(-30, 30), cy: RIM - rand(50, 130), r: rand(6, 12), class: 'puff' }, g);
-        m.style.animationDelay = (k * 0.04).toFixed(2) + 's';
-      }
-    } else if (type === 'feed') {
-      for (k = 0; k < 8; k++) {
-        var f = el('circle', { cx: x + rand(-22, 22), cy: RIM - 4, r: rand(2, 3.4), class: 'grain' }, g);
-        f.style.animationDelay = (k * 0.05).toFixed(2) + 's';
-      }
-    } else {
-      p.body.classList.remove('turning'); void p.body.getBBox(); p.body.classList.add('turning');
-    }
-    sparkle(p, false);
-    setTimeout(function () { g.remove(); }, 1400);
-  }
-  function sparkle(p, big) {
-    var g = el('g', { class: 'gm-spark' + (big ? ' big' : ''), transform: 'translate(' + X[p.i] + ' ' + (RIM - (p.stage >= 3 ? 150 : 90)) + ')' }, fxG);
-    for (var k = 0; k < (big ? 10 : 6); k++) {
-      var a = k / (big ? 10 : 6) * Math.PI * 2, r1 = big ? 26 : 18, r2 = big ? 44 : 30;
-      el('path', { d: 'M' + (Math.cos(a) * r1).toFixed(1) + ' ' + (Math.sin(a) * r1).toFixed(1) + ' L' + (Math.cos(a) * r2).toFixed(1) + ' ' + (Math.sin(a) * r2).toFixed(1) }, g);
-    }
-    setTimeout(function () { g.remove(); }, 1200);
-  }
-
-  /* ---------- loop: only while a round is on ---------- */
-  function frame(now) {
-    if (!playing) return;
-    var dt = last ? Math.min(.05, (now - last) / 1000) : .016; last = now; t += dt;
-    timerBar.style.transform = 'scaleX(' + Math.max(0, 1 - t / ROUND).toFixed(4) + ')';
-    if (t >= nextSpawn) { spawn(); nextSpawn = t + Math.max(.9, 2.1 - t * 0.02) * rand(.8, 1.2); }
-    plants.forEach(function (p) {
-      if (!p.need) return;
-      p.need.t += dt;
-      var left = Math.max(0, 1 - p.need.t / p.need.T);
-      p.ring.style.strokeDashoffset = (100 - left * 100).toFixed(1);
-      p.g.classList.toggle('urgent', left < .35);
-      if (left <= 0 && !p.wilt) { p.wilt = true; p.g.classList.add('wilt'); missed++; label(p); }
+  /* ---------- HUD ---------- */
+  function paint() {
+    hud.drops.textContent = Math.floor(S.drops);
+    hud.wave.textContent = Math.min(6, Math.max(1, S.wave));
+    var lv = ''; for (var i = 0; i < 5; i++) lv += '<i class="' + (i < S.leaves ? 'on' : '') + '"></i>';
+    if (hud.leaves.innerHTML !== lv) { hud.leaves.innerHTML = lv; hud.leaves.setAttribute('aria-label', S.leaves + ' leaves left'); }
+    Object.keys(UNIT).forEach(function (k) {
+      var c = cards[k], cd = S.cool[k] / UNIT[k].cd;
+      c.classList.toggle('poor', S.drops < UNIT[k].cost);
+      c.querySelector('.pt-cd').style.transform = 'scaleY(' + Math.max(0, cd).toFixed(3) + ')';
     });
-    if (t >= ROUND) return end();
-    requestAnimationFrame(frame);
   }
+  function choose(k) {
+    sel = k;
+    Object.keys(cards).forEach(function (n) { var on = n === sel; cards[n].classList.toggle('on', on); cards[n].setAttribute('aria-checked', on ? 'true' : 'false'); });
+    G.ptGhost.innerHTML = ''; G.ptGhost.style.display = 'none'; if (sel) ART[sel](G.ptGhost);
+  }
+  Object.keys(cards).forEach(function (k) { cards[k].addEventListener('click', function () { choose(sel === k ? null : k); }); });
+  game.addEventListener('keydown', function (e) {
+    var k = { '1': 'mister', '2': 'barrel', '3': 'trap', '4': 'marigold', '5': 'trowel' }[e.key];
+    if (k) { choose(k); e.preventDefault(); } else if (e.key === 'Escape') choose(null);
+  });
+  var bTimer = null;
+  function say(msg, long) { banner.textContent = msg; banner.classList.add('on'); clearTimeout(bTimer); bTimer = setTimeout(function () { banner.classList.remove('on'); }, long ? 2600 : 1500); }
+
+  /* ---------- placing ---------- */
+  function cellAt(evt) {
+    var pt = svg.createSVGPoint(); pt.x = evt.clientX; pt.y = evt.clientY;
+    var p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    var c = Math.floor((p.x - GX) / CELL), ln = Math.floor((p.y - GY) / CELL);
+    return (c >= 0 && c < COLS && ln >= 0 && ln < LANES) ? { c: c, l: ln } : null;
+  }
+  svg.addEventListener('pointermove', function (e) {
+    if (!sel || !running) return;
+    var cell = cellAt(e);
+    if (!cell) { G.ptGhost.style.display = 'none'; return; }
+    G.ptGhost.style.display = '';
+    tf(G.ptGhost, cx(cell.c), cy(cell.l));
+    var taken = !!S.units[key(cell.c, cell.l)];
+    G.ptGhost.classList.toggle('bad', sel === 'trowel' ? !taken : taken || S.drops < UNIT[sel].cost || S.cool[sel] > 0);
+  });
+  svg.addEventListener('pointerleave', function () { G.ptGhost.style.display = 'none'; });
+  svg.addEventListener('click', function (e) {
+    if (!running || paused) return;
+    var cell = cellAt(e); if (!cell) return;
+    var k = key(cell.c, cell.l), u = S.units[k];
+    if (sel === 'trowel') {
+      if (!u) return;
+      var back = Math.floor(UNIT[u.kind].cost / 2); S.drops += back; floatText('+' + back, u.x, u.y - 40, 'gain');
+      u.g.remove(); delete S.units[k]; paint(); return;
+    }
+    if (!sel) { say('Pick something from the tray first'); return; }
+    if (u) { say('That square is taken'); return; }
+    var def = UNIT[sel];
+    if (S.cool[sel] > 0) { say('Still growing a new one'); return; }
+    if (S.drops < def.cost) { say('Not enough drops yet'); return; }
+    S.drops -= def.cost; S.cool[sel] = def.cd;
+    var g = el('g', { class: 'pt-unit pt-' + sel }, G.ptUnits);
+    var inner = el('g', { class: 'pt-in' }, g); ART[sel](inner);
+    tf(g, cx(cell.c), cy(cell.l));
+    S.units[k] = { kind: sel, c: cell.c, l: cell.l, x: cx(cell.c), y: cy(cell.l), hp: def.hp, max: def.hp, g: g, t: 0, chew: 0 };
+    snd('pour', .22);
+    paint();
+  });
+
+  /* ---------- waves ---------- */
+  function startWave() {
+    S.wave++;
+    if (S.wave > WAVES.length) { finish(true); return; }
+    S.queue = WAVES[S.wave - 1].slice(); S.spawnT = 1.2;
+    say(S.wave === WAVES.length ? 'Final wave: here they all come!' : 'Wave ' + S.wave + (S.wave === 1 ? ': aphids!' : S.wave === 2 ? ': caterpillars too' : S.wave === 3 ? ': snails join in' : ''), true);
+    paint();
+  }
+  function spawn(kind) {
+    var lane = Math.floor(Math.random() * LANES), d = PEST[kind];
+    var g = el('g', { class: 'pt-pest pt-' + kind }, G.ptPests); PEST_ART[kind](g);
+    var bar = el('rect', { x: -14, y: -34, width: 28, height: 4, rx: 2, class: 'pt-hp' }, g);
+    var hp = d.hp + Math.floor(S.wave / 3);
+    S.pests.push({ kind: kind, l: lane, x: 930, y: cy(lane) + d.y - 14, hp: hp, max: hp, d: d, g: g, bar: bar, slow: 0 });
+  }
+
+  /* ---------- effects ---------- */
+  function floatText(txt, x, y, cls) {
+    var t = el('text', { x: x, y: y, 'text-anchor': 'middle', class: 'pt-float ' + (cls || '') }, G.ptFx); t.textContent = txt;
+    setTimeout(function () { t.remove(); }, 1100);
+  }
+  function puff(x, y, color) {
+    var g = el('g', { class: 'pt-puff' }, G.ptFx); tf(g, x, y);
+    for (var i = 0; i < 6; i++) { var a = i / 6 * Math.PI * 2; el('circle', { cx: Math.cos(a) * 8, cy: Math.sin(a) * 6, r: 6, fill: color || '#EAF8FF' }, g); }
+    setTimeout(function () { g.remove(); }, 700);
+  }
+  function flash(g, cls) { g.classList.remove(cls); void g.getBBox(); g.classList.add(cls); }
+  function hit(p, dmg) { p.hp -= dmg; flash(p.g, 'hurt'); if (p.hp <= 0) caught(p); }
+  function caught(p) {
+    if (p.dead) return; p.dead = true;
+    S.caught++; S.drops += p.d.reward; floatText('+' + p.d.reward, p.x, p.y - 30, 'gain');
+    puff(p.x, p.y, '#D8F0B8'); p.g.remove();
+  }
+  function frontOf(p) { // the defender a pest is chewing, if any
+    var hit_ = null;
+    for (var k in S.units) { var u = S.units[k]; if (u.l === p.l && p.x > u.x && p.x - u.x < 40) hit_ = u; }
+    return hit_;
+  }
+
+  /* ---------- loop ---------- */
+  function step(dt) {
+    S.t += dt;
+    S.passiveT += dt; if (S.passiveT >= 5) { S.passiveT = 0; S.drops += 10; }
+    for (var ck in S.cool) S.cool[ck] = Math.max(0, S.cool[ck] - dt);
+
+    if (S.queue.length) { S.spawnT -= dt; if (S.spawnT <= 0) { spawn(S.queue.shift()); S.spawnT = Math.max(1.4, 4.2 - S.wave * .45) * rand(.75, 1.25); } }
+    else if (!S.pests.length) { S.waveGap -= dt; if (S.waveGap <= 0) { S.waveGap = 6; startWave(); if (!running) return; } }
+
+    for (var k in S.units) {
+      var u = S.units[k]; u.t += dt;
+      var ahead = S.pests.filter(function (p) { return !p.dead && p.l === u.l && p.x > u.x - 20 && p.x < 910; });
+      if (u.kind === 'mister' && ahead.length && u.t >= 1.35) {
+        u.t = 0; flash(u.g, 'fire');
+        var s = el('circle', { r: 7, fill: 'url(#ptMist)', class: 'pt-shot' }, G.ptShots);
+        S.shots.push({ x: u.x + 18, y: u.y - 42, l: u.l, g: s });
+        snd('spray', .07);
+      } else if (u.kind === 'barrel' && u.t >= 9) {
+        u.t = 0; S.drops += 25; floatText('+25', u.x, u.y - 34, 'gain'); flash(u.g, 'fill');
+      } else if (u.kind === 'trap') {
+        if (u.chew > 0) { u.chew -= dt; if (u.chew <= 0) u.g.classList.remove('chew'); }
+        else {
+          var near = ahead.filter(function (p) { return p.x - u.x < 96; })[0];
+          if (near) {
+            u.g.classList.add('chew');
+            if (near.kind === 'snail') { hit(near, 8); u.chew = 2.2; } else { caught(near); u.chew = near.kind === 'cat' ? 4.5 : 3; }
+          }
+        }
+      }
+    }
+
+    S.shots = S.shots.filter(function (s) {
+      s.x += 330 * dt;
+      var target = S.pests.filter(function (p) { return !p.dead && p.l === s.l && Math.abs(p.x - s.x) < 18; })[0];
+      if (target) { hit(target, 1); target.slow = .6; puff(s.x, s.y + 22); s.g.remove(); return false; }
+      if (s.x > 920) { s.g.remove(); return false; }
+      tf(s.g, s.x, s.y + 22 + Math.sin(s.x / 22) * 2); return true;
+    });
+
+    var chewing = {};
+    S.pests = S.pests.filter(function (p) {
+      if (p.dead) return false;
+      var block = frontOf(p);
+      if (block) {
+        chewing[key(block.c, block.l)] = 1;
+        block.hp -= p.d.bite * dt;
+        if (block.kind === 'marigold') block.g.style.setProperty('--wilt', (1 - block.hp / block.max).toFixed(2));
+        if (block.hp <= 0) { puff(block.x, block.y, '#C9A27A'); block.g.remove(); delete S.units[key(block.c, block.l)]; }
+        p.g.classList.add('eating');
+      } else {
+        p.g.classList.remove('eating');
+        p.slow = Math.max(0, p.slow - dt);
+        p.x -= p.d.speed * (p.slow > 0 ? .55 : 1) * dt;
+      }
+      if (p.x < HOME_X + 34) { // reached a houseplant: one leaf lost
+        S.leaves--; p.g.remove(); flash(HOMES[p.l].g, 'nibbled');
+        floatText('-1 leaf', HOME_X, cy(p.l) - 40, 'loss');
+        if (S.leaves <= 0) finish(false);
+        return false;
+      }
+      tf(p.g, p.x, p.y);
+      p.bar.setAttribute('width', (28 * Math.max(0, p.hp / p.max)).toFixed(1));
+      return true;
+    });
+    for (var uk in S.units) S.units[uk].g.classList.toggle('bitten', !!chewing[uk]);
+    paint();
+  }
+  function frame(now) {
+    if (!running || paused || !visible || document.hidden) { last = 0; return; }
+    var dt = last ? Math.min(.05, (now - last) / 1000) : .016; last = now;
+    step(dt);
+    if (running) requestAnimationFrame(frame);
+  }
+  function go() { if (running && !paused && visible && !document.hidden) { last = 0; requestAnimationFrame(frame); } }
+
+  /* ---------- round control ---------- */
   function start() {
-    reset(); score.jobs = 0; score.blooms = 0; missed = 0; paintStats();
-    startCard.hidden = true; endCard.hidden = true; game.classList.add('is-playing');
-    playing = true; t = 0; last = 0; nextSpawn = .6;
-    timerBar.style.transform = 'scaleX(1)';
-    ask(plants[0]);
-    requestAnimationFrame(frame);
+    ['ptUnits', 'ptPests', 'ptShots', 'ptFx'].forEach(function (id) { G[id].innerHTML = ''; });
+    S = fresh(); running = true; paused = false;
+    startCard.hidden = true; endCard.hidden = true; pauseCard.hidden = true;
+    game.classList.add('is-playing'); choose('mister'); paint();
+    say('Plant a mister or two. The aphids are coming', true);
+    go();
   }
-  function end() {
-    playing = false; game.classList.remove('is-playing');
-    plants.forEach(function (p) { p.need = null; p.g.classList.remove('asking', 'urgent'); label(p); });
-    var best = score.jobs > score.best;
-    if (best) { score.best = score.jobs; try { localStorage.setItem('lp-game-best', String(score.best)); } catch (e) { /* private mode */ } }
-    paintStats();
-    game.querySelector('.gm-end-title').textContent = score.blooms === 5 ? 'The whole sill is in bloom!' : best ? 'A new best!' : score.jobs >= 15 ? 'Lovely work' : 'A gentle start';
-    game.querySelector('.gm-end-text').textContent = score.jobs + ' jobs done, ' + score.blooms + ' of 5 in bloom' + (missed ? ', ' + missed + (missed === 1 ? ' plant' : ' plants') + ' waited a little long' : '') + '. In the app, one calm reminder a day keeps them all happy.';
+  function finish(won) {
+    running = false; game.classList.remove('is-playing'); choose(null);
+    var reached = won ? 6 : Math.max(0, S.wave - 1);
+    var score = reached * 100 + S.caught * 5 + (won ? S.leaves * 50 : 0);
+    var nb = score > best; if (nb) { best = score; try { localStorage.setItem('lp-pest-best', String(best)); } catch (e) { /* private mode */ } }
+    game.querySelector('.pt-end-kick').textContent = won ? 'Garden saved' : 'The bugs got through';
+    game.querySelector('.pt-end-title').textContent = won ? (S.leaves === 5 ? 'Not a single leaf lost!' : 'Every plant made it') : 'Your plants need a rest';
+    game.querySelector('.pt-end-text').textContent = (won ? 'All six waves held back with ' : 'You held ' + reached + ' of 6 waves with ') + S.caught + ' pests caught' + (won ? ' and ' + S.leaves + ' of 5 leaves kept' : '') + '. Score ' + score + (nb ? ', a new best!' : ' (best ' + best + ').') + ' In real life, LeafPulse\'s Leaf doctor helps you spot pests early.';
     endCard.hidden = false;
   }
-  game.querySelectorAll('.gm-go').forEach(function (b) { b.addEventListener('click', start); });
+  game.querySelectorAll('.pt-go').forEach(function (b) { b.addEventListener('click', start); });
+  function pause(on) { if (!running) return; paused = on; pauseCard.hidden = !on; if (!on) go(); }
+  game.querySelector('.pt-pausebtn').addEventListener('click', function () { pause(!paused); });
+  game.querySelector('.pt-resume').addEventListener('click', function () { pause(false); });
+  document.addEventListener('visibilitychange', function () { if (document.hidden) pause(true); });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
+    visible = es[0].isIntersecting;
+    if (!visible && running && !paused && S.t > 0) pause(true);
+    else go();
+  }, { threshold: .25 }).observe(svg);
 
+  S = fresh(); paint();
 })();
