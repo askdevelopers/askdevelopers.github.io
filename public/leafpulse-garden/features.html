@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>LeafPulse Features</title>
+<meta name="description" content="Today, plant profiles with gauges, a 650-plant catalogue with pet-safety badges, care guides, the Leaf doctor, light meter and vacation mode.">
+<meta name="theme-color" content="#CDEBF3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1A2550" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232F6A34' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z'/%3E%3Cpath d='M2 21c0-3 1.9-5.5 5-6.5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="theme.js?v=22acb1fd"></script>
+<link rel="stylesheet" href="garden.css?v=ce8a0da9">
+<link rel="stylesheet" href="site.css?v=f050c1fb">
+<script src="site.js?v=e7897b16" defer></script>
+<script src="roam.js?v=6cba2e97" defer></script>
+</head>
+<body class="inner">
+<a class="skip" href="#main">Skip to content</a>
+<div class="page-top">
+<header class="site-header">
+  <div class="nav">
+    <a class="brand" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.5 5-6.5"/></svg>LeafPulse</a>
+    <nav class="nav-links" id="links" aria-label="Main"><a href="features.html" aria-current="page">Features</a><a href="premium.html">Premium</a><a href="support.html">Help</a></nav>
+    <div class="nav-right">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch between day and night garden" title="Day / night">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a class="pill pill-sm nav-cta" href="index.html#get">Get the app</a>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="links"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </div>
+</header>
+  <div class="page-intro">
+    <span class="eyebrow">Features</span>
+    <h1>Everything your plants need, <span class="hl">nothing&nbsp;they&nbsp;don't</span>.</h1>
+    <p class="lede">A calm, compact companion: one screen a day, a profile for every plant, and help when a leaf looks wrong.</p>
+  </div>
+  <div class="mini-garden" data-garden></div>
+</div>
+<main id="main">
+<section class="band">
+  <div class="wrap split">
+    <div class="split-art reveal"><div class="phone big"><img class="on-light" src="assets/screens/today-light.webp" alt="Today screen with the jobs due and progress for the day" width="600" height="1305" loading="lazy" decoding="async"><img class="on-dark" src="assets/screens/today-dark.webp" alt="Today screen with the jobs due and progress for the day" width="600" height="1305" loading="lazy" decoding="async"></div><span class="doodle d1">overdue first!</span></div>
+    <div class="split-copy reveal">
+      <span class="eyebrow">Today</span>
+      <h2>Today, at a glance.</h2>
+      <p class="lead">Add your plants once, and every morning one screen shows who needs you.</p>
+      <ul class="ticks"><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11z"/><path d="M9 14.5a3 3 0 0 0 3 3"/></svg></span><span>Water, feed, mist and rotate jobs across all your plants, overdue first</span></li><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.6L16 9.5"/></svg></span><span>Done in one tap, with progress for the day and undo for every job</span></li><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg></span><span>One gentle reminder a day at the hour you choose, never a pile of alerts</span></li></ul>
+    </div>
+  </div>
+</section><section class="band band-soft">
+  <div class="wrap split flip">
+    <div class="split-art reveal"><div class="phone big"><img src="assets/screens/upcoming-light.webp" alt="Upcoming screen listing the next few days of care" width="600" height="1305" loading="lazy" decoding="async"></div></div>
+    <div class="split-copy reveal">
+      <span class="eyebrow">Upcoming</span>
+      <h2>The next few days, too.</h2>
+      <p class="lead">Nothing sneaks up on you: the Upcoming screen lines up what each plant needs next.</p>
+      <ul class="ticks"><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span><span>Care for the coming days, plant by plant</span></li><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg></span><span>Change any plant's rhythm later from its profile</span></li></ul>
+    </div>
+  </div>
+</section><section class="band">
+  <div class="wrap split">
+    <div class="split-art reveal"><div class="phone big"><img class="on-light" src="assets/screens/plant-light.webp" alt="Plant profile for a monstera with three gauges" width="600" height="1305" loading="lazy" decoding="async"><img class="on-dark" src="assets/screens/plant-dark.webp" alt="Plant profile for a monstera with three gauges" width="600" height="1305" loading="lazy" decoding="async"></div></div>
+    <div class="split-copy reveal">
+      <span class="eyebrow">Your plants</span>
+      <h2>A profile for every plant.</h2>
+      <p class="lead">Group plants by room, each with its own colour and care schedule.</p>
+      <ul class="ticks"><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/><circle cx="12" cy="16" r="1.4"/></svg></span><span>Soil-moisture, light and feeding gauges, care history and a care score</span></li><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.5 5-6.5"/></svg></span><span>A built-in catalogue of 650 plants fills in the care defaults</span></li><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6.5" cy="10" r="1.8"/><circle cx="10" cy="6.5" r="1.8"/><circle cx="14" cy="6.5" r="1.8"/><circle cx="17.5" cy="10" r="1.8"/><path d="M8.5 17c0-2.5 1.6-4.5 3.5-4.5s3.5 2 3.5 4.5c0 1.6-1.4 2.2-3.5 2.2S8.5 18.6 8.5 17z"/></svg></span><span>A "toxic to cats and dogs" badge on every catalogue plant</span></li><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M20.5 16l-5-5-8 8.5"/></svg></span><span>A journal with photos, notes and heights, then-and-now photos and a share card</span></li></ul>
+    </div>
+  </div>
+</section><section class="band band-soft">
+  <div class="wrap split flip">
+    <div class="split-art reveal"><div class="phone big"><img class="on-light" src="assets/screens/learn-light.webp" alt="Learn tab with care guides and the Leaf doctor" width="600" height="1305" loading="lazy" decoding="async"><img class="on-dark" src="assets/screens/learn-dark.webp" alt="Learn tab with care guides and the Leaf doctor" width="600" height="1305" loading="lazy" decoding="async"></div></div>
+    <div class="split-copy reveal">
+      <span class="eyebrow">Learn and fix</span>
+      <h2>Help when a leaf looks wrong.</h2>
+      <p class="lead">Short reads for the common worries, and a doctor that works without the internet.</p>
+      <ul class="ticks"><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/></svg></span><span>16 short care guides: watering, light, repotting, yellow leaves, brown tips, pests, winter and summer care</span></li><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20.5 20.5l-4.8-4.8"/><path d="M11 8v6M8 11h6"/></svg></span><span>Leaf doctor: describe the leaf, answer two or three questions, and get the likely cause and a fix</span></li><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M9 16a4.5 4.5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1"/></svg></span><span>Worked out on your phone, no internet needed</span></li></ul>
+    </div>
+  </div>
+</section><section class="band">
+  <div class="wrap split">
+    <div class="split-art reveal"><div class="phone big"><img class="on-light" src="assets/screens/light-light.webp" alt="Light meter reading a bright spot" width="600" height="1305" loading="lazy" decoding="async"><img class="on-dark" src="assets/screens/light-dark.webp" alt="Light meter reading a bright spot" width="600" height="1305" loading="lazy" decoding="async"></div></div>
+    <div class="split-copy reveal">
+      <span class="eyebrow">Light meter</span><span class="badge-premium">Premium</span>
+      <h2>Is this spot bright enough?</h2>
+      <p class="lead">Hold the phone where a plant sits and see if the spot is low, medium, bright or direct sun.</p>
+      <ul class="ticks"><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span><span>Reads the light through your camera</span></li><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.5 5-6.5"/></svg></span><span>Shows which plants will be happy there</span></li></ul>
+    </div>
+  </div>
+</section><section class="band band-soft">
+  <div class="wrap split flip">
+    <div class="split-art reveal"><div class="phone big"><img class="on-light" src="assets/screens/vacation-light.webp" alt="Vacation mode with dates and a sitter sheet" width="600" height="1305" loading="lazy" decoding="async"><img class="on-dark" src="assets/screens/vacation-dark.webp" alt="Vacation mode with dates and a sitter sheet" width="600" height="1305" loading="lazy" decoding="async"></div></div>
+    <div class="split-copy reveal">
+      <span class="eyebrow">Vacation mode</span><span class="badge-premium">Premium</span>
+      <h2>Go away without the guilt.</h2>
+      <p class="lead">Plan care before a trip, then share or print a one-page sitter sheet.</p>
+      <ul class="ticks"><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="7.5" width="17" height="12" rx="2.5"/><path d="M9 7.5V5.5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 5.5v2M3.5 12.5h17"/></svg></span><span>Pick your dates and see who needs a visit while you're away</span></li><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg></span><span>Pause reminders while you're away</span></li><li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M20.5 16l-5-5-8 8.5"/></svg></span><span>Share or print the sitter sheet for whoever looks after them</span></li></ul>
+    </div>
+  </div>
+</section><section class="band">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">And the small things</span>
+      <h2>Little touches that add up.</h2>
+    </div>
+    <div class="mini-grid">
+      <div class="card reveal"><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A5.5 5.5 0 0 1 17 8.5a4.5 4.5 0 0 1 .5 9.5z"/></svg></span><h3>Weather-smart watering <span class="badge-premium sm">Premium</span></h3><p>Heat waves bring watering forward, cold snaps push it back, and you see why.</p></div>
+      <div class="card reveal"><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><h3>Identify by photo <span class="badge-premium sm">Premium</span></h3><p>Snap a plant and get its care defaults ready, powered by Pl@ntNet.</p></div>
+      <div class="card reveal"><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-5h4v5"/></svg></span><h3>Room by room</h3><p>Plants grouped by room, each room with its own colour.</p></div>
+      <div class="card reveal"><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg></span><h3>Backup your way</h3><p>Export and import a backup whenever you like.</p></div>
+      <div class="card reveal"><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span><h3>Light and dark</h3><p>A calm light theme and a night garden for evenings.</p></div>
+      <div class="card reveal"><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="19" height="10" rx="5"/><circle cx="16.5" cy="12" r="3"/></svg></span><h3>Stats off in one tap</h3><p>Usage statistics are anonymous and easy to turn off.</p></div>
+    </div>
+  </div>
+</section><div class="wrap"><section class="cta reveal">
+    <div class="cta-card">
+      <span class="eyebrow">Coming soon</span>
+      <h2>Your plants will notice.</h2>
+      <p>LeafPulse is coming to the App Store and Google Play. Questions in the meantime? <a href="mailto:askdevelopers001@gmail.com?subject=LeafPulse">Write to us</a>.</p>
+      <div class="store-row">
+        <span class="pill store" aria-label="App Store, coming soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg><span><small>Coming soon to the</small>App Store</span></span>
+        <span class="pill pill-ghost store" aria-label="Google Play, coming soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5v17l13-8.5z"/></svg><span><small>Coming soon on</small>Google Play</span></span>
+      </div>
+    </div>
+  </section></div>
+</main>
+<footer class="site-footer">
+  <div class="mini-garden foot-garden" data-garden></div>
+  <div class="foot-inner">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.5 5-6.5"/></svg>LeafPulse</a>
+        <p class="footer-tag">Your little garden, cared for. A calm companion for houseplant care.</p>
+        <p class="made-by">Made with care by <a href="https://askdevelopers.github.io/#contact" rel="noopener">Ask Developers</a></p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul><li><a href="features.html">Features</a></li><li><a href="premium.html">Premium</a></li><li><a href="support.html">Help</a></li><li><a href="credits.html">Credits</a></li></ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul><li><a href="privacy.html">Privacy policy</a></li><li><a href="terms.html">Terms of use</a></li><li><a href="delete-account.html">Delete your data</a></li><li><a href="mailto:askdevelopers001@gmail.com">askdevelopers001@gmail.com</a></li></ul>
+      </div>
+    </div>
+    <p class="fineprint">© <span data-year>2026</span> Ask Developers. LeafPulse gives general houseplant care guidance, not professional horticultural or veterinary advice. App Store is a service mark of Apple Inc. Google Play is a trademark of Google LLC.</p>
+  </div>
+</footer>
+</body>
+</html>
