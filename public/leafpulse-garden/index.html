@@ -16,9 +16,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="theme.js?v=22acb1fd"></script>
 <link rel="stylesheet" href="garden.css?v=ce8a0da9">
-<link rel="stylesheet" href="site.css?v=f050c1fb">
+<link rel="stylesheet" href="site.css?v=e1049fd3">
 <script src="site.js?v=e7897b16" defer></script>
 <script src="roam.js?v=6cba2e97" defer></script>
+<script src="play.js" defer></script>
 <script src="garden.js?v=8da36c59" defer></script>
 </head>
 <body>
@@ -1018,6 +1019,78 @@
       <div class="card reveal"><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg></span><h3>No account</h3><p>Nothing to sign up for. Your plants, photos and notes live on your phone.</p></div>
       <div class="card reveal"><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M9 16a4.5 4.5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1"/></svg></span><h3>Works offline</h3><p>Today's jobs, reminders, guides and the Leaf doctor work without the internet.</p></div>
       <div class="card reveal"><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="19" height="10" rx="5"/><circle cx="16.5" cy="12" r="3"/></svg></span><h3>Your call on stats</h3><p>Anonymous usage stats you can turn off in one tap. We never sell data. <a href="privacy.html">Privacy policy</a></p></div>
+    </div>
+  </div>
+</section>
+
+
+<section class="band game-band" id="play">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Mini game</span>
+      <h2>Take a little garden break.</h2>
+      <p>Five pots, four tools, one minute. Give each plant what it asks for before it droops, and grow them all into bloom.</p>
+    </div>
+    <div class="gm card reveal" id="gardenGame">
+      <div class="gm-bar">
+        <div class="gm-tools" role="radiogroup" aria-label="Choose a tool">
+          <button type="button" role="radio" class="gm-tool on" aria-checked="true" data-tool="water" title="Water (1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h11v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M15 12l5-4"/><path d="M6 9V7a3.5 3.5 0 0 1 7 0v2"/></svg><span>Water</span><kbd>1</kbd></button>
+          <button type="button" role="radio" class="gm-tool" aria-checked="false" data-tool="mist" title="Mist (2)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9h6v11a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1z"/><path d="M10 9V6h4l2-2"/><path d="M19 7h.01M21 5h.01M21 9h.01"/></svg><span>Mist</span><kbd>2</kbd></button>
+          <button type="button" role="radio" class="gm-tool" aria-checked="false" data-tool="feed" title="Feed (3)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg><span>Feed</span><kbd>3</kbd></button>
+          <button type="button" role="radio" class="gm-tool" aria-checked="false" data-tool="turn" title="Turn (4)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 3v5h5"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16M20 21v-5h-5"/></svg><span>Turn</span><kbd>4</kbd></button>
+        </div>
+        <div class="gm-stats" aria-label="Score">
+          <span><b data-gstat="jobs">0</b> jobs</span>
+          <span><b data-gstat="blooms">0</b> in bloom</span>
+          <span><b data-gstat="best">0</b> best</span>
+        </div>
+      </div>
+      <div class="gm-field">
+        <div class="gm-timer" aria-hidden="true"><i></i></div>
+        <svg class="gm-scene" viewBox="0 0 800 360" role="group" aria-label="Five plants on a balcony shelf">
+          <defs>
+            <linearGradient id="gmWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="gm-w1"/><stop offset="1" class="gm-w2"/></linearGradient>
+            <linearGradient id="gmSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="gm-s1"/><stop offset="1" class="gm-s2"/></linearGradient>
+            <linearGradient id="gmWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9B887"/><stop offset="1" stop-color="#A86F42"/></linearGradient>
+            <linearGradient id="gmPot" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#A44E2E"/><stop offset=".38" stop-color="#EA9264"/><stop offset=".7" stop-color="#CF6A40"/><stop offset="1" stop-color="#93432A"/></linearGradient>
+            <linearGradient id="gmRim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F5B088"/><stop offset="1" stop-color="#C9683F"/></linearGradient>
+            <linearGradient id="gmTulip" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFCDB6"/><stop offset="1" stop-color="#EC7F5E"/></linearGradient>
+            <linearGradient id="gmPetal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE98A"/><stop offset="1" stop-color="#F4AE2E"/></linearGradient>
+            <radialGradient id="gmCactus" cx=".5" cy=".5" r=".6" fx=".35" fy=".3"><stop offset="0" stop-color="#B8E39A"/><stop offset=".6" stop-color="#6FAE58"/><stop offset="1" stop-color="#3F7D3A"/></radialGradient>
+            <radialGradient id="gmGer" cx=".5" cy=".5" r=".6" fx=".35" fy=".3"><stop offset="0" stop-color="#FF9C8A"/><stop offset="1" stop-color="#D9413A"/></radialGradient>
+          </defs>
+          <rect width="800" height="360" fill="url(#gmWall)"/>
+          <g class="gm-window">
+            <rect x="110" y="22" width="580" height="226" rx="16" fill="url(#gmSky)"/>
+            <g class="day-only" fill="#fff" opacity=".9"><circle cx="210" cy="92" r="20"/><circle cx="236" cy="80" r="26"/><circle cx="266" cy="94" r="18"/><rect x="196" y="94" width="86" height="18" rx="9"/><circle cx="540" cy="70" r="14"/><circle cx="560" cy="62" r="19"/><circle cx="582" cy="72" r="13"/><rect x="530" y="72" width="62" height="13" rx="6.5"/></g>
+            <g class="night-only"><circle cx="590" cy="76" r="22" fill="#F4EED8"/><circle cx="582" cy="70" r="4" fill="#E2D9BB"/><circle cx="597" cy="84" r="5" fill="#E2D9BB"/><g fill="#FFF8DC"><circle cx="180" cy="60" r="1.6"/><circle cx="260" cy="110" r="1.2"/><circle cx="330" cy="50" r="1.8"/><circle cx="430" cy="90" r="1.3"/><circle cx="480" cy="44" r="1.5"/><circle cx="650" cy="150" r="1.2"/></g></g>
+            <path d="M400 22 V248 M110 135 H690" stroke="#FBF3E6" stroke-width="8" opacity=".9"/>
+            <rect x="110" y="22" width="580" height="226" rx="16" fill="none" stroke="#FBF3E6" stroke-width="10"/>
+            <rect x="96" y="244" width="608" height="14" rx="7" fill="url(#gmWood)"/>
+          </g>
+          <rect x="24" y="300" width="752" height="18" rx="8" fill="url(#gmWood)"/>
+          <rect x="24" y="318" width="752" height="8" rx="4" fill="#3E2A1A" opacity=".18"/>
+          <g id="gmPlants"></g>
+          <g id="gmFx"></g>
+        </svg>
+        <div class="gm-toast" aria-live="polite"></div>
+        <div class="gm-card gm-start">
+          <p class="gm-kicker">Tend the windowsill</p>
+          <h3>One minute in the garden</h3>
+          <p>Pick a tool, then tap the plant asking for it. Keys 1 to 4 pick tools too.</p>
+          <button type="button" class="pill gm-go">Start</button>
+        </div>
+        <div class="gm-card gm-end" hidden>
+          <p class="gm-kicker">Time's up</p>
+          <h3 class="gm-end-title">Lovely work</h3>
+          <p class="gm-end-text"></p>
+          <div class="gm-end-row"><button type="button" class="pill gm-go">Play again</button><a class="pill pill-ghost" href="#get">Get LeafPulse</a></div>
+        </div>
+      </div>
+      <div class="gm-foot">
+        <button type="button" class="icon-btn gm-sound" aria-pressed="true" aria-label="Sound on. Turn garden sounds off" title="Sound"><svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg><svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m16 9 5 6M21 9l-5 6"/></svg></button>
+        <span class="soft">Cacti would rather be turned than watered. Ferns and daisies love a mist.</span>
+      </div>
     </div>
   </div>
 </section>
