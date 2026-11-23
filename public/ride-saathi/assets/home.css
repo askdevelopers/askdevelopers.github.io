@@ -1,0 +1,338 @@
+/* RideSaathi home page. The concept is wayfinding on an Indian road: the car on its street map, a station
+   departure board, the ride as a metro line, a bus-ticket fare, a highway sign and a "next stop" board.
+   Prefixes: h2o- hero map, db- departure board, ln- line, fs- fair share, tk- ticket, sx- safety, in- India map,
+   lx- languages sign, fq- FAQ, nx- next stop. Shared tokens, header, footer and the car's parts are in site.css. */
+
+:root {
+  --map-block: #D0DCD3;
+  --map-bldg: #C4D2C8;
+  --map-street: #E9F0EB;
+  --map-park: #BFE0C9;
+  --board: #101813;
+  --board-edge: #26302A;
+  --amber: #FFC845;
+  --amber-dim: #8E7633;
+  --paper: #FFF8E6;
+  --paper-ink: #2B2A22;
+  --paper-soft: #7A7564;
+  --sign: #0B7140;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --map-block: #18221D; --map-bldg: #1F2B25; --map-street: #24312A; --map-park: #1C3426;
+    --board: #0A0F0C; --board-edge: #1E2823; --paper: #E6DFC8; --paper-ink: #24231C; --paper-soft: #6C6757;
+    --sign: #0A5F36;
+  }
+}
+:root[data-theme="dark"] {
+  --map-block: #18221D; --map-bldg: #1F2B25; --map-street: #24312A; --map-park: #1C3426;
+  --board: #0A0F0C; --board-edge: #1E2823; --paper: #E6DFC8; --paper-ink: #24231C; --paper-soft: #6C6757;
+  --sign: #0A5F36;
+}
+
+/* Parts of the shared car <symbol>. Inside a <use> the parts live in a shadow tree, so these selectors must not
+   depend on ancestors. Seat colours come through inherited custom properties (the women-only switch sets them). */
+.cz-shadow { fill: url(#rsShadow); }
+.cz-tyre { fill: var(--tyre); }
+.cz-mirror { fill: var(--car); }
+.cz-body { fill: url(#rsBody); }
+.cz-headlight { fill: var(--headlight); }
+.cz-crease { stroke: var(--car-light); fill: none; opacity: .8; }
+.cz-glass { fill: url(#rsGlass); }
+.cz-glint { stroke: var(--glass-light); fill: none; }
+.cz-cabin { fill: var(--cabin); }
+.cz-tail { fill: var(--tail); }
+.cz-seat { fill: var(--seat); stroke: var(--seat-edge); stroke-width: 1.6; transition: fill .6s ease-in-out, stroke .6s ease-in-out; }
+.cz-wheel { stroke: var(--tyre); fill: none; }
+
+.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.home main > section { border-bottom: 1px solid var(--hairline); }
+.sec-head { max-width: 560px; margin-bottom: 26px; }
+.sec-head h2 { margin-bottom: 8px; }
+.home h2 { letter-spacing: -.015em; }
+
+/* ---------- Hero ---------- */
+.h2o { padding: 26px 0 8px; overflow: hidden; }
+.h2o-grid { display: grid; gap: 6px; }
+.h2o-copy h1 { font-size: clamp(36px, 9.6vw, 64px); line-height: 1.02; letter-spacing: -.03em; margin: 2px 0 14px; }
+.h2o-copy h1 .hl { color: var(--line-text); }
+.h2o-lede { font-size: 15.5px; line-height: 1.55; color: var(--muted); max-width: 31em; }
+.h2o-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 18px; }
+.h2o-facts { display: flex; margin: 22px 0 0; border-top: 1.5px solid var(--text); max-width: 400px; }
+.h2o-facts div { flex: 1; padding: 9px 8px 0 0; }
+.h2o-facts dt { font: 800 21px/1.1 var(--display); }
+.h2o-facts dd { margin: 2px 0 0; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+.h2o-stage { overflow: hidden; margin: 0 -16px; }
+.h2o-map { width: 150%; max-width: none; margin-left: -25%; height: auto; }
+@media (min-width: 560px) { .h2o-stage { margin: 0; } .h2o-map { width: 100%; margin: 0 auto; max-width: 620px; } }
+@media (min-width: 960px) {
+  .h2o { padding: 30px 0 0; }
+  .h2o-grid { grid-template-columns: minmax(0, 430px) minmax(0, 1fr); align-items: center; gap: 24px; }
+  .h2o-copy { padding-bottom: 24px; }
+}
+
+.h2o-map text { font-size: 13px; }
+.h2o-map .who { font-size: 16px; }
+.m-street { fill: var(--map-street); }
+.m-block { fill: var(--map-block); }
+.m-park { fill: var(--map-park); }
+.m-bldg rect { fill: var(--map-bldg); }
+.m-road { fill: var(--map-street); }
+.m-lane { stroke: var(--hairline); stroke-width: 2; stroke-dasharray: 14 16; fill: none; }
+.r-halo { fill: none; stroke: var(--line); stroke-opacity: .18; stroke-width: 20; stroke-linecap: round; stroke-linejoin: round; }
+.r-line { fill: none; stroke: var(--line); stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.h2o-map .stn circle { fill: var(--surface); stroke: var(--line); stroke-width: 4; }
+.stn.s-you circle { fill: var(--sun); stroke: var(--ink); stroke-width: 3; }
+.stn.s-office circle { fill: var(--ink); stroke: var(--line); stroke-width: 4; }
+.h2o-map .stn-t { font-family: var(--mono); font-weight: 500; font-size: 11.5px; letter-spacing: .12em; fill: var(--text); }
+.h2o-map .stn-s { font-size: 12px; fill: var(--muted); }
+
+/* Load: the route draws itself, stations appear along it, the car glides up into place, then the seats fill. */
+.js .r-line { stroke-dashoffset: 1; animation: rs-draw 2.4s ease-in-out .2s forwards; }
+.js .r-halo, .js .h2o-map .stn { opacity: 0; animation: rs-fade .8s ease-in-out forwards; }
+.js .r-halo { animation-delay: 1.6s; }
+.js .s-home { animation-delay: .3s; }
+.js .s-you { animation-delay: .7s; }
+.js .s-anita { animation-delay: 1s; }
+.js .s-office { animation-delay: 2.2s; }
+.js .h2o-car { animation: h2o-in 2s ease-in-out both; }
+.js .h2o-map .seq { animation-duration: .8s; }
+.js .h2o-map .s1 { animation-delay: 1.5s; }
+.js .h2o-map .s2 { animation-delay: 1.75s; }
+.js .h2o-map .s3 { animation-delay: 2s; }
+.js .h2o-map .s4 { animation-delay: 2.25s; }
+.h2o-map .m-lane { animation: rs-lane 3.2s linear infinite; }
+@keyframes rs-draw { to { stroke-dashoffset: 0; } }
+@keyframes h2o-in { from { transform: translateY(70px); opacity: 0; } 30% { opacity: 1; } to { transform: none; opacity: 1; } }
+@keyframes rs-lane { to { stroke-dashoffset: 30; } }
+
+/* ---------- Departure board ---------- */
+.db-band { padding: 20px 0 30px; }
+.db {
+  background: var(--board); color: var(--amber); border-radius: 14px; padding: 14px 16px 10px;
+  box-shadow: inset 0 0 0 1px var(--board-edge), var(--shadow); font-family: var(--mono);
+}
+.db-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; padding-bottom: 10px; border-bottom: 1px solid var(--board-edge); }
+.db-title { font: 500 13px/1 var(--mono); letter-spacing: .3em; text-transform: uppercase; color: var(--amber); }
+.db-title::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--line); margin: 0 10px 1px 0; animation: db-pulse 2.8s ease-in-out infinite; }
+.db-note { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--amber-dim); }
+.db-head, .db-rows li { display: grid; grid-template-columns: 62px minmax(0, 1fr) auto; grid-template-areas: "t r r" "t c s"; column-gap: 12px; }
+.db-head { padding: 8px 0 4px; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--amber-dim); }
+.db-head span:nth-child(1) { grid-area: t; } .db-head span:nth-child(2) { grid-area: r; }
+.db-head span:nth-child(3), .db-head span:nth-child(4) { display: none; }
+.db-rows { list-style: none; margin: 0; padding: 0; position: relative; }
+.db-rows::after { /* dot-matrix grain */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle, transparent 0 .9px, rgba(0, 0, 0, .32) 1.1px) 0 0 / 3px 3px;
+}
+.db-rows li { padding: 8px 0; border-top: 1px dashed var(--board-edge); font-size: 13px; line-height: 1.35; letter-spacing: .05em; text-transform: uppercase; transition: opacity .5s ease-in-out, transform .5s ease-in-out; }
+.db-rows li.out { opacity: 0; transform: translateY(-5px); }
+.db-rows .t { grid-area: t; font-weight: 500; }
+.db-rows .r { grid-area: r; color: #FFE39A; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.db-rows .c { grid-area: c; color: var(--amber-dim); font-size: 11.5px; }
+.db-rows .s { grid-area: s; color: #6FE39B; font-size: 11.5px; text-align: right; }
+@media (min-width: 720px) {
+  .db { padding: 16px 22px 12px; }
+  .db-head, .db-rows li { grid-template-columns: 96px minmax(0, 1fr) 150px 82px; grid-template-areas: "t r c s"; }
+  .db-head span { display: block !important; }
+  .db-head span:nth-child(3) { grid-area: c; } .db-head span:nth-child(4) { grid-area: s; text-align: right; }
+  .db-rows li { font-size: 14px; padding: 9px 0; }
+  .db-rows .c, .db-rows .s { font-size: 13px; }
+}
+@keyframes db-pulse { 50% { opacity: .35; } }
+
+/* ---------- The line ---------- */
+.ln { padding: 52px 0 56px; }
+.ln-track { --p: 0; position: relative; }
+.ln-stops { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; position: relative; }
+.ln-stops li { position: relative; padding-left: 40px; }
+.ln-dot {
+  position: absolute; left: 1px; top: 1px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--surface); border: 4px solid var(--hairline); z-index: 2;
+  transition: border-color .6s ease-in-out, background-color .6s ease-in-out;
+}
+.ln-stops li.on .ln-dot { border-color: var(--line); }
+.ln-stops li.on .ln-dot.you { background: var(--sun); border-color: var(--ink); }
+.ln-stops li.on .ln-dot.end { background: var(--ink); }
+.ln-n { display: block; font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); transition: color .6s ease-in-out; }
+.ln-stops li.on .ln-n { color: var(--line-text); }
+.ln-stops h3 { font-size: 15.5px; margin: 3px 0 4px; }
+.ln-stops p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.ln-rail { position: absolute; left: 9px; top: 10px; bottom: 10px; width: 5px; border-radius: 3px; background: var(--hairline); z-index: 1; }
+.ln-fill { position: absolute; left: 0; top: 0; width: 100%; height: calc(var(--p) * 100%); border-radius: 3px; background: var(--line); }
+.ln-car { max-width: none; position: absolute; left: 50%; top: calc(var(--p) * 100%); width: 21px; height: 42px; transform: translate(-50%, -50%) rotate(180deg); z-index: 3; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .18)); }
+@media (min-width: 860px) {
+  .ln-stops { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px; }
+  .ln-stops li { padding: 44px 0 0; text-align: left; }
+  .ln-dot { left: 0; top: 0; }
+  .ln-rail { left: 10px; right: calc((100% - 5 * 18px) / 6 - 10px); top: 8px; bottom: auto; width: auto; height: 5px; }
+  .ln-fill { height: 100%; width: calc(var(--p) * 100%); }
+  .ln-car { top: 50%; left: calc(var(--p) * 100%); transform: translate(-50%, -50%) rotate(90deg); }
+}
+
+/* ---------- Fair share ---------- */
+.fs { padding: 52px 0 56px; background: var(--bg-deep); }
+.fs-grid { display: grid; gap: 34px; align-items: center; }
+@media (min-width: 900px) { .fs-grid { grid-template-columns: minmax(0, 1fr) 360px; gap: 56px; } }
+.fs-copy h2 { margin-bottom: 8px; }
+.fs-copy > .soft { max-width: 34em; }
+.fs-route { margin: 24px 0 6px; --lab: 58px; }
+.fs-axis { position: relative; height: 18px; margin-left: var(--lab); font-family: var(--mono); font-size: 10.5px; color: var(--faint); letter-spacing: .06em; }
+.fs-km { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+.fs-km.k0 { left: 0; transform: none; } .fs-km.k1 { left: 41.67%; } .fs-km.k2 { left: 70.83%; } .fs-km.k3 { right: 0; transform: none; }
+.fs-bar { display: grid; grid-template-columns: var(--lab) 1fr; align-items: center; height: 26px; }
+.fs-bar b { font-size: 12.5px; font-weight: 700; }
+.fs-bar i { position: relative; height: 10px; border-radius: 5px; background: var(--hairline); }
+.fs-bar i::after { content: ""; position: absolute; top: 0; bottom: 0; border-radius: 5px; }
+.fs-bar.drv i::after { left: 0; right: 0; background: var(--sky); }
+.fs-bar.you i::after { left: 41.67%; right: 0; background: var(--sun); }
+.fs-bar.ani i::after { left: 70.83%; right: 0; background: var(--lilac); }
+
+.fs-slider { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 6px 10px; margin-top: 22px; max-width: 460px; }
+.fs-lab { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.fs-slider output { font: 800 20px/1 var(--display); }
+.fs-slider input { grid-column: 1 / -1; }
+.fs-ends { grid-column: 1 / -1; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10.5px; color: var(--faint); letter-spacing: .06em; }
+
+/* Custom range: same look on every browser. --v is the filled share (0–100%), set by home.js. */
+input[type="range"] {
+  --v: 33.3%;
+  -webkit-appearance: none; appearance: none; width: 100%; height: 26px; background: transparent; margin: 0; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; background: linear-gradient(var(--line), var(--line)) 0 0 / var(--v) 100% no-repeat, var(--hairline); }
+input[type="range"]::-moz-range-track { height: 8px; border-radius: 4px; background: linear-gradient(var(--line), var(--line)) 0 0 / var(--v) 100% no-repeat, var(--hairline); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; margin-top: -8px; border-radius: 50%; background: var(--sun); border: 3px solid var(--ink); box-shadow: 0 2px 6px rgba(0, 0, 0, .18); }
+input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--sun); border: 3px solid var(--ink); box-shadow: 0 2px 6px rgba(0, 0, 0, .18); }
+
+/* The bus ticket */
+.tk {
+  justify-self: center; width: 100%; max-width: 330px; transform: rotate(-1.6deg);
+  filter: drop-shadow(0 12px 22px rgba(23, 35, 29, .16));
+}
+.tk-in {
+  background: var(--paper); color: var(--paper-ink); font-family: var(--mono); padding: 22px 20px 20px;
+  -webkit-mask: radial-gradient(5px at 50% 0, #0000 98%, #000) 0 0 / 13px 51% repeat-x, radial-gradient(5px at 50% 100%, #0000 98%, #000) 0 100% / 13px 51% repeat-x;
+  mask: radial-gradient(5px at 50% 0, #0000 98%, #000) 0 0 / 13px 51% repeat-x, radial-gradient(5px at 50% 100%, #0000 98%, #000) 0 100% / 13px 51% repeat-x;
+}
+.tk-brand { font-size: 12px; font-weight: 500; letter-spacing: .22em; text-align: center; }
+.tk-sub { font-size: 11px; text-align: center; color: var(--paper-soft); margin-top: 4px; letter-spacing: .04em; }
+.tk-rows { margin: 14px 0 0; padding-top: 12px; border-top: 1.5px dashed var(--paper-soft); }
+.tk-rows div { display: flex; justify-content: space-between; gap: 10px; padding: 3px 0; font-size: 13px; }
+.tk-rows dd { margin: 0; font-weight: 500; font-variant-numeric: tabular-nums; }
+.tk-total div:first-child { font-size: 14.5px; font-weight: 500; }
+.tk-total div:first-child dd { font-family: var(--display); font-weight: 800; font-size: 19px; }
+.tk-foot { margin-top: 14px; padding-top: 10px; border-top: 1.5px dashed var(--paper-soft); text-align: center; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--paper-soft); }
+.tk dd.tick { animation: rs-fade .5s ease-in-out; }
+
+/* ---------- Safety ---------- */
+.sx { padding: 52px 0 56px; }
+.sx-grid { display: grid; gap: 30px; align-items: center; }
+@media (min-width: 860px) { .sx-grid { grid-template-columns: 340px minmax(0, 1fr); gap: 64px; } }
+.sx-fig { margin: 0; display: grid; justify-items: center; gap: 14px; }
+.sx-car { width: 100%; max-width: 260px; height: auto; }
+.sx-road { fill: var(--map-street); }
+.sx-drv { fill: var(--sky); transition: fill .6s ease-in-out; }
+.sx-w, .sx-on { opacity: 0; }
+.sx-m, .sx-w, .sx-badge, .sx-off, .sx-on { transition: opacity .6s ease-in-out; }
+.sx-badge { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .16em; fill: var(--accent-text); opacity: 0; }
+.sx-fig.on .sx-drv { fill: var(--lilac); }
+.sx-fig.on .sx-m, .sx-fig.on .sx-off { opacity: 0; }
+.sx-fig.on .sx-w, .sx-fig.on .sx-on, .sx-fig.on .sx-badge { opacity: 1; }
+.sx-fig.on .sx-car use { --seat: #EFE6FF; --seat-edge: #B9A3EA; }
+:root[data-theme="dark"] .sx-fig.on .sx-car use { --seat: #3B3352; --seat-edge: #6F5FA0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sx-fig.on .sx-car use { --seat: #3B3352; --seat-edge: #6F5FA0; } }
+.sx-fig figcaption { display: grid; justify-items: center; gap: 8px; text-align: center; }
+.sx-cap { display: grid; font-size: 12.5px; color: var(--muted); max-width: 280px; }
+.sx-cap > span { grid-area: 1 / 1; }
+
+/* Custom switch (same on every platform) */
+.sw { display: inline-flex; align-items: center; gap: 10px; font: 700 13.5px/1 var(--display); color: var(--text); background: var(--surface); border: 1px solid var(--hairline); border-radius: 999px; padding: 6px 14px 6px 6px; cursor: pointer; }
+.sw-k { position: relative; width: 38px; height: 22px; border-radius: 11px; background: var(--hairline); transition: background-color .4s ease-in-out; }
+.sw-k::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); box-shadow: 0 1px 3px rgba(0, 0, 0, .25); transition: transform .4s ease-in-out; }
+.sw[aria-checked="true"] .sw-k { background: var(--lilac); }
+.sw[aria-checked="true"] .sw-k::after { transform: translateX(16px); }
+
+.sx-copy h2 { margin-bottom: 16px; max-width: 16em; }
+.sx-list { list-style: none; padding: 0; margin: 0 0 18px; border-top: 1px solid var(--hairline); }
+.sx-list li { display: grid; gap: 2px; padding: 10px 0; border-bottom: 1px solid var(--hairline); }
+.sx-list b { font-size: 14px; }
+.sx-list span { font-size: 13px; color: var(--muted); }
+@media (min-width: 640px) { .sx-list li { grid-template-columns: 160px 1fr; gap: 16px; } }
+
+/* ---------- India map ---------- */
+.in { padding: 52px 0 40px; background: var(--bg-deep); }
+.in-grid { display: grid; gap: 18px; align-items: center; }
+@media (min-width: 860px) { .in-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 48px; } }
+.in-copy h2 { margin-bottom: 10px; }
+.in-copy .soft + .soft { margin-top: 10px; }
+.in-key { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 8px; font-size: 12.5px; color: var(--muted); }
+.in-key li { display: flex; align-items: center; gap: 10px; }
+.in-key i { display: inline-block; }
+.k-stn { width: 14px; height: 14px; border-radius: 50%; border: 3px solid var(--text); background: var(--surface); }
+.k-line { width: 26px; height: 5px; border-radius: 3px; background: var(--line); }
+.in-fig { margin: 0; }
+.in-map { width: 100%; height: auto; max-width: 520px; margin: 0 auto; }
+.in-cap { text-align: right; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+.in-map .cor { fill: none; stroke: var(--line); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.in-map .cor.alt { stroke: var(--accent); }
+.in-map .cor.alt2 { stroke: var(--sky); }
+.in-map .cor.alt3 { stroke: var(--lilac); }
+.in-map .stn circle { fill: var(--surface); stroke: var(--text); stroke-width: 3.5; }
+.in-map .stn.hub circle { stroke-width: 4.5; }
+.in-map .stn text { font-family: var(--body); font-weight: 700; font-size: 14px; fill: var(--text); }
+.js .in-map .cor { stroke-dashoffset: 1; transition: stroke-dashoffset 1.8s ease-in-out; }
+.js .in-map .stn { opacity: 0; transition: opacity .8s ease-in-out; }
+.in-map.in .cor { stroke-dashoffset: 0; }
+.in-map.in .stn { opacity: 1; }
+
+/* ---------- Languages: a highway sign ---------- */
+.lx { padding: 46px 0 54px; }
+.lx-grid { display: grid; gap: 26px; align-items: center; }
+@media (min-width: 760px) { .lx-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 440px); gap: 48px; } }
+.lx h2 { margin-bottom: 8px; }
+.sign { position: relative; padding-bottom: 46px; }
+.sign::before, .sign::after { content: ""; position: absolute; bottom: 0; width: 9px; height: 54px; background: linear-gradient(90deg, #8A948E, #C3CBC6 45%, #7D8781); border-radius: 2px; z-index: -1; }
+.sign::before { left: 22%; } .sign::after { right: 22%; }
+.sign-in {
+  background: var(--sign); color: #fff; border-radius: 12px; padding: 16px 18px;
+  box-shadow: inset 0 0 0 3px var(--sign), inset 0 0 0 5px #fff, var(--shadow);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px 22px;
+}
+.sign-in span { display: flex; justify-content: space-between; align-items: baseline; font-weight: 700; font-size: 18px; line-height: 1.5; border-bottom: 1px solid rgba(255, 255, 255, .22); padding: 2px 0 4px; }
+.sign-in span:nth-last-child(-n+2) { border-bottom: 0; }
+.sign-in i { font-style: normal; font-family: var(--display); font-weight: 800; font-size: 17px; opacity: .9; }
+
+/* ---------- FAQ ---------- */
+.fq { padding: 52px 0 44px; }
+.fq-cols { display: grid; column-gap: 40px; border-top: 1px solid var(--hairline); }
+@media (min-width: 820px) { .fq-cols { grid-template-columns: 1fr 1fr; } }
+.fq details { border-bottom: 1px solid var(--hairline); }
+.fq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 14px; padding: 12px 0; font-weight: 700; font-size: 14px; }
+.fq summary::-webkit-details-marker { display: none; }
+.fq summary::after { content: "+"; font: 500 18px/1 var(--mono); color: var(--line-text); transition: transform .4s ease-in-out; }
+.fq details[open] summary::after { transform: rotate(45deg); }
+.fq details p { font-size: 13px; color: var(--muted); padding: 0 24px 14px 0; }
+.fq-more { margin-top: 16px; }
+
+/* ---------- Next stop ---------- */
+.nx { padding: 36px 0 44px; }
+.home main > section.nx { border-bottom: 0; }
+.nx-board {
+  background: var(--board); border-radius: 16px; padding: 22px 20px; display: grid; gap: 18px; align-items: center;
+  box-shadow: inset 0 0 0 1px var(--board-edge), var(--shadow);
+}
+@media (min-width: 820px) { .nx-board { grid-template-columns: minmax(0, 1fr) 300px; padding: 28px 30px; gap: 40px; } }
+.nx-k { font-family: var(--mono); font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--amber-dim); }
+.nx-v { font: 500 clamp(22px, 4.6vw, 34px)/1.15 var(--mono); color: var(--amber); letter-spacing: .02em; text-transform: uppercase; margin-top: 8px; }
+.nx-blink { color: #FFE39A; animation: nx-breathe 3.2s ease-in-out infinite; }
+.nx-side p { color: #AFBDB5; font-size: 13px; margin-bottom: 12px; }
+.nx-btn { background: var(--amber); color: #17231D; }
+.nx-btn:hover { background: #FFE39A; color: #17231D; }
+@keyframes nx-breathe { 50% { opacity: .5; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .home *, .home *::before, .home *::after { animation: none !important; transition: none !important; }
+  .js .r-line, .js .in-map .cor { stroke-dashoffset: 0; }
+  .js .r-halo, .js .h2o-map .stn, .js .h2o-car, .js .h2o-map .seq, .js .in-map .stn { opacity: 1; }
+}

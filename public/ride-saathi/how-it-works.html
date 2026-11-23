@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>How it works · RideSaathi</title>
+<meta name="description" content="Your commute as a metro line: offer a seat, find a car going your way, see who sits where, split only the fuel and rate each other.">
+<link rel="canonical" href="https://askdevelopers.github.io/ride-saathi/how-it-works.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RideSaathi">
+<meta property="og:title" content="How it works · RideSaathi">
+<meta property="og:description" content="Your commute as a metro line: offer a seat, find a car going your way, see who sits where, split only the fuel and rate each other.">
+<meta property="og:url" content="https://askdevelopers.github.io/ride-saathi/how-it-works.html">
+<meta property="og:image" content="https://askdevelopers.github.io/ride-saathi/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="author" content="Ask Developers">
+<meta name="theme-color" content="#DDE7E0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111915" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231B2620'/%3E%3Cpath d='M16 2v28' stroke='%2313A150' stroke-width='5'/%3E%3Ccircle cx='16' cy='16' r='7.5' fill='%23FFD23F' stroke='%231B2620' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="assets/theme.js"></script>
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="index.html" aria-label="RideSaathi home"><svg viewBox="0 0 26 26" aria-hidden="true"><path class="b-line" d="M13 0v26" stroke-width="4"/><circle class="b-ring" cx="13" cy="13" r="7" stroke-width="3"/></svg>RideSaathi</a>
+    <nav class="nav-links" id="links" aria-label="Main">
+      <a href="how-it-works.html" aria-current="page">How it works</a>
+      <a href="safety.html">Safety</a>
+      <a href="support.html">Help</a>
+    </nav>
+    <div class="nav-right">
+      <button class="icon-btn theme-btn" id="themeBtn" type="button" aria-label="Switch light or dark theme" title="Light or dark"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="links"><svg class="bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">How it works</span>
+      <h1>Your commute, drawn as a metro line.</h1>
+      <p>Every shared ride is one car on its own route, with stops where riders get on and off. Here is the line, stop by stop.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <ol class="hw">
+        <li class="hw-stop reveal"><span class="hw-n">01</span><span class="hw-mark"></span>
+          <div class="hw-body"><h2>Offer a seat</h2><span class="mono who">Driver</span>
+            <p>Add your car once, then the route you drive to work and the time you leave. Your empty seats become places that riders along the way can join.</p></div></li>
+        <li class="hw-stop reveal"><span class="hw-n">02</span><span class="hw-mark"></span>
+          <div class="hw-body"><h2>Find a car going your way</h2><span class="mono who">Rider</span>
+            <p>Search with your pickup, drop and time. RideSaathi shows cars whose route passes within a short walk of both, with your drop after your pickup.</p>
+            <p>Several riders can join one car at different points, up to the seats on offer.</p></div></li>
+        <li class="hw-stop reveal"><span class="hw-n">03</span><span class="hw-mark you"></span>
+          <div class="hw-body split"><div><h2>See who sits where</h2><span class="mono who">Both</span>
+            <p>The car seen from above: who drives, who sits in front, who joins from where, and which seat is still free.</p></div>
+            <figure class="hw-fig"><div class="hw-shot"><img src="assets/img/seats-light.webp" alt="The app's seat map: a car from above with You in the front seat, Rahul K. driving, Anita S. behind, and one seat free, above a fuel split for 31 km." width="600" height="821" loading="lazy" decoding="async"></div><figcaption class="hw-cap">The seat map in the app</figcaption></figure></div></li>
+        <li class="hw-stop reveal"><span class="hw-n">04</span><span class="hw-mark"></span>
+          <div class="hw-body split"><div><h2>Follow the line</h2><span class="mono who">Both</span>
+            <p>Your trip as a timed line: where the car starts, where each rider gets on and off, and when it reaches your stop.</p></div>
+            <figure class="hw-fig"><div class="hw-shot"><img class="on-light" src="assets/img/route-light.webp" alt="The route as a metro line: Electronic City 8:25, Sony World Signal 8:52 where you board, Domlur Flyover, Marathahalli Bridge, and ITPL Main Gate 9:31 where you leave." width="600" height="487" loading="lazy" decoding="async"><img class="on-dark" src="assets/img/route-dark.webp" alt="The route as a metro line, in the dark theme." width="600" height="487" loading="lazy" decoding="async"></div><figcaption class="hw-cap">The route, as the app draws it</figcaption></figure></div></li>
+        <li class="hw-stop reveal"><span class="hw-n">05</span><span class="hw-mark"></span>
+          <div class="hw-body"><h2>Split the fuel</h2><span class="mono who">Both</span>
+            <p>Each rider's share is the kilometres they ride times the driver's per-km rate. You settle it directly with the driver, for example by UPI. RideSaathi never handles the money and takes no commission.</p></div></li>
+        <li class="hw-stop reveal"><span class="hw-n">06</span><span class="hw-mark end"></span>
+          <div class="hw-body"><h2>Rate each other</h2><span class="mono who">Both</span>
+            <p>After the trip, the driver rates the riders and the riders rate the driver. Good ratings build trust for the next morning.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Two roles, one app</span>
+        <h2>Drive some days, ride on others.</h2>
+        <p>Anyone can do both. The role you pick first only decides your home screen.</p>
+      </div>
+      <div class="rl reveal">
+        <div><h3>When you drive</h3><ul>
+          <li>Offer the empty seats on your daily route</li>
+          <li>Choose your per-km share inside the cap</li>
+          <li>Mark a ride women-only if you prefer</li>
+          <li>See who sits where before you set off</li>
+          <li>Rate your riders after the trip</li></ul></div>
+        <div><h3>When you ride</h3><ul>
+          <li>Find a car whose route passes near you</li>
+          <li>See your seat and who else is in the car</li>
+          <li>Pay only for the kilometres you share</li>
+          <li>Share your trip, with SOS one tap away</li>
+          <li>Rate your driver after the trip</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">The fair-share rule</span>
+        <h2>Cost sharing, not fares.</h2>
+        <p>A private car may share its running costs, not carry people for profit. So the rate per km is capped.</p>
+      </div>
+      <div class="fr reveal">
+        <div class="fr-gauge">
+          <span class="mono soft">Driver's rate per km</span>
+          <div class="fr-scale" role="img" aria-label="The rate can be set between 2 and 8 rupees per km. 4 rupees is suggested."><span class="fr-band"></span><span class="fr-pin">₹4 suggested</span></div>
+          <div class="fr-ticks" aria-hidden="true"><span class="t0">₹0</span><span class="t2">₹2</span><span class="t4">₹4</span><span class="t6">₹6</span><span class="t8">₹8</span><span class="t10">₹10</span></div>
+          <p class="fr-legend"><span><i></i>The band a driver can choose: ₹2 to ₹8 per km</span></p>
+          <p class="fr-sum">Anita rides 7 km × ₹4 = <b>₹28</b></p>
+        </div>
+        <ul class="fr-points">
+          <li><b>No commission</b><span>RideSaathi takes nothing from the share.</span></li>
+          <li><b>No profit</b><span>The cap keeps the share to running costs, which is what private cars may do.</span></li>
+          <li><b>Paid straight to the driver</b><span>Settle up directly, for example by UPI. The app never holds your money.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="cl reveal">
+        <div><h2>Coming soon to Android and iOS.</h2><p class="soft">Until then, read how we keep rides safe.</p></div>
+        <a class="btn btn-ink" href="safety.html">Safety</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><svg viewBox="0 0 26 26" aria-hidden="true"><path class="b-line" d="M13 0v26" stroke-width="4"/><circle class="b-ring" cx="13" cy="13" r="7" stroke-width="3"/></svg>RideSaathi</a>
+        <p class="soft footer-tag">Office carpooling for Indian cities. Share the empty seats, split only the fuel.</p>
+        <p class="soft made-by">Made by <a href="https://askdevelopers.github.io/#contact" rel="noopener">Ask Developers</a>, India</p>
+      </div>
+      <div>
+        <h4>App</h4>
+        <ul><li><a href="how-it-works.html">How it works</a></li><li><a href="safety.html">Safety</a></li><li><a href="support.html">Help</a></li><li><a href="credits.html">Credits</a></li></ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul><li><a href="privacy.html">Privacy policy</a></li><li><a href="terms.html">Terms of use</a></li><li><a href="delete-account.html">Delete your account</a></li><li><a class="mail" href="mailto:askdevelopers001@gmail.com">askdevelopers001@gmail.com</a></li></ul>
+      </div>
+    </div>
+    <p class="fineprint">© <span data-year>2026</span> Ask Developers. RideSaathi helps people share the running costs of trips they were making anyway. It is not a taxi or ride-hailing service, and it never handles payments.</p>
+  </div>
+</footer>
+</body>
+</html>

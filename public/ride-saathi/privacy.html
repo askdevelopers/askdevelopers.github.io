@@ -1,0 +1,149 @@
+<!doctype html>
+<!--
+  BEFORE LAUNCH: re-check this whole policy against the shipped app code. It was written on 2026-11-23 from
+  docs/PRODUCT_SPEC.md, before accounts, rides, trips, trust, ads and Premium were built. Confirm every data field,
+  every service (Firebase Auth/Firestore/Analytics, Crashlytics?, AdMob, RevenueCat?, map/search/routing providers),
+  location behaviour (foreground/background, who sees it, deletion), retention periods and the in-app delete path,
+  and keep it in line with the Play Data safety form and the App Store privacy labels.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Privacy Policy · RideSaathi</title>
+<meta name="description" content="What RideSaathi collects for shared rides, why, who can see it, and how to delete it. We never handle money and never sell data.">
+<link rel="canonical" href="https://askdevelopers.github.io/ride-saathi/privacy.html">
+<meta name="author" content="Ask Developers">
+<meta name="theme-color" content="#DDE7E0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111915" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231B2620'/%3E%3Cpath d='M16 2v28' stroke='%2313A150' stroke-width='5'/%3E%3Ccircle cx='16' cy='16' r='7.5' fill='%23FFD23F' stroke='%231B2620' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="assets/theme.js"></script>
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="index.html" aria-label="RideSaathi home"><svg viewBox="0 0 26 26" aria-hidden="true"><path class="b-line" d="M13 0v26" stroke-width="4"/><circle class="b-ring" cx="13" cy="13" r="7" stroke-width="3"/></svg>RideSaathi</a>
+    <nav class="nav-links" id="links" aria-label="Main">
+      <a href="how-it-works.html">How it works</a>
+      <a href="safety.html">Safety</a>
+      <a href="support.html">Help</a>
+    </nav>
+    <div class="nav-right">
+      <button class="icon-btn theme-btn" id="themeBtn" type="button" aria-label="Switch light or dark theme" title="Light or dark"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="links"><svg class="bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <article class="doc">
+    <div class="wrap">
+      <span class="eyebrow">Legal</span>
+      <h1>Privacy policy</h1>
+      <p class="updated">Last updated 23 November 2026</p>
+
+      <div class="summary">
+        <p>The short version</p>
+        <ul>
+          <li>We collect what a shared ride needs: your first name, sign-in, car details if you drive, your routes and pickup points, and ratings.</li>
+          <li>Live location is shared only during a trip, and deleted when the trip ends.</li>
+          <li>We never handle money. Riders pay drivers directly, for example by UPI, outside the app.</li>
+          <li>We never sell your data. You can delete your account at any time.</li>
+        </ul>
+      </div>
+
+      <h2>Who we are</h2>
+      <p>RideSaathi is made by Ask Developers, India. Contact: <a href="mailto:askdevelopers001@gmail.com">askdevelopers001@gmail.com</a>. This policy covers the RideSaathi app on Android and iOS and this website.</p>
+
+      <h2>What we collect</h2>
+      <div class="table-scroll">
+      <table class="doc-table">
+        <tr><th>What</th><th>Why</th><th>Who can see it</th></tr>
+        <tr><td data-label="What"><strong>Sign-in</strong>: your email address and an account id from Google, Apple or email sign-in</td><td data-label="Why">To create your account and keep it yours</td><td data-label="Who can see it">Only us. Never shown to other members.</td></tr>
+        <tr><td data-label="What"><strong>Profile</strong>: first name, language, and whether you mostly drive or ride</td><td data-label="Why">So the people you ride with know who you are</td><td data-label="Who can see it">Members on rides you offer or request</td></tr>
+        <tr><td data-label="What"><strong>Gender</strong></td><td data-label="Why">Only to offer and match women-only rides</td><td data-label="Who can see it">Used for matching. Not shown on your profile.</td></tr>
+        <tr><td data-label="What"><strong>Car details</strong> (if you drive): model, colour, number plate, seats</td><td data-label="Why">So riders can find and recognise your car</td><td data-label="Who can see it">Riders who view or join your rides</td></tr>
+        <tr><td data-label="What"><strong>Rides</strong>: routes, pickup and drop points, departure times, seats, the per-km share, requests and trip history</td><td data-label="Why">To match riders along a car's route and run the trip</td><td data-label="Who can see it">The driver and riders of that ride</td></tr>
+        <tr><td data-label="What"><strong>Live location</strong>, during a trip only</td><td data-label="Why">So the people on the trip know where the car is</td><td data-label="Who can see it">The people on that trip. Deleted when the trip ends.</td></tr>
+        <tr><td data-label="What"><strong>Ratings, reports and blocks</strong></td><td data-label="Why">To keep rides safe and fair</td><td data-label="Who can see it">Your average rating is shown to members. Reports are seen only by us.</td></tr>
+        <tr><td data-label="What"><strong>Support emails</strong></td><td data-label="Why">To answer you</td><td data-label="Who can see it">Only us</td></tr>
+      </table>
+      </div>
+      <p>We don't collect your phone number, contacts, photos or payment details.</p>
+
+      <h2>Payments</h2>
+      <p>RideSaathi never handles money. The share for a ride is paid by the rider straight to the driver, for example by UPI, outside the app. We never see or store card, bank or UPI details.</p>
+
+      <h2>Services we use</h2>
+      <div class="table-scroll">
+      <table class="doc-table">
+        <tr><th>Service</th><th>What it receives</th><th>When</th></tr>
+        <tr><td data-label="Service">Firebase Authentication and Cloud Firestore (Google)</td><td data-label="What it receives">Your sign-in details, profile, car, rides, ratings and trip data, stored on Google's servers</td><td data-label="When">While you use the app</td></tr>
+        <tr><td data-label="Service">Firebase Analytics (Google)</td><td data-label="What it receives">Which screens and features are used, app version, device type, language and an approximate region from your IP address. Never your routes or messages.</td><td data-label="When">While you use the app</td></tr>
+        <tr><td data-label="Service">Google AdMob</td><td data-label="What it receives">Advertising identifier and ad interactions</td><td data-label="When">Only after the consent form, and on iPhone the tracking prompt, which you can refuse. Never during a trip.</td></tr>
+        <tr><td data-label="Service">Map, place search and routing services (OpenFreeMap map tiles from OpenStreetMap data, and open-source search and routing servers)</td><td data-label="What it receives">The map area shown, the place names you search for, and the points a route is drawn between. No account details.</td><td data-label="When">When you look at a map, search for a place or plan a route</td></tr>
+      </table>
+      </div>
+      <p>These providers process data for us or under their own privacy policies. Data may be stored on servers outside India.</p>
+
+      <h2>Permissions</h2>
+      <ul>
+        <li><strong>Places you choose</strong>: the pickup and drop points you pick or search for, to match you with cars on that route. Place searches are sent to an OpenStreetMap search server without your name. We don't track or keep a history of where you go.</li>
+        <li><strong>App Tracking Transparency</strong> (iPhone): asked once for personalised ads. Saying no keeps the app fully working.</li>
+      </ul>
+
+      <h2>Who can use RideSaathi</h2>
+      <p>RideSaathi is for adults aged 18 and over. We don't knowingly collect data from anyone younger.</p>
+
+      <h2>How long we keep it</h2>
+      <ul>
+        <li>Live trip location: deleted when the trip ends.</li>
+        <li>Your account, car, rides and trip history: while your account is open. Deleted within 30 days of deleting your account.</li>
+        <li>Reports about safety: up to 12 months after the account is deleted, so a removed member can't simply start again.</li>
+        <li>Analytics: up to 14 months. Support emails: up to 2 years, or sooner if you ask.</li>
+      </ul>
+
+      <h2>Your rights</h2>
+      <p>You can see and change your profile in the app and <a href="delete-account.html">delete your account</a> at any time. Under India's Digital Personal Data Protection Act and similar laws (such as the GDPR), you can ask us for a copy of your data, to correct it, to delete it, or to withdraw consent. Email <a href="mailto:askdevelopers001@gmail.com?subject=RideSaathi%20privacy">askdevelopers001@gmail.com</a> and we will reply within 30 days. This address is also our contact for privacy complaints.</p>
+
+      <h2>Security</h2>
+      <p>Data travels encrypted (HTTPS) and is stored on Google's Firebase servers behind access rules, so members can read only what their rides need.</p>
+
+      <h2>Changes</h2>
+      <p>If RideSaathi starts collecting something new, this page, the Google Play Data safety form and the App Store privacy label change together, with the date above. Big changes are also announced in the app.</p>
+
+      <div class="callout"><strong>Questions?</strong> Email <a href="mailto:askdevelopers001@gmail.com?subject=RideSaathi%20privacy">askdevelopers001@gmail.com</a>.</div>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><svg viewBox="0 0 26 26" aria-hidden="true"><path class="b-line" d="M13 0v26" stroke-width="4"/><circle class="b-ring" cx="13" cy="13" r="7" stroke-width="3"/></svg>RideSaathi</a>
+        <p class="soft footer-tag">Office carpooling for Indian cities. Share the empty seats, split only the fuel.</p>
+        <p class="soft made-by">Made by <a href="https://askdevelopers.github.io/#contact" rel="noopener">Ask Developers</a>, India</p>
+      </div>
+      <div>
+        <h4>App</h4>
+        <ul><li><a href="how-it-works.html">How it works</a></li><li><a href="safety.html">Safety</a></li><li><a href="support.html">Help</a></li><li><a href="credits.html">Credits</a></li></ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul><li><a href="privacy.html">Privacy policy</a></li><li><a href="terms.html">Terms of use</a></li><li><a href="delete-account.html">Delete your account</a></li><li><a class="mail" href="mailto:askdevelopers001@gmail.com">askdevelopers001@gmail.com</a></li></ul>
+      </div>
+    </div>
+    <p class="fineprint">© <span data-year>2026</span> Ask Developers. RideSaathi helps people share the running costs of trips they were making anyway. It is not a taxi or ride-hailing service, and it never handles payments.</p>
+  </div>
+</footer>
+</body>
+</html>
