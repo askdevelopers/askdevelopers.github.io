@@ -476,7 +476,7 @@ p { margin: 0; }
 .footer-grid li a:hover { text-decoration: underline; }
 .footer-tag { margin-top: 8px; font-size: 13.5px; max-width: 30em; }
 .made-by { font-size: 13px; margin-top: 6px; }
-.mail { overflow-wrap: anywhere; }
+.mail { overflow-wrap: break-word; } /* the address breaks at the <wbr> before @, never mid-word */
 .fineprint { margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--hairline); color: var(--muted); font-size: 12px; }
 @media (min-width: 820px) {
   .footer-grid { grid-template-columns: 1.6fr 1fr 1fr; }

@@ -194,6 +194,12 @@
       }
       return [0, 0, 0];
     }
+    // First distance along the road whose point is at or below page height y (the road never climbs).
+    function firstAt(y) {
+      var lo = 0, hi = total;
+      for (var i = 0; i < 28; i++) { var mid = (lo + hi) / 2; if (pointAt(mid)[1] < y) lo = mid; else hi = mid; }
+      return hi;
+    }
     // Car-local point (drawing units) → page point, for a car at `pose` ([x, y, heading]).
     function carToPage(lx, ly, pose) {
       var s = CW / 200, a = pose[2] + Q, dx = (lx - 100) * s, dy = (ly - 202) * s;
@@ -232,6 +238,8 @@
       }
 
       pieces = []; anchors = [];
+      var crossings = []; // anchor index where each crossing starts, and the gap's centre line
+      var stopAnchors = []; // anchor index of each rider's stop
       var lane = home.p.lane, x = lanes[lane];
       var houseH = 54 * k, y0 = secs[home.p.home].top + houseH + 4, y = y0, len = 0;
       var marks = []; // places with drawings next to the road (no trees there)
@@ -244,6 +252,7 @@
           var pair = p.cross || p.office, yc = gapY(pair[0], pair[1]);
           var nx = lanes[lane === 'R' ? 'L' : 'R'], dir = nx > x ? 1 : -1;
           down(yc - r);
+          crossings.push({ a: anchors.length - 1, yc: yc });
           // Quarter turn out of the lane, across the gap, and (except at the office) a quarter turn back down.
           push(new Arc(x + dir * r, yc - r, r, dir > 0 ? Math.PI : 0, Q));
           // At the office the road runs on past the lane so the parked car sits right in front of the door.
@@ -259,6 +268,7 @@
           var next = PLAN[i + 1], limit = next && (next.cross || next.office) ? gapY((next.cross || next.office)[0], (next.cross || next.office)[1]) - r - CL : want;
           var sy = Math.max(y + CL * 1.3, Math.min(want, limit));
           down(sy);
+          stopAnchors.push({ a: anchors.length - 1, y: sy });
           stopAt[p.name] = { L: len, x: x, y: sy, lane: lane };
         }
       });
@@ -349,10 +359,37 @@
         }
       });
 
-      // Scroll → distance along the road. Near the very bottom, finish the trip even if the page is too short.
-      var maxScroll = Math.max(1, docH - vh);
+      /* Scroll → distance along the road. Anchors start as page heights (the car sits level with the middle of the
+         screen on the straight runs). Each crossing then gets its own, longer stretch of scrolling: the car sets off
+         when the gap is 85% of the way down the screen and is across by the time the gap is 20% from the top, so
+         the whole crossing plays out in view at normal reading speed. Straight runs share what is left. */
+      var maxScroll = Math.max(1, docH - vh), maxC = maxScroll + vh / 2;
+      crossings.forEach(function (cr) {
+        anchors[cr.a][0] = cr.yc - 0.35 * vh;
+        anchors[cr.a + 1][0] = cr.yc + 0.3 * vh;
+      });
+      // Riders: the car reaches them while their stop is still low on the screen (75% down), so the pickup
+      // has the lower half of the screen to play out even if you keep scrolling.
+      stopAnchors.forEach(function (st) { anchors[st.a][0] = st.y - 0.25 * vh; });
+      var lastA = anchors.length - 1;
+      anchors[lastA][0] = Math.min(anchors[lastA][0], maxC - 8);
+      // Crossings keep their windows (only nudged apart if two would overlap); stops and straight runs fit in
+      // between them, as early as that room allows.
+      var minStep = 60, hard = {}, ai;
+      crossings.forEach(function (cr) { hard[cr.a] = hard[cr.a + 1] = true; });
+      var prevHard = -Infinity;
+      for (ai = 0; ai <= lastA; ai++) if (hard[ai]) { anchors[ai][0] = Math.max(anchors[ai][0], prevHard + minStep); prevHard = anchors[ai][0]; }
+      for (ai = 0; ai <= lastA; ai++) {
+        if (hard[ai]) continue;
+        var nh = ai + 1; while (nh <= lastA && !hard[nh]) nh++;
+        var lo = ai > 0 ? anchors[ai - 1][0] + minStep : -Infinity;
+        var hi = nh <= lastA ? anchors[nh][0] - minStep * (nh - ai) : Infinity;
+        var c = Math.min(Math.max(anchors[ai][0], lo), hi);
+        if (c < lo) c = anchors[ai - 1][0] + (anchors[nh][0] - anchors[ai - 1][0]) / (nh - ai + 1); // squeezed: share it
+        anchors[ai][0] = c;
+      }
       layout.maxScroll = maxScroll;
-      layout.short = anchors[anchors.length - 1][0] > maxScroll + vh / 2 - 4;
+      layout.short = anchors[lastA][0] > maxC - 4;
       if (!ready) { L = target(); ready = true; settle(true); }
       else settle(true);
       render();
@@ -390,22 +427,43 @@
     function boardNow(s, inside) {
       clear(s);
       s.inside = inside;
-      s.who.classList.remove('walk');
+      s.who.classList.remove('walk', 'quick');
       s.who.classList.toggle('gone', inside);
       avs[s.seat].classList.toggle('on', inside && !office.arrived);
       doors[s.door].classList.remove('open'); slots[s.door].classList.remove('open');
       s.lab.classList.toggle('passed', inside);
     }
-    function pickup(s, now) {
+    /* A pickup: door opens, rider walks over and sits, door closes. The full version (~1.9 s) when you are reading;
+       a quick one (~0.85 s) when you are scrolling on, so the car never gets left behind. */
+    var boarding = null; // the stop being picked up right now
+    function doorShut(s) {
+      if (!doors[s.door].classList.contains('open')) return;
+      doors[s.door].classList.remove('open'); slots[s.door].classList.remove('open'); play('door-close');
+      say(s.p.name === 'You' ? 'You got in' : s.p.name + ' got in', s.p.color);
+    }
+    function pickup(s, now, quick) {
       clear(s);
       s.inside = true;
+      boarding = s;
       s.lab.classList.add('passed');
-      hold = now + 1900;
-      later(s, 200, function () { doors[s.door].classList.add('open'); slots[s.door].classList.add('open'); play('door-open'); });
-      later(s, 520, function () { s.who.classList.add('walk'); });
-      later(s, 1100, function () { s.who.classList.add('gone'); });
-      later(s, 1250, function () { avs[s.seat].classList.add('on'); });
-      later(s, 1450, function () { doors[s.door].classList.remove('open'); slots[s.door].classList.remove('open'); play('door-close'); say(s.p.name === 'You' ? 'You got in' : s.p.name + ' got in', s.p.color); });
+      car.classList.toggle('quick', !!quick);
+      s.who.classList.toggle('quick', !!quick);
+      var t = quick ? [0, 80, 330, 420, 560, 850] : [150, 450, 1000, 1130, 1300, 1700];
+      hold = now + t[5];
+      later(s, t[0], function () { doors[s.door].classList.add('open'); slots[s.door].classList.add('open'); play('door-open'); });
+      later(s, t[1], function () { s.who.classList.add('walk'); });
+      later(s, t[2], function () { s.who.classList.add('gone'); });
+      later(s, t[3], function () { avs[s.seat].classList.add('on'); });
+      later(s, t[4], function () { doorShut(s); });
+      later(s, t[5], function () { boarding = null; });
+    }
+    // Finish a pickup on the spot (the car is about to slide off the screen, or you scrolled far ahead).
+    function finishPickup(s) {
+      clear(s);
+      s.who.classList.add('walk', 'gone');
+      avs[s.seat].classList.add('on');
+      doorShut(s);
+      boarding = null;
     }
     function arrive(animate) {
       clear(office);
@@ -426,6 +484,7 @@
     }
     // Make rider state match the car's position without animation (first paint, jumps, resizes, reduced motion).
     function settle(quiet) {
+      if (quiet) { hold = 0; boarding = null; }
       stops.forEach(function (s) { var inside = L >= s.L - 1; if (inside !== s.inside || quiet) boardNow(s, inside); });
       var at = L >= Lmax - 1;
       if (at && !office.arrived) arrive(false);
@@ -443,41 +502,68 @@
       tag.style.transform = 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) translateX(-50%)';
     }
 
-    var ACC = 1500, VMAX = 1250, DEC = 650;
+    var ACC = 1800, VMAX = 1450, DEC = 650;
+    var scrollSpeed = 0, lastScroll = window.scrollY;
     function frame(now) {
       raf = 0;
       if (!on) return;
       var dt = Math.min(0.05, (now - (last || now)) / 1000);
       last = now;
-      var T = target(), braking = false;
+      // How fast you are scrolling down (smoothed), to pick a full or a quick pickup.
+      var sdy = window.scrollY - lastScroll; lastScroll = window.scrollY;
+      if (dt > 0) scrollSpeed += (Math.max(0, sdy / dt) - scrollSpeed) * Math.min(1, dt * 4);
+      var T = target(), braking = false, vh = window.innerHeight;
 
       if (reduce) { L = T; v = 0; settle(false); render(); return; }
       if (Math.abs(T - L) > 2200) { // a big jump (link, keyboard): skip ahead without the show
-        stops.concat(office).forEach(clear); hold = 0;
+        stops.concat(office).forEach(clear); hold = 0; boarding = null;
         L = T - Math.sign(T - L) * 260; v = 0; settle(true);
       }
+      // Keep the car in view. The road only ever runs down the page, so the part on screen is one stretch of it.
+      // If you scroll faster than the car can drive (or jump), it skips ahead out of sight to just beyond the
+      // screen edge and drives straight back in. Riders it passed are already seated.
+      var top = window.scrollY - CL * 0.6, bottom = window.scrollY + vh + CL * 0.6, skip = -1;
+      if (T > L && pointAt(L)[1] < top) skip = Math.min(T, firstAt(top));
+      else if (T < L && pointAt(L)[1] > bottom) skip = Math.max(T, firstAt(bottom));
+      if (skip >= 0 && Math.abs(skip - L) > 1) {
+        if (boarding) finishPickup(boarding);
+        hold = 0; L = Math.max(Lmin, Math.min(Lmax, skip)); settle(false);
+      }
       if (hold && T < L - 2) { // scrolling back during a pickup: let the car go
-        hold = 0; stops.forEach(function (s) { if (s.timers.length) boardNow(s, true); });
+        hold = 0; boarding = null; stops.forEach(function (s) { if (s.timers.length) boardNow(s, true); });
       }
       if (hold) {
         v = 0; braking = true;
+        // Never leave the car behind: wrap up the pickup if it is about to slide off the top, or you are far ahead.
+        var carY = pointAt(L)[1] - window.scrollY;
+        if (boarding && (carY < 0.15 * vh || T - L > 1.2 * vh)) { finishPickup(boarding); hold = now + 120; }
         if (now >= hold) hold = 0;
       } else {
-        // Head for the scroll position, braking early enough never to overshoot it (no reversing).
-        var gap = Math.abs(T - L);
-        var vd = Math.sign(T - L) * Math.min(VMAX, gap * 4.2, Math.sqrt(2 * ACC * 0.8 * gap));
+        // Head for the scroll position, braking early enough never to overshoot it (no reversing). The further
+        // behind the car is, the faster it may go, so it catches up instead of dropping off the screen.
+        var gap = Math.abs(T - L), behind = Math.max(0, T - L - 0.3 * vh);
+        var nearTop = T > L && pointAt(L)[1] - window.scrollY < 0.25 * vh; // about to be left behind
+        if (nearTop) behind = Math.max(behind, 0.3 * vh);
+        var vmax = Math.min(3600, VMAX + behind * 5), dec = behind > 0 ? 1600 : DEC;
+        var vd = Math.sign(T - L) * Math.min(vmax, gap * 4.2, Math.sqrt(2 * ACC * 0.8 * gap));
         // Ease into the next waiting rider and into the office.
         if (vd > 0) {
           var stopL = Lmax;
           for (var i = 0; i < stops.length; i++) if (!stops[i].inside && stops[i].L > L) { stopL = Math.min(stopL, stops[i].L); break; }
-          var cap = Math.sqrt(2 * DEC * Math.max(0, stopL - L)) + 12;
+          var cap = Math.sqrt(2 * dec * Math.max(0, stopL - L)) + 12;
           if (vd > cap) { vd = cap; braking = cap < v; }
         }
-        v += Math.max(-ACC * dt, Math.min(ACC * dt, vd - v));
+        var acc = behind > 0 ? 3200 : ACC;
+        v += Math.max(-acc * dt, Math.min(acc * dt, vd - v));
         var next = L + v * dt;
         stops.forEach(function (s) {
           if (!s.inside && L < s.L && next >= s.L) {
-            if (onScreen(pointAt(s.L)[1])) { next = s.L; v = 0; pickup(s, now); braking = true; }
+            // Full pickup if it fits before the car would reach the top of the screen at your scroll speed.
+            var sy = pointAt(s.L)[1];
+            if (onScreen(sy)) {
+              var room = (sy - window.scrollY - 0.15 * vh) / Math.max(1, scrollSpeed);
+              next = s.L; v = 0; pickup(s, now, scrollSpeed > 60 && room < 1.8); braking = true;
+            }
             else boardNow(s, true);
           } else if (s.inside && next < s.L - 1 && L >= s.L - 1) boardNow(s, false);
         });

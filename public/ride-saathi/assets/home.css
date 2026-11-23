@@ -58,13 +58,15 @@
 .h2o-copy h1 .hl { color: var(--line-text); }
 .h2o-lede { font-size: 15.5px; line-height: 1.55; color: var(--muted); max-width: 31em; }
 .h2o-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 18px; }
-.h2o-facts { display: flex; margin: 22px 0 0; border-top: 1.5px solid var(--text); max-width: 400px; }
-.h2o-facts div { flex: 1; padding: 9px 8px 0 0; }
+.h2o-facts { display: grid; grid-template-columns: auto auto minmax(0, 1fr); column-gap: 18px; margin: 22px 0 0; border-top: 1.5px solid var(--text); max-width: 400px; }
+.h2o-facts div { padding-top: 9px; }
 .h2o-facts dt { font: 800 21px/1.1 var(--display); }
 .h2o-facts dd { margin: 2px 0 0; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 
 .h2o-stage { overflow: hidden; margin: 0 -16px; }
-.h2o-map { width: 150%; max-width: none; margin-left: -25%; height: auto; }
+/* Phones: the map is drawn larger than the screen and centred, so its middle (x 80-520 of 600) fills the width.
+   Every label sits inside that window; check it at 360px after moving one. */
+.h2o-map { width: 136%; max-width: none; margin-left: -18%; height: auto; }
 @media (min-width: 560px) { .h2o-stage { margin: 0; } .h2o-map { width: 100%; margin: 0 auto; max-width: 620px; } }
 @media (min-width: 960px) {
   .h2o { padding: 30px 0 0; }
@@ -301,7 +303,7 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius
 @media (min-width: 640px) { .sx-list li { grid-template-columns: 160px 1fr; gap: 16px; } }
 
 /* ---------- India map ---------- */
-.in { padding: 52px 0 40px; background: var(--bg-deep); }
+.in-sec { padding: 52px 0 40px; background: var(--bg-deep); }
 .in-grid { display: grid; gap: 18px; align-items: center; }
 @media (min-width: 860px) { .in-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 48px; } }
 .in-copy h2 { margin-bottom: 10px; }
@@ -380,9 +382,6 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius
 .ws-say [lang] { font-size: 14.5px; font-weight: 700; line-height: 1.38; }
 .ws-en { font-size: 11.5px; opacity: .8; line-height: 1.35; }
 .ws-card[aria-pressed="true"] .ws-say { opacity: 1; transform: none; }
-.ws-note { margin: 12px 0 0; font-size: 11.5px; color: var(--muted); }
-.ws-note a { color: inherit; text-decoration: none; }
-.ws-note a:hover { text-decoration: underline; }
 @media (max-width: 859px) {
   .ws-row { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 40%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px; }
   .ws-row::-webkit-scrollbar { display: none; }
@@ -499,7 +498,7 @@ circle.sk-1 { fill: #E9B894; } circle.sk-2 { fill: #C68A62; }
 .ln-art .il-phone { fill: var(--il-phone); }
 .ln-art .il-screen { fill: var(--il-screen); }
 .ln-art .il-amt { font: 800 19px/1 var(--display); fill: var(--il-ink); }
-.ln-art .il-upi { font: 500 7px/1 var(--mono); letter-spacing: .12em; fill: #6B776F; }
+.ln-art .il-upi { font: 500 7px/1 var(--mono); letter-spacing: .02em; fill: #6B776F; }
 .ln-art .il-stars { font-size: 15px; letter-spacing: 1px; fill: var(--sun); stroke: var(--il-ink); stroke-width: .5; }
 @keyframes il-glow { 50% { opacity: .55; } }
 
