@@ -16,7 +16,7 @@
   var S = {
     board: 'main > section.db-band', line: 'main > section#line', fare: 'main > section.fs', impact: 'main > section.zs',
     safety: 'main > section.sx', india: 'main > section[aria-labelledby="inTitle"]', langs: 'main > section.lx',
-    faq: 'main > section.fq', next: 'main > section.nx'
+    faq: 'main > section.fq', next: 'main > section.nx', footer: 'body > footer.site-footer'
   };
   var PLAN = [
     { home: S.board, lane: 'R', name: "Rahul's home", time: '07:40' },
@@ -27,7 +27,8 @@
     { cross: [S.safety, S.india] },
     { cross: [S.india, S.langs] },
     { stop: S.langs, f: 0.3, name: 'Vikram', time: '08:09', pc: 'pc-mint', sk: 'sk-3', seat: 'fl', color: 'var(--mint)' },
-    { office: [S.langs, S.faq], name: 'Office', time: '08:30' }
+    // The office stands in its own strip after "Coming soon", just above the footer (trip.css opens the room).
+    { office: [S.next, S.footer], name: 'Office', time: '08:30' }
   ];
 
   /* Car drawing (#car, viewBox 200×404, nose up). Seats: front left, driver (front right, India drives on the
@@ -36,6 +37,35 @@
   var DOOR = { fl: ['l', 164, 76], bl: ['l', 246, 62], fr: ['r', 164, 76], br: ['r', 246, 62] };
   var DOOR_OF = { fl: 'fl', bl: 'bl', br: 'br', dr: 'fr' };
   var BASE_W = 52; // car width in px on a wide screen
+
+  /* Roadside drawings (original). Plants are seen from above like the road; buildings stand on the kerb, seen
+     from the front like the home and the office. Colours come from trip.css (day and night). */
+  var FROND = '';
+  for (var fi = 0; fi < 8; fi++) FROND += '<path class="' + (fi % 2 ? 'tm-frond2' : 'tm-frond') + '" transform="rotate(' + (fi * 45 + 20) + ' 12 12)" d="M12 12Q15 6.5 12 1Q9 6.5 12 12Z"/>';
+  var ROADSIDE =
+    '<symbol id="tmNeem" viewBox="0 0 24 24"><ellipse class="tm-shade" cx="13.5" cy="14.5" rx="10" ry="8.5"/>' +
+      '<circle class="tm-leafd" cx="8.5" cy="13.5" r="6.5"/><circle class="tm-leafd" cx="15" cy="14.5" r="6"/><circle class="tm-leaf" cx="12" cy="9.5" r="7"/>' +
+      '<circle class="tm-leaf" cx="7.5" cy="11" r="4.5"/><circle class="tm-leafhi" cx="10" cy="7.5" r="2.8"/><circle class="tm-leafhi" cx="14.8" cy="10" r="1.7"/></symbol>' +
+    '<symbol id="tmPalm" viewBox="0 0 24 24"><ellipse class="tm-shade" cx="13.5" cy="14" rx="9" ry="7.5"/>' + FROND + '<circle class="tm-trunk" cx="12" cy="12" r="2"/></symbol>' +
+    '<symbol id="tmBush" viewBox="0 0 16 12"><ellipse class="tm-shade" cx="8.8" cy="7.6" rx="7" ry="4.2"/><circle class="tm-leafd" cx="4.5" cy="7" r="3.6"/>' +
+      '<circle class="tm-leafd" cx="11" cy="6.8" r="3.8"/><circle class="tm-leaf" cx="7.8" cy="4.8" r="3.6"/><circle class="tm-flower" cx="5" cy="5.4" r="1"/>' +
+      '<circle class="tm-flower" cx="10.8" cy="4.8" r="1"/><circle class="tm-flower" cx="8.8" cy="8.2" r=".9"/><circle class="tm-flower" cx="3.6" cy="8.6" r=".8"/></symbol>' +
+    // A corner shop: sign board, striped awning, open front with a counter
+    '<symbol id="tmShop" viewBox="0 0 30 24"><rect class="tm-bw-wall" x="1" y="4" width="28" height="20" rx="1.5"/><rect class="tm-bw-sign" x="4" y="0" width="22" height="5" rx="1"/>' +
+      '<rect class="tm-shopin" x="4" y="12" width="22" height="12"/><rect class="tm-bw-edge" x="4" y="18.5" width="22" height="1.6"/>' +
+      '<rect class="tm-awn-a" x="0" y="8" width="30" height="4"/><rect class="tm-awn-b" x="3.75" y="8" width="3.75" height="4"/><rect class="tm-awn-b" x="11.25" y="8" width="3.75" height="4"/>' +
+      '<rect class="tm-awn-b" x="18.75" y="8" width="3.75" height="4"/><rect class="tm-awn-b" x="26.25" y="8" width="3.75" height="4"/></symbol>' +
+    // A block of flats with the black water tank on the roof
+    '<symbol id="tmFlat" viewBox="0 0 20 36"><rect class="tm-tank" x="11.5" y="0" width="6" height="5" rx="2"/><rect class="tm-bw-edge" x="1" y="4.5" width="18" height="1.6"/>' +
+      '<rect class="tm-bw-wall" x="1.5" y="5.5" width="17" height="30.5" rx="1"/>' +
+      '<rect class="tm-bwl" x="4" y="9" width="4.5" height="4.5" rx=".8"/><rect class="tm-bwo" x="11.5" y="9" width="4.5" height="4.5" rx=".8"/>' +
+      '<rect class="tm-bwo" x="4" y="16" width="4.5" height="4.5" rx=".8"/><rect class="tm-bwl" x="11.5" y="16" width="4.5" height="4.5" rx=".8"/>' +
+      '<rect class="tm-bwl" x="4" y="23" width="4.5" height="4.5" rx=".8"/><rect class="tm-bwl" x="11.5" y="23" width="4.5" height="4.5" rx=".8"/>' +
+      '<rect class="tm-door" x="7.5" y="29.5" width="5" height="6.5" rx=".8"/></symbol>' +
+    // A low house with a flat roof, a parapet and a pot plant on top
+    '<symbol id="tmHouse" viewBox="0 0 24 20"><circle class="tm-leaf" cx="19.5" cy="2.6" r="2.4"/><rect class="tm-bw-edge" x="0" y="3.5" width="24" height="2.6" rx=".8"/>' +
+      '<rect class="tm-bw-wall" x="1" y="5.5" width="22" height="14.5" rx="1"/><rect class="tm-door" x="9.5" y="11" width="5" height="9" rx=".8"/>' +
+      '<rect class="tm-bwl" x="3.5" y="9" width="4.5" height="4.5" rx=".8"/><rect class="tm-bwo" x="16" y="9" width="4.5" height="4.5" rx=".8"/></symbol>';
   // On straight runs the car rides a little below the middle of the screen, leaving room above it for pickups
   // and for catching up when you scroll quickly.
   var LEAD = 0.62;
@@ -159,6 +189,7 @@
     svgEl('rect', { 'class': 'tc-hl', x: 128, y: 13, width: 22, height: 6, rx: 3 }, csvg);
     // Flash the headlights twice as the car pulls up for a rider (shows at night only).
     var flashT = [];
+    var sig = null; // the traffic signal: { L: distance along the road, g: its drawing, state }
     function flash() {
       flashT.forEach(clearTimeout); flashT = [];
       [0, 150, 330, 480].forEach(function (ms, i) { flashT.push(setTimeout(function () { car.classList.toggle('flash', i % 2 === 0); }, ms)); });
@@ -206,6 +237,37 @@
       else if (p.office) office = { p: p, lab: div('trip-lab', layer, '<b>' + p.name + '</b>' + p.time), arrived: false, timers: [], out: [] };
     });
     office.out = stops.map(function (s) { return person('exit', s.p.pc, s.p.sk, layer); });
+    // The cars these riders would each have driven alone: they fade in behind Rahul's car at the office, then clear.
+    office.ghosts = stops.map(function (s0, i) {
+      var g = div('trip-ghost', layer);
+      g.style.setProperty('--i', i);
+      svgEl('use', { href: '#car' }, svgEl('svg', { viewBox: '0 0 200 404' }, g));
+      return g;
+    });
+
+    /* Trip summary at the office: the example trip's numbers, using the same fare rule as the fare-share ticket
+       (driver's rate from its slider, ₹10 minimum) and the Impact page's 0.12 kg CO₂ per car-km. */
+    var RIDES = [['You', 14], ['Anita', 7], ['Vikram', 4]], KG_PER_KM = 0.12;
+    var sum = document.createElement('section');
+    sum.className = 'trip-sum';
+    sum.setAttribute('aria-label', 'Trip summary');
+    sum.innerHTML = '<p class="tsum-k"><i></i>Trip complete · 08:30</p><p class="tsum-h">3 cars fewer on the road</p>' +
+      '<dl class="tsum-d"><div><dt>Riders</dt><dd>3</dd></div><div><dt>Shared</dt><dd data-km></dd></div>' +
+      '<div><dt>To Rahul</dt><dd data-pay></dd></div><div><dt>CO₂ saved</dt><dd data-co2></dd></div></dl>' +
+      '<p class="tsum-f"><span>Example trip at <b data-rate></b>/km, no commission.</span><button type="button" class="tsum-again">Ride again ↺</button></p>';
+    document.body.appendChild(sum);
+    function fillSummary() {
+      var input = document.getElementById('rate'), rate = input ? parseFloat(input.value) || 4 : 4, km = 0, pay = 0;
+      RIDES.forEach(function (r) { km += r[1]; pay += Math.max(10, Math.round(r[1] * rate)); });
+      sum.querySelector('[data-km]').textContent = km + ' km';
+      sum.querySelector('[data-pay]').textContent = '₹' + pay;
+      sum.querySelector('[data-co2]').textContent = '≈ ' + Math.round(km * KG_PER_KM) + ' kg';
+      sum.querySelector('[data-rate]').textContent = '₹' + (rate % 1 ? rate.toFixed(1) : rate);
+    }
+    fillSummary();
+    sum.querySelector('.tsum-again').addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
 
     var on = false, pieces = [], total = 0, anchors = [], k = 1, CW = BASE_W, CL = BASE_W * 2.02, Lmin = 0, Lmax = 0;
     var L = 0, v = 0, hold = 0, raf = 0, last = 0, tagTimer = 0, ready = false;
@@ -234,6 +296,8 @@
     function place(el, x, y) { el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) translate(-50%,-100%)'; }
 
     function layout() {
+      // Open the destination strip first (trip.css), so everything below is measured with it in place.
+      root.classList.toggle('trip-room', mq.matches);
       var W = root.clientWidth;
       var secs = {}, ok = mq.matches;
       if (ok) {
@@ -249,7 +313,7 @@
       var off = Math.min(cL, W - cR) / 2; // lane centre to the nearest ink
       // Car size from the margin: car + open door + a rider beside it must fit between the lane and the edge.
       CW = Math.min(BASE_W, (off - 4) / 1.12);
-      if (!ok || CW < 34) { on = false; root.classList.remove('trip-on'); return; }
+      if (!ok || CW < 34) { on = false; root.classList.remove('trip-on', 'trip-room'); return; }
       k = CW / BASE_W; CL = CW * 2.02;
       var RW = Math.round(CW * 0.74), r = Math.min(70, off - 6);
       var lanes = { L: cL / 2, R: cR + (W - cR) / 2 };
@@ -271,10 +335,18 @@
       function down(toY) { if (toY > y) { push(new Line(x, y, x, toY)); y = toY; anchors.push([y, len]); } }
       anchors.push([y, 0]);
       var stopAt = {};
+      // The office: its road runs along the strip above the footer, and the office stands a quarter of the way in.
+      var officeP = PLAN[PLAN.length - 1], oh = 96 * k;
+      var footTop = document.querySelector(officeP.office[1]).getBoundingClientRect().top + window.scrollY;
+      var officeY = footTop - Math.max(30, RW / 2 + 16);
+      var ox = cL + (cR - cL) * 0.22;
+      if (officeY - RW / 2 - oh - 34 < secs[officeP.office[0]].bottom + 6) ok = false; // strip too short
+      function crossY(p) { return p.office ? officeY : gapY(p.cross[0], p.cross[1]); }
       PLAN.forEach(function (p, i) {
         if (p.cross || p.office) {
-          var pair = p.cross || p.office, yc = gapY(pair[0], pair[1]);
-          var nx = lanes[lane === 'R' ? 'L' : 'R'], dir = nx > x ? 1 : -1;
+          var yc = crossY(p);
+          // At the office the car parks just past the door, so the door stays in view.
+          var nx = p.office ? ox + CL * 0.55 : lanes[lane === 'R' ? 'L' : 'R'], dir = nx > x ? 1 : -1;
           down(yc - r);
           crossings.push({ a: anchors.length - 1, yc: yc, end: !!p.office });
           // Quarter turn out of the lane, across the gap, and (except at the office) a quarter turn back down.
@@ -289,13 +361,13 @@
         } else if (p.stop) {
           // A stop sits in the straight run that holds it; keep it clear of the bends at both ends.
           var b = secs[p.stop], want = b.top + (b.bottom - b.top) * p.f;
-          var next = PLAN[i + 1], limit = next && (next.cross || next.office) ? gapY((next.cross || next.office)[0], (next.cross || next.office)[1]) - r - CL : want;
+          var next = PLAN[i + 1], limit = next && (next.cross || next.office) ? crossY(next) - r - CL : want;
           var sy = Math.max(y + CL * 1.3, Math.min(want, limit));
           down(sy);
           stopAt[p.name] = { L: len, x: x, y: sy, lane: lane };
         }
       });
-      if (!ok) { on = false; root.classList.remove('trip-on'); return; }
+      if (!ok) { on = false; root.classList.remove('trip-on', 'trip-room'); return; }
       total = len;
       Lmin = CL / 2 + 2; Lmax = total - CL / 2 - 6;
 
@@ -317,7 +389,8 @@
       svgEl('path', { 'class': 'tm-lane', d: d, 'stroke-dasharray': (9 * k).toFixed(1) + ' ' + (12 * k).toFixed(1) }, map);
       // Street lamps (night only, see trip.css): filled in after the trees, drawn above the road and below the car.
       var defs = svgEl('defs', {}, map);
-      defs.innerHTML = '<radialGradient id="tmLampG"><stop offset="0" class="tm-l0"/><stop offset=".55" class="tm-l0 tm-lmid"/><stop offset="1" class="tm-l1"/></radialGradient>';
+      defs.innerHTML = '<radialGradient id="tmLampG"><stop offset="0" class="tm-l0"/><stop offset=".55" class="tm-l0 tm-lmid"/><stop offset="1" class="tm-l1"/></radialGradient>' + ROADSIDE;
+      var groundG = svgEl('g', { 'class': 'tm-ground' }, map); // rail tracks and the zebra crossing, on the tarmac
       var lampG = svgEl('g', { 'class': 'tm-lamps' }, map);
 
       // Home: a small house whose door opens onto the road.
@@ -330,15 +403,20 @@
       place(home.lab, hx, hy - 6);
 
       // Office: a block with the RideSaathi sign on its roof, standing on the road where it ends.
-      var ox = office.at[0], oy = office.at[1] - RW / 2, oh = 96 * k;
+      var oy = office.at[1] - RW / 2;
       var og = svgEl('g', { 'class': 'tm-office', transform: 'translate(' + (ox - 28 * k).toFixed(1) + ' ' + (oy - oh).toFixed(1) + ') scale(' + k.toFixed(3) + ')' }, map);
       var wins = '';
       for (var row = 0; row < 4; row++) for (var col = 0; col < 3; col++) wins += '<rect class="tm-bwin" x="' + (9 + col * 14) + '" y="' + (26 + row * 13) + '" width="10" height="8" rx="1.5"/>';
       og.innerHTML = '<rect class="tm-bldg" x="2" y="18" width="52" height="78" rx="3"/>' + wins +
         '<rect class="tm-glass" x="19" y="78" width="18" height="18" rx="1.5"/><path class="tm-frame" d="M28 78V96"/>' +
-        '<rect class="tm-mast" x="27" y="12" width="2" height="7"/><rect class="tm-logo" x="18" y="0" width="20" height="14" rx="3.5"/>' +
-        '<path class="tm-logo-line" d="M28 1V13"/><circle class="tm-logo-dot" cx="28" cy="7" r="3.6"/>';
+        '<rect class="tm-mast" x="27" y="12" width="2" height="7"/><circle class="tm-glow" cx="28" cy="7" r="15"/><rect class="tm-logo" x="18" y="0" width="20" height="14" rx="3.5"/>' +
+        '<path class="tm-logo-line" d="M28 1V13"/><circle class="tm-logo-dot" cx="28" cy="7" r="3.6"/>' +
+        '<circle class="tm-tree" cx="-12" cy="86" r="9"/><circle class="tm-tree2" cx="-12" cy="77" r="5.5"/><circle class="tm-tree2" cx="68" cy="89" r="6.5"/>';
+      office.g = og;
+      var bw = og.querySelectorAll('.tm-bwin');
+      office.wins = [bw[10], bw[6], bw[2]]; // a desk on each floor, bottom up
       office.door = [ox, oy - 2 * k];
+      office.ox = ox;
       marks.push([ox, oy - oh, oh + RW]);
       place(office.lab, ox, oy - oh - 6);
 
@@ -369,19 +447,90 @@
         el.style.setProperty('--gx', (office.door[0] - p[0]).toFixed(1) + 'px');
         el.style.setProperty('--gy', (office.door[1] - p[1]).toFixed(1) + 'px');
       });
+      // Ghost cars queue on the road behind the parked car; the summary sits in the strip above them.
+      office.ghosts.forEach(function (g, i) {
+        g.style.transform = 'translate(' + (endPose[0] - office.at[2] * CL * 1.2 * (i + 1)).toFixed(1) + 'px,' + endPose[1].toFixed(1) + 'px)';
+      });
+      var sumW = Math.min(330, cR - (ox + 44 * k) - 8);
+      sum.style.width = sumW + 'px';
+      sum.style.left = (ox + 44 * k).toFixed(1) + 'px';
+      sum.style.top = (oy - 12 - sum.offsetHeight).toFixed(1) + 'px';
 
-      // Trees on the straight runs, both sides, where nothing else is drawn and the margin has room.
+      // A traffic signal with a zebra crossing on the longest straight run, and a railway level crossing on the
+      // next one, each clear of the stops and of the bends.
+      function hitMark(x0, ya, yb) {
+        for (var m = 0; m < marks.length; m++) if (Math.abs(marks[m][0] - x0) < 4 && yb > marks[m][1] - 14 && ya < marks[m][1] + marks[m][2] + 14) return true;
+        return false;
+      }
+      var acc0 = 0, runs = [];
+      pieces.forEach(function (pc) { pc.s = acc0; acc0 += pc.len; if (pc instanceof Line && pc.x0 === pc.x1 && pc.len > CL * 4) runs.push(pc); });
+      runs.sort(function (a, b) { return b.len - a.len; });
+      var sigG = svgEl('g', {}, map), feats = [];
+      runs.forEach(function (pc) {
+        if (feats.length > 1) return;
+        [0.5, 0.35, 0.65].some(function (f) {
+          var fy = pc.y0 + pc.len * f;
+          if (fy - pc.y0 < CL * 1.5 || pc.y1 - fy < CL * 1.5 || hitMark(pc.x0, fy - 44 * k, fy + 44 * k)) return false;
+          feats.push({ pc: pc, y: fy });
+          marks.push([pc.x0, fy - 44 * k, 88 * k]);
+          return true;
+        });
+      });
+      sig = null;
+      var lk = k * 1.35; // signal, barriers and the crossing sign, a little larger than the map scale
+      feats.forEach(function (ft, i) {
+        var x0 = ft.pc.x0, fy = ft.y, sd = x0 < W / 2 ? -1 : 1, e = RW / 2;
+        if (i === 0) { // the signal: stop line, zebra stripes and the signal head on the kerb before them
+          svgEl('rect', { 'class': 'tm-zebra', x: (x0 - e + 2 * k).toFixed(1), y: (fy - 10 * k).toFixed(1), width: (RW - 4 * k).toFixed(1), height: (1.6 * k).toFixed(1) }, groundG);
+          for (var zx = x0 - e + 3 * k; zx < x0 + e - 5 * k; zx += 6 * k) svgEl('rect', { 'class': 'tm-zebra', x: zx.toFixed(1), y: (fy - 5 * k).toFixed(1), width: (3.2 * k).toFixed(1), height: (11 * k).toFixed(1) }, groundG);
+          var g = svgEl('g', { 'class': 'tm-sig red', transform: 'translate(' + (x0 + sd * (e + 7 * k)).toFixed(1) + ' ' + (fy - 7 * k).toFixed(1) + ') scale(' + lk.toFixed(3) + ')' }, sigG);
+          g.innerHTML = '<rect class="tm-spole" x="-.9" y="-18" width="1.8" height="18"/><rect class="tm-shead" x="-4" y="-35" width="8" height="18" rx="2"/>' +
+            '<circle class="tm-sgl r" cy="-30.5" r="5.5"/><circle class="tm-sgl a" cy="-26" r="5.5"/><circle class="tm-sgl g" cy="-21.5" r="5.5"/>' +
+            '<circle class="tm-sl tm-sr" cy="-30.5" r="1.9"/><circle class="tm-sl tm-sa" cy="-26" r="1.9"/><circle class="tm-sl tm-sg" cy="-21.5" r="1.9"/>';
+          sig = { L: ft.pc.s + (fy - ft.pc.y0), g: g, state: 'red' };
+        } else { // the level crossing: sleepers and rails across the margin, boom barriers up on both sides
+          var xa = sd < 0 ? 0 : cR + 8, xb = sd < 0 ? cL - 8 : W;
+          for (var sx = xa + 2 * k; sx < xb - 2 * k; sx += 6 * k) {
+            if (Math.abs(sx - x0) < e + 1) continue;
+            svgEl('rect', { 'class': 'tm-sleeper', x: sx.toFixed(1), y: (fy - 6.5 * k).toFixed(1), width: (2.6 * k).toFixed(1), height: (13 * k).toFixed(1), rx: (0.6 * k).toFixed(1) }, groundG);
+          }
+          [-4, 4].forEach(function (dy) { svgEl('path', { 'class': 'tm-rail', 'stroke-width': (1.4 * k).toFixed(2), d: 'M' + xa.toFixed(1) + ' ' + (fy + dy * k).toFixed(1) + 'H' + xb.toFixed(1) }, groundG); });
+          [[-1, -1], [1, 1]].forEach(function (b) {
+            var bg = svgEl('g', { transform: 'translate(' + (x0 + b[0] * (e + 5 * k)).toFixed(1) + ' ' + (fy + b[1] * 12 * k).toFixed(1) + ') scale(' + lk.toFixed(3) + ')' }, sigG);
+            bg.innerHTML = '<rect class="tm-boom-w" x="-1" y="-29" width="2" height="23" rx="1"/><rect class="tm-boom-r" x="-1" y="-27" width="2" height="4"/><rect class="tm-boom-r" x="-1" y="-19" width="2" height="4"/>' +
+              '<rect class="tm-bpost" x="-1.8" y="-7" width="3.6" height="7" rx=".8"/>';
+          });
+          var xg = svgEl('g', { transform: 'translate(' + (x0 + sd * (e + 15 * k)).toFixed(1) + ' ' + (fy - 8 * k).toFixed(1) + ') scale(' + lk.toFixed(3) + ')' }, sigG);
+          xg.innerHTML = '<rect class="tm-spole" x="-.7" y="-16" width="1.4" height="16"/><path class="tm-xb-o" d="M-5 -21L5 -13M5 -21L-5 -13"/><path class="tm-xb" d="M-5 -21L5 -13M5 -21L-5 -13"/>';
+        }
+      });
+
+      /* Roadside: trees, palms, bushes and small buildings on the straight runs, both sides, where nothing else is
+         drawn and the margin has room. Buildings mostly on the side towards the screen edge, to keep the side
+         next to the text calm. The mix is fixed by position, so it doesn't change between visits. */
       var tg = svgEl('g', { 'class': 'tm-trees' }, map);
-      var step = 66 * k, tr = 5.5 * k;
+      var step = 66 * k;
+      var KINDS = { neem: ['tmNeem', 25, 25], palm: ['tmPalm', 27, 27], bush: ['tmBush', 19, 14], shop: ['tmShop', 36, 29], flat: ['tmFlat', 26, 47], house: ['tmHouse', 31, 26] };
+      function rnd(n) { var s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); }
       pieces.forEach(function (pc) {
         if (!(pc instanceof Line) || pc.x0 !== pc.x1) return;
+        var outer = pc.x0 < W / 2 ? -1 : 1;
         for (var ty = pc.y0 + step / 2; ty < pc.y1 - 10; ty += step) {
           [-1, 1].forEach(function (sd, j) {
-            var tx = pc.x0 + sd * (RW / 2 + tr + 4 * k), yy = ty + (j ? step / 2 : 0);
+            var yy = ty + (j ? step / 2 : 0);
             if (yy > pc.y1 - 10) return;
-            if (tx - tr < 4 || tx + tr > W - 4 || (tx > cL - tr - 6 && tx < cR + tr + 6)) return;
-            for (var m = 0; m < marks.length; m++) if (Math.abs(marks[m][0] - pc.x0) < 4 && yy > marks[m][1] - 14 && yy < marks[m][1] + marks[m][2] + 14) return;
-            svgEl('circle', { 'class': (Math.round(yy / step) + j) % 2 ? 'tm-tree' : 'tm-tree2', cx: tx.toFixed(1), cy: yy.toFixed(1), r: (j ? tr * 0.75 : tr).toFixed(1) }, tg);
+            var r1 = rnd(Math.round(yy) * 3 + j), r2 = rnd(Math.round(yy) * 7 + j + 1);
+            var kind = r1 < (sd === outer ? 0.42 : 0.14) ? (r2 < 0.4 ? 'shop' : r2 < 0.7 ? 'house' : 'flat') : (r2 < 0.5 ? 'neem' : r2 < 0.78 ? 'palm' : 'bush');
+            var kd = KINDS[kind], w = kd[1] * k, h = kd[2] * k, bld = kind === 'shop' || kind === 'house' || kind === 'flat';
+            var tx = pc.x0 + sd * (RW / 2 + (bld ? 9 : 3) * k + w / 2);
+            if (tx - w / 2 < 4 || tx + w / 2 > W - 4 || (tx + w / 2 > cL - 6 && tx - w / 2 < cR + 6)) {
+              kind = 'bush'; kd = KINDS.bush; w = kd[1] * k; h = kd[2] * k; bld = false; tx = pc.x0 + sd * (RW / 2 + 3 * k + w / 2);
+              if (tx - w / 2 < 4 || tx + w / 2 > W - 4 || (tx + w / 2 > cL - 6 && tx - w / 2 < cR + 6)) return;
+            }
+            // Buildings stand on the kerb (their base on the row line); plants are seen from above, centred on it.
+            var top2 = bld ? yy + 10 * k - h : yy - h / 2;
+            if (hitMark(pc.x0, top2, top2 + h)) return;
+            svgEl('use', { href: '#' + kd[0], 'class': 'tm-c' + (1 + Math.floor(r1 * 97) % 4), x: (tx - w / 2).toFixed(1), y: top2.toFixed(1), width: w.toFixed(1), height: h.toFixed(1) }, tg);
           });
         }
       });
@@ -515,18 +664,34 @@
     function arrive(animate) {
       clear(office);
       office.arrived = true;
-      if (!animate) { stops.forEach(function (s) { avs[s.seat].classList.remove('on'); }); return; }
+      if (!animate) {
+        stops.forEach(function (s) { avs[s.seat].classList.remove('on'); });
+        office.wins.forEach(function (w) { w.classList.add('lit'); });
+        office.g.classList.add('lit'); fillSummary(); sum.classList.add('show');
+        return;
+      }
       var ds = stops.map(function (s) { return s.door; });
       later(office, 250, function () { ds.forEach(function (d) { doors[d].classList.add('open'); slots[d].classList.add('open'); }); play('door-open'); });
       later(office, 650, function () { stops.forEach(function (s) { avs[s.seat].classList.remove('on'); }); office.out.forEach(function (el) { el.classList.add('show'); }); });
       later(office, 950, function () { office.out.forEach(function (el) { el.classList.add('walk'); }); });
-      later(office, 1500, function () { ds.forEach(function (d) { doors[d].classList.remove('open'); slots[d].classList.remove('open'); }); play('door-close'); say('Office · all off'); });
+      later(office, 1500, function () { ds.forEach(function (d) { doors[d].classList.remove('open'); slots[d].classList.remove('open'); }); play('door-close'); });
+      // At their desks: a window lights up on each floor, then the RideSaathi sign on the roof glows.
+      office.wins.forEach(function (w, i) { later(office, 1950 + i * 260, function () { w.classList.add('lit'); }); });
       later(office, 2300, function () { office.out.forEach(function (el) { el.classList.add('gone'); }); });
+      later(office, 2750, function () { office.g.classList.add('lit'); });
+      // The three cars that stayed at home appear behind Rahul's car, then clear one by one; the summary comes in.
+      later(office, 2900, function () { office.ghosts.forEach(function (g) { g.classList.add('show'); }); });
+      later(office, 3300, function () { fillSummary(); sum.classList.add('show'); });
+      later(office, 5400, function () { office.ghosts.forEach(function (g) { g.classList.add('gone'); }); });
     }
     function leaveOffice() {
       clear(office);
       office.arrived = false;
       office.out.forEach(function (el) { el.classList.remove('show', 'walk', 'gone'); });
+      office.ghosts.forEach(function (g) { g.classList.remove('show', 'gone'); });
+      office.wins.forEach(function (w) { w.classList.remove('lit'); });
+      if (office.g) office.g.classList.remove('lit');
+      sum.classList.remove('show');
       stops.forEach(function (s) { avs[s.seat].classList.toggle('on', s.inside); doors[s.door].classList.remove('open'); slots[s.door].classList.remove('open'); });
     }
     // Make rider state match the car's position without animation (first paint, jumps, resizes, reduced motion).
@@ -547,6 +712,11 @@
       var tx = Math.max(hw, Math.min(root.clientWidth - hw, p[0]));
       var ty = Math.abs(Math.sin(p[2])) > 0.5 ? p[1] + CL / 2 + 12 : p[1] + CW / 2 + 12; // below the car
       tag.style.transform = 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) translateX(-50%)';
+      // The signal turns green as the car comes up to it, amber once it is through, then red again.
+      if (sig) {
+        var dl = L - sig.L, st = dl < -280 * k || dl > 380 * k ? 'red' : dl > 120 * k ? 'amber' : 'green';
+        if (st !== sig.state) { sig.g.classList.remove('red', 'amber', 'green'); sig.g.classList.add(st); sig.state = st; }
+      }
     }
 
     var ACC = 2400, VMAX = 1600, DEC = 1000;

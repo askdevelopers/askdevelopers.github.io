@@ -15,6 +15,56 @@
   --trip-roof: #A4553A; --trip-edge: #34413A;
 }
 
+/* Roadside (trees, palms, bushes, shops, flats, houses, signal, level crossing). Day colours here, night below. */
+:root {
+  --trip-leaf: #7DB98E; --trip-leafd: #5B9C70; --trip-leafhi: #A9D6B2; --trip-frond: #5E9F71; --trip-frond2: #7BB98A; --trip-trunk: #8A6A4E;
+  --trip-flower: #F2A33A; --trip-shade: rgba(30, 50, 40, .12);
+  --trip-w1: #F3DDB8; --trip-w2: #EBCBC3; --trip-w3: #D3E3E7; --trip-w4: #F1E5AE; --trip-wedge: #CBB8A0;
+  --trip-sign1: #E8683F; --trip-sign2: #13A150; --trip-sign3: #2C8C8A; --trip-sign4: #C9A227;
+  --trip-shopin: #7A5E4A; --trip-winoff: var(--il-win); --trip-tank: #2C312E;
+  --trip-sleeper: #9C8A78; --trip-rail: #7D8783; --trip-pole: #5A6660;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --trip-leaf: #24432F; --trip-leafd: #1A3324; --trip-leafhi: #2F573D; --trip-frond: #1F3B2A; --trip-frond2: #294C36; --trip-trunk: #4A3A2E;
+    --trip-flower: #7A5A2A; --trip-shade: rgba(0, 0, 0, .28);
+    --trip-w1: #5A4F42; --trip-w2: #564546; --trip-w3: #3F4D52; --trip-w4: #575033; --trip-wedge: #3A332C;
+    --trip-sign1: #A84B2E; --trip-sign2: #0F7A3D; --trip-sign3: #22696A; --trip-sign4: #8F7420;
+    --trip-shopin: #E3B45E; --trip-winoff: #1E2724; --trip-tank: #151917;
+    --trip-sleeper: #3E362F; --trip-rail: #66706C; --trip-pole: #4A5550;
+  }
+}
+:root[data-theme="dark"] {
+  --trip-leaf: #24432F; --trip-leafd: #1A3324; --trip-leafhi: #2F573D; --trip-frond: #1F3B2A; --trip-frond2: #294C36; --trip-trunk: #4A3A2E;
+  --trip-flower: #7A5A2A; --trip-shade: rgba(0, 0, 0, .28);
+  --trip-w1: #5A4F42; --trip-w2: #564546; --trip-w3: #3F4D52; --trip-w4: #575033; --trip-wedge: #3A332C;
+  --trip-sign1: #A84B2E; --trip-sign2: #0F7A3D; --trip-sign3: #22696A; --trip-sign4: #8F7420;
+  --trip-shopin: #E3B45E; --trip-winoff: #1E2724; --trip-tank: #151917;
+  --trip-sleeper: #3E362F; --trip-rail: #66706C; --trip-pole: #4A5550;
+}
+.tm-shade { fill: var(--trip-shade); }
+.tm-leaf { fill: var(--trip-leaf); } .tm-leafd { fill: var(--trip-leafd); } .tm-leafhi { fill: var(--trip-leafhi); }
+.tm-frond { fill: var(--trip-frond); } .tm-frond2 { fill: var(--trip-frond2); } .tm-trunk { fill: var(--trip-trunk); }
+.tm-flower { fill: var(--trip-flower); }
+.tm-c1 { --tw: var(--trip-w1); --ts: var(--trip-sign1); } .tm-c2 { --tw: var(--trip-w2); --ts: var(--trip-sign2); }
+.tm-c3 { --tw: var(--trip-w3); --ts: var(--trip-sign3); } .tm-c4 { --tw: var(--trip-w4); --ts: var(--trip-sign4); }
+.tm-bw-wall { fill: var(--tw, var(--trip-w1)); } .tm-bw-edge { fill: var(--trip-wedge); } .tm-bw-sign { fill: var(--ts, var(--trip-sign1)); }
+.tm-awn-a { fill: var(--ts, var(--trip-sign1)); } .tm-awn-b { fill: #FFF6EA; opacity: calc(1 - var(--trip-night, 0) * .55); }
+.tm-shopin { fill: var(--trip-shopin); } .tm-tank { fill: var(--trip-tank); }
+.tm-bwl { fill: var(--il-win); } .tm-bwo { fill: var(--trip-winoff); }
+.tm-zebra { fill: var(--trip-lane); }
+.tm-sleeper { fill: var(--trip-sleeper); } .tm-rail { stroke: var(--trip-rail); fill: none; }
+.tm-spole, .tm-bpost { fill: var(--trip-pole); } .tm-shead { fill: #1F2622; }
+.tm-boom-w { fill: #F4F1EA; } .tm-boom-r { fill: #D9412B; }
+.tm-xb-o { stroke: #D9412B; stroke-width: 3; stroke-linecap: round; fill: none; } .tm-xb { stroke: #F4F1EA; stroke-width: 1.4; stroke-linecap: round; fill: none; }
+/* Signal lights: the lit one is bright, the others dim; at night the lit one glows */
+.tm-sl { opacity: .22; transition: opacity .45s ease-in-out; }
+.tm-sr { fill: #FF4A3A; } .tm-sa { fill: #FFB020; } .tm-sg { fill: #2FD27A; }
+.tm-sgl { opacity: 0; transition: opacity .45s ease-in-out; }
+.tm-sgl.r { fill: #FF4A3A; } .tm-sgl.a { fill: #FFB020; } .tm-sgl.g { fill: #2FD27A; }
+.tm-sig.red .tm-sr, .tm-sig.amber .tm-sa, .tm-sig.green .tm-sg { opacity: 1; }
+.tm-sig.red .tm-sgl.r, .tm-sig.amber .tm-sgl.a, .tm-sig.green .tm-sgl.g { opacity: calc(var(--trip-night, 0) * .4); }
+
 .trip, .trip-snd { display: none; }
 .trip-on .trip { display: block; position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 3; pointer-events: none; --k: 1; }
 
@@ -101,5 +151,43 @@
 
 @media (prefers-reduced-motion: reduce) {
   .trip-who, .trip-who.exit, .trip-car .tc-av, .trip-car .tc-door, .trip-car .tc-slot, .trip-lab, .trip-tag,
-  .tc-beam, .tc-tailglow, .trip-car .tc-hl, .tm-lamps { transition: none; }
+  .tc-beam, .tc-tailglow, .trip-car .tc-hl, .tm-lamps, .tm-sl, .tm-sgl { transition: none; }
+}
+
+/* ---------- The destination: a strip after "Coming soon" where the road ends at the office ---------- */
+.trip-room main { padding-bottom: 210px; }
+.tm-bwin { transition: fill .9s ease-in-out; }
+.tm-bwin.lit { fill: #FFD46B; }
+.tm-glow { fill: #FFD23F; opacity: 0; transition: opacity 1.2s ease-in-out; }
+.tm-office.lit .tm-glow { opacity: .35; }
+
+/* Ghost cars: the cars that stayed at home. Grey, faint, and they drift up as they clear. */
+.trip-ghost { position: absolute; left: calc(var(--cl, 93px) / -2); top: calc(var(--cw, 46px) / -2); width: var(--cl, 93px); height: var(--cw, 46px);
+  opacity: 0; translate: 0 0; transition: opacity .9s ease-in-out, translate 1.4s ease-in-out; filter: grayscale(1); }
+.trip-ghost svg { position: absolute; left: 50%; top: 50%; width: var(--cw, 46px); height: var(--cl, 93px); max-width: none; transform: translate(-50%, -50%) rotate(-90deg); }
+.trip-ghost.show { opacity: .32; }
+.trip-ghost.show, .trip-ghost.gone { transition-delay: calc(var(--i, 0) * .3s); }
+.trip-ghost.gone { opacity: 0; translate: 0 -16px; }
+
+/* Trip summary card, in the strip beside the office */
+.trip-sum { display: none; }
+.trip-on .trip-sum { display: block; position: absolute; z-index: 3; visibility: hidden; opacity: 0; translate: 0 6px; box-sizing: border-box; padding: 11px 14px 10px;
+  background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; box-shadow: 0 6px 18px rgba(0, 0, 0, .07);
+  transition: opacity .8s ease-in-out, translate .8s ease-in-out, visibility 0s linear .8s; }
+.trip-on .trip-sum.show { visibility: visible; opacity: 1; translate: 0 0; transition-delay: 0s; }
+.tsum-k { margin: 0; font: 500 9.5px/1.3 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.tsum-k i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--line); margin-right: 6px; vertical-align: 1px; }
+.tsum-h { margin: 3px 0 8px; font: 700 14px/1.25 var(--display, inherit); color: var(--text); letter-spacing: -.01em; }
+.tsum-d { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 7px 0 8px; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+.tsum-d div { min-width: 0; }
+.tsum-d dt { font: 500 8.5px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tsum-d dd { margin: 2px 0 0; font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; }
+.tsum-d div:last-child dd { color: var(--line-text, var(--line)); }
+.tsum-f { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 7px 0 0; font-size: 11px; color: var(--muted); }
+.tsum-f b { font-weight: 600; color: var(--text); }
+.tsum-again { flex: none; border: 0; padding: 4px 0; background: none; color: var(--line-text, var(--line)); font: 500 10px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.tsum-again:hover { text-decoration: underline; text-underline-offset: 3px; }
+.tsum-again:focus-visible { outline: 2px solid var(--line); outline-offset: 2px; border-radius: 4px; }
+@media (prefers-reduced-motion: reduce) {
+  .trip-ghost, .trip-on .trip-sum, .tm-bwin, .tm-glow { transition: none; }
 }
