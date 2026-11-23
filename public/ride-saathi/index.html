@@ -25,14 +25,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="assets/theme.js?v=b081f14"></script>
-<link rel="stylesheet" href="assets/site.css?v=b081f14">
-<link rel="stylesheet" href="assets/home.css?v=b081f14">
-<link rel="stylesheet" href="assets/trip.css?v=b081f14">
-<script src="assets/site.js?v=b081f14" defer></script>
-<script src="assets/home.js?v=b081f14" defer></script>
-<script src="assets/trip.js?v=b081f14" defer></script>
-<script src="assets/stories.js?v=b081f14" defer></script>
+<script src="assets/theme.js?v=1ba392e"></script>
+<link rel="stylesheet" href="assets/site.css?v=1ba392e">
+<link rel="stylesheet" href="assets/home.css?v=1ba392e">
+<link rel="stylesheet" href="assets/trip.css?v=1ba392e">
+<link rel="stylesheet" href="assets/ride-film.css?v=1ba392e">
+<script src="assets/site.js?v=1ba392e" defer></script>
+<script src="assets/home.js?v=1ba392e" defer></script>
+<script src="assets/trip.js?v=1ba392e" defer></script>
+<script src="assets/ride-film.js?v=1ba392e" defer></script>
+<script src="assets/stories.js?v=1ba392e" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"MobileApplication","name":"RideSaathi","url":"https://askdevelopers.github.io/ride-saathi/","operatingSystem":"Android, iOS","applicationCategory":"TravelApplication","description":"Carpooling for every Indian city: offer the empty seats on your daily route, or join a car going your way and share only the running cost.","inLanguage":["en","hi","kn","ta","te","mr"],"author":{"@type":"Organization","name":"Ask Developers","url":"https://askdevelopers.github.io/","email":"askdevelopers001@gmail.com"}}</script>
 </head>
 <body class="home">
@@ -129,6 +131,8 @@
           <span class="tag">Coming soon · Android &amp; iOS</span>
           <a class="arrow-link" href="#line">See a ride, stop by stop ↓</a>
         </div>
+        <!-- Phones and tablets: the morning trip as a short film (ride-film.js). Wide screens have the trip in the margins. -->
+        <button class="rf-open rf-strip" id="rfOpen" type="button"><span class="rf-disc"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 1.5v13l11-6.5z"/></svg></span><span class="rf-txt"><b>Watch a ride</b><small>Rahul's car · 3 pickups · 25 s</small></span><span class="rf-mini" aria-hidden="true"><i class="d0"></i><i class="d1"></i><i class="d2"></i><i class="d3"></i><i class="d4"></i><span class="rf-mini-run"><svg viewBox="0 0 404 200"><use href="#car" width="200" height="404" transform="translate(404 0) rotate(90)"/></svg></span></span></button>
         <dl class="h2o-facts">
           <div><dt>₹2–8</dt><dd>per km, capped</dd></div>
           <div><dt>0%</dt><dd>commission</dd></div>

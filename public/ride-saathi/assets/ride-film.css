@@ -1,0 +1,148 @@
+/* RideSaathi home page, phones and tablets: "Watch a ride" (assets/ride-film.js). The wide-screen trip needs page
+   margins, so narrower screens get the same morning as a short film. Prefix rf-. Colours come from the site, home
+   and trip tokens, so day and night follow the theme. Calm motion only: fades and glides, ease-in-out. */
+
+/* ---------- The button in the hero (only where the wide-screen trip can't show) ----------
+   A play disc that breathes a soft halo; as a strip (.rf-strip) it also previews the ride: a tiny car drives the
+   five stations along the bottom and lights each one. Slow ease-in-out loops; nothing moves for reduced motion. */
+.rf-open { display: none; position: relative; align-items: center; gap: 12px; margin-top: 18px; padding: 0; border: 0;
+  background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+@media (max-width: 1179.98px) { .js .rf-open { display: flex; } }
+@media (prefers-reduced-motion: reduce) { .js .rf-open { display: none; } }
+.rf-disc { position: relative; flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--ink);
+  display: grid; place-items: center; --ring: 0 0 0 3px var(--bg), 0 0 0 4.5px var(--line);
+  box-shadow: var(--ring); animation: rf-halo 2.6s ease-in-out infinite; }
+.rf-disc svg { width: 15px; height: 15px; margin-left: 3px; fill: var(--sun); }
+/* a soft sun-coloured halo breathes out from the disc, behind it */
+@keyframes rf-halo {
+  0% { box-shadow: var(--ring), 0 0 0 4px rgba(255, 210, 63, .55); }
+  70%, 100% { box-shadow: var(--ring), 0 0 0 22px rgba(255, 210, 63, 0); }
+}
+.rf-txt b { display: block; font: 700 14.5px/1.2 var(--display); }
+.rf-txt small { display: block; margin-top: 3px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); }
+.rf-open:focus-visible { outline: 2px solid var(--line); outline-offset: 4px; border-radius: 8px; }
+.rf-mini { display: none; }
+
+/* The strip */
+/* Light theme: an ink strip. Dark theme: deep green, so the sun-yellow halo and stops still glow (an inverted,
+   light strip washed the yellow out). */
+.rf-strip { --rf-bg: var(--ink); --rf-fg: var(--on-ink); --rf-mute: var(--on-ink-muted); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .rf-strip { --rf-bg: #0E3A25; --rf-fg: #F1F5F2; --rf-mute: rgba(241, 245, 242, .62); }
+}
+:root[data-theme="dark"] .rf-strip { --rf-bg: #0E3A25; --rf-fg: #F1F5F2; --rf-mute: rgba(241, 245, 242, .62); }
+.rf-open.rf-strip { flex-wrap: wrap; width: 100%; max-width: 400px; padding: 12px 14px 10px; border-radius: 14px;
+  background: var(--rf-bg); color: var(--rf-fg); box-shadow: var(--shadow), inset 0 0 0 1px rgba(255, 255, 255, .06); }
+.rf-strip .rf-disc { background: var(--sun); --ring: 0 0 0 0 transparent; }
+.rf-strip .rf-disc svg { fill: #17231D; }
+.rf-strip .rf-txt small { color: var(--rf-mute); }
+.rf-strip .rf-txt::after { content: "→"; position: absolute; right: 16px; top: 22px; font-family: var(--mono); color: var(--rf-mute); }
+.rf-strip .rf-mini { display: block; position: relative; flex: 1 0 100%; height: 16px; margin-top: 8px; }
+.rf-mini::before { content: ""; position: absolute; left: 15px; right: 15px; top: 7px; height: 2px; border-radius: 1px; background: var(--rf-mute); opacity: .5; }
+.rf-mini i { position: absolute; top: 4px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: var(--rf-bg);
+  box-shadow: inset 0 0 0 2px var(--rf-mute); animation: rf-stop 9s ease-in-out infinite; }
+/* dots sit where the car centre pauses: 15px + share of (track - car) */
+.rf-mini .d0 { left: 15px; } .rf-mini .d1 { left: calc(15px + (100% - 30px) * .26); } .rf-mini .d2 { left: calc(15px + (100% - 30px) * .5); }
+.rf-mini .d3 { left: calc(15px + (100% - 30px) * .74); } .rf-mini .d4 { left: calc(100% - 15px); }
+.rf-mini .d1 { animation-name: rf-stop1; } .rf-mini .d2 { animation-name: rf-stop2; } .rf-mini .d3 { animation-name: rf-stop3; } .rf-mini .d4 { animation-name: rf-stop4; }
+.rf-mini .d0 { background: var(--sun); box-shadow: none; animation: none; }
+@keyframes rf-stop1 { 0%, 21% { background: var(--rf-bg); } 25%, 96% { background: var(--sun); } 100% { background: var(--rf-bg); } }
+@keyframes rf-stop2 { 0%, 45% { background: var(--rf-bg); } 49%, 96% { background: var(--sun); } 100% { background: var(--rf-bg); } }
+@keyframes rf-stop3 { 0%, 69% { background: var(--rf-bg); } 73%, 96% { background: var(--sun); } 100% { background: var(--rf-bg); } }
+@keyframes rf-stop4 { 0%, 88% { background: var(--rf-bg); } 92%, 96% { background: var(--sun); } 100% { background: var(--rf-bg); } }
+.rf-mini-run { position: absolute; left: 0; top: 0; width: calc(100% - 30px); height: 16px; animation: rf-run 9s ease-in-out infinite; }
+.rf-mini-run svg { display: block; width: 31px; height: 16px; }
+/* The car stops at each station (26%, 50%, 74% of the road), then fades back to the start */
+@keyframes rf-run {
+  0%, 4% { transform: translateX(0); opacity: 1; }
+  20%, 27% { transform: translateX(26%); }
+  43%, 51% { transform: translateX(50%); }
+  67%, 75% { transform: translateX(74%); }
+  90%, 95% { transform: translateX(100%); opacity: 1; }
+  99% { transform: translateX(100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 0; }
+}
+
+/* ---------- The film ---------- */
+html.rf-lock, html.rf-lock body { overflow: hidden; }
+.rf { position: fixed; inset: 0; z-index: 80; display: flex; justify-content: center; background: var(--bg);
+  opacity: 0; transition: opacity .45s ease-in-out; }
+.rf[hidden] { display: none; }
+.rf.show { opacity: 1; }
+.rf-col { display: flex; flex-direction: column; width: 100%; max-width: 480px; height: 100%;
+  padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0); }
+
+.rf-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px 6px; }
+.rf-eyebrow { margin: 0; font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.rf-title { margin: 2px 0 0; font: 800 16px/1.2 var(--display); letter-spacing: -.01em; }
+.rf-btns { display: flex; gap: 8px; }
+.rf-btns .icon-btn.off { color: var(--faint); }
+
+/* Progress as a metro line: five stations, the green fills as the car drives */
+.rf-line { position: relative; list-style: none; margin: 0; padding: 6px 16px 10px; display: grid; grid-template-columns: repeat(5, 1fr); }
+.rf-track { position: absolute; top: 17px; left: calc(16px + (100% - 32px) / 10); right: calc(16px + (100% - 32px) / 10);
+  height: 4px; border-radius: 2px; background: var(--hairline); }
+.rf-fill { display: block; height: 100%; width: 0; border-radius: 2px; background: var(--line); }
+.rf-line li { position: relative; z-index: 1; text-align: center; color: var(--muted); }
+.rf-line i { display: block; width: 13px; height: 13px; margin: 6px auto 5px; border-radius: 50%; background: var(--bg);
+  border: 2.5px solid var(--hairline); transition: border-color .5s ease-in-out, background-color .5s ease-in-out; }
+.rf-line li.on i { border-color: var(--line); background: var(--surface); }
+.rf-line li.at i { background: var(--sun); border-color: var(--ink); }
+.rf-line b { display: block; font-size: 11.5px; font-weight: 700; transition: color .5s ease-in-out; }
+.rf-line li.on b { color: var(--text); }
+.rf-line span { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .04em; }
+
+.rf-stage { position: relative; flex: 1; min-height: 0; overflow: hidden; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+.rf-scene { display: block; width: 100%; height: 100%; }
+.rf-cap { margin: 0; min-height: 2.7em; padding: 10px 16px 0; font-size: 13.5px; line-height: 1.35; transition: opacity .35s ease-in-out; }
+.rf-cap.fade { opacity: 0; }
+.rf-meter { display: grid; grid-template-columns: repeat(4, auto); justify-content: space-between; gap: 8px;
+  margin: 6px 16px 14px; padding-top: 8px; border-top: 1.5px solid var(--text); }
+.rf-meter dt { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.rf-meter dd { margin: 3px 0 0; font: 800 16px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.rf-meter .co2 dd { color: var(--line-text); }
+
+/* The end: the trip summary, like the wide-screen one */
+.rf-end { position: absolute; left: 12px; right: 12px; bottom: 12px; padding: 14px 16px 12px; border-radius: 14px;
+  background: var(--surface); box-shadow: inset 0 0 0 1px var(--hairline), var(--shadow);
+  opacity: 0; transform: translateY(14px); transition: opacity .7s ease-in-out, transform .7s ease-in-out; }
+.rf-end[hidden] { display: none; }
+.rf-end.show { opacity: 1; transform: none; }
+.rf-end-k { margin: 0; font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--line-text); }
+.rf-end-h { margin: 3px 0 10px; font: 800 18px/1.2 var(--display); letter-spacing: -.01em; }
+.rf-end dl { display: grid; grid-template-columns: repeat(4, auto); justify-content: space-between; gap: 6px; margin: 0;
+  padding: 8px 0; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+.rf-end dt { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.rf-end dd { margin: 2px 0 0; font: 800 15px/1.1 var(--display); }
+.rf-end-f { margin: 8px 0 10px; font-size: 11.5px; color: var(--muted); }
+.rf-end-b { display: flex; gap: 8px; }
+.rf-end-b .btn { padding-top: 8px; padding-bottom: 8px; font-size: 13px; }
+
+/* ---------- Scene drawing (SVG). The road and roadside are the trip's own colours ---------- */
+.rf-ground { fill: var(--bg); }
+.rf-road { fill: var(--trip-road); }
+.rf-lane { fill: none; stroke: var(--trip-lane); stroke-width: 2.5; stroke-dasharray: 18 22; }
+.rf-kerb { fill: var(--trip-edge); }
+.rf-tag rect { fill: var(--surface); stroke: var(--hairline); stroke-width: 1; }
+.rf-tag text { font-family: var(--mono); font-size: 8.6px; font-weight: 500; letter-spacing: .08em; fill: var(--text); }
+.rf-tag .t2 { fill: var(--muted); }
+.rf-door { fill: var(--car); stroke: rgba(0, 0, 0, .18); stroke-width: 2; }
+.rf-ini { font-family: var(--display); font-weight: 800; font-size: 23px; fill: var(--on-tint); text-anchor: middle; }
+.rf-scene .av-mint { fill: var(--mint); }
+.rf-bldg { fill: var(--il-bldg); stroke: var(--trip-edge); stroke-width: 1.5; }
+.rf-bwin { fill: var(--il-bwin); }
+.rf-bdoor { fill: var(--il-door); }
+.rf-logo { fill: #1B2620; } .rf-logo-line { stroke: #13A150; stroke-width: 2.6; fill: none; }
+.rf-logo-dot { fill: #FFD23F; stroke: #1B2620; stroke-width: 1.6; }
+/* roadside sprites (same drawings as trip.js) */
+.rf-shade { fill: var(--trip-shade); }
+.rf-leaf { fill: var(--trip-leaf); } .rf-leafd { fill: var(--trip-leafd); } .rf-leafhi { fill: var(--trip-leafhi); }
+.rf-frond { fill: var(--trip-frond); } .rf-frond2 { fill: var(--trip-frond2); } .rf-trunk { fill: var(--trip-trunk); }
+.rf-flower { fill: var(--trip-flower); }
+.rf-c1 { --tw: var(--trip-w1); --ts: var(--trip-sign1); } .rf-c2 { --tw: var(--trip-w2); --ts: var(--trip-sign2); }
+.rf-c3 { --tw: var(--trip-w3); --ts: var(--trip-sign3); } .rf-c4 { --tw: var(--trip-w4); --ts: var(--trip-sign4); }
+.rf-wall { fill: var(--tw, var(--trip-w1)); } .rf-edge { fill: var(--trip-wedge); } .rf-sign { fill: var(--ts, var(--trip-sign1)); }
+.rf-awn-b { fill: #FFF6EA; }
+.rf-shopin { fill: var(--trip-shopin); } .rf-tank { fill: var(--trip-tank); }
+.rf-win { fill: var(--il-win); } .rf-winoff { fill: var(--trip-winoff); } .rf-hdoor { fill: var(--il-door); }
