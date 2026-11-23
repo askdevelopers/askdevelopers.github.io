@@ -1,5 +1,5 @@
 /* RideSaathi home page: departure board, the car driving the line as you scroll, the fare ticket, the women-only
-   switch and the India metro map. No inline scripts (strict CSP). Fare maths matches src/lib/match.ts. */
+   switch and the India metro map (the trip down the margins is in trip.js). No inline scripts (strict CSP). Fare maths matches src/lib/match.ts. */
 (function () {
   var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 

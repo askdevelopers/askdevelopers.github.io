@@ -1,0 +1,80 @@
+/* RideSaathi home page: the morning trip (assets/trip.js). A road from Rahul's home to the office that winds down
+   the margins and crosses the page between sections. Wide screens only. Sizes scale with --k (set by the script). */
+:root {
+  --trip-road: #C3D0C7; --trip-lane: #F4F7F3; --trip-tree: #8DBF9B; --trip-tree2: #6FAE83;
+  --trip-roof: #D9714E; --trip-edge: #C9D3CD;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --trip-road: #202A25; --trip-lane: #3A4740; --trip-tree: #24432F; --trip-tree2: #2D5239;
+    --trip-roof: #A4553A; --trip-edge: #34413A;
+  }
+}
+:root[data-theme="dark"] {
+  --trip-road: #202A25; --trip-lane: #3A4740; --trip-tree: #24432F; --trip-tree2: #2D5239;
+  --trip-roof: #A4553A; --trip-edge: #34413A;
+}
+
+.trip, .trip-snd { display: none; }
+.trip-on .trip { display: block; position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 3; pointer-events: none; --k: 1; }
+
+/* The road, its trees and the two buildings */
+.trip-map { position: absolute; left: 0; overflow: visible; max-width: none; }
+.tm-road { fill: none; stroke: var(--trip-road); stroke-linecap: round; stroke-linejoin: round; }
+.tm-lane { fill: none; stroke: var(--trip-lane); stroke-width: 2; }
+.tm-tree { fill: var(--trip-tree); } .tm-tree2 { fill: var(--trip-tree2); }
+.tm-roof { fill: var(--trip-roof); }
+.tm-wall { fill: var(--il-wall); } .tm-win { fill: var(--il-win); } .tm-door { fill: var(--il-door); }
+.tm-bldg { fill: var(--il-bldg); stroke: var(--trip-edge); stroke-width: 1.5; }
+.tm-bwin { fill: var(--il-bwin); }
+.tm-glass { fill: var(--il-glass); } .tm-frame { stroke: var(--il-bldg); stroke-width: 1.2; fill: none; }
+.tm-mast { fill: var(--muted); }
+.tm-logo { fill: #1B2620; } .tm-logo-line { stroke: #13A150; stroke-width: 2.6; fill: none; }
+.tm-logo-dot { fill: #FFD23F; stroke: #1B2620; stroke-width: 1.6; }
+
+/* Signs: who waits where, and when */
+.trip-lab { position: absolute; left: 0; top: 0; white-space: nowrap; text-align: center; font: 500 9px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px; padding: 3px 6px 2px; transition: opacity .7s ease-in-out; }
+.trip-lab b { display: block; color: var(--text); font-weight: 500; }
+.trip-lab.passed { opacity: .5; }
+
+/* Riders: they glide to the open door and fade into their seat. At the office they walk to the door and go in. */
+.trip-who { position: absolute; width: calc(14px * var(--k)); height: calc(29.4px * var(--k)); transition: transform .65s ease-in-out, opacity .45s ease-in-out; }
+.trip-who svg { display: block; width: 100%; height: 100%; }
+.trip-who.walk { transform: translateX(var(--walk, 0)); }
+.trip-who.gone { opacity: 0; }
+.trip-who.exit { opacity: 0; transition: transform 1.3s ease-in-out, opacity .5s ease-in-out; }
+.trip-who.exit.show { opacity: 1; }
+.trip-who.exit.walk { transform: translate(var(--gx, 0), var(--gy, 0)) scale(.8); }
+.trip-who.exit.gone { opacity: 0; }
+
+/* The car: position and heading come from the script */
+.trip-car { position: absolute; z-index: 2; left: calc(var(--cw, 46px) / -2); top: calc(var(--cl, 93px) / -2); width: var(--cw, 46px); height: var(--cl, 93px); transform-origin: 50% 50%; }
+.trip-car svg { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .18)); }
+.trip-car .tc-av { fill: var(--pc, var(--sky)); opacity: 0; transition: opacity .6s ease-in-out; stroke: var(--seat); stroke-width: 6; }
+.trip-car .tc-av.on { opacity: 1; }
+.trip-car .tc-slot { fill: var(--cabin); opacity: 0; transition: opacity .3s ease-in-out; }
+.trip-car .tc-slot.open { opacity: 1; }
+.trip-car .tc-door { fill: var(--car-light); stroke: var(--tail); stroke-width: 3; transform-box: view-box; transition: transform .55s ease-in-out; }
+.trip-car .tc-door.l.open { transform: rotate(58deg); }
+.trip-car .tc-door.r.open { transform: rotate(-58deg); }
+.trip-car.brake use { --tail: #FF3B1F; }
+
+.trip-tag { position: absolute; z-index: 3; left: 0; top: 0; white-space: nowrap; font: 500 10px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; background: var(--ink); color: var(--on-ink);
+  padding: 6px 8px 5px; border-radius: 999px; opacity: 0; transition: opacity .5s ease-in-out; }
+.trip-tag.show { opacity: 1; }
+.trip-tag i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; background: var(--tag-c, var(--sun)); }
+
+/* Sound on/off, bottom right in the margin */
+.trip-on .trip-snd { display: grid; place-items: center; position: fixed; right: 16px; bottom: 16px; z-index: 15; width: 34px; height: 34px; padding: 0; border-radius: 50%;
+  background: var(--surface); color: var(--text); border: 1px solid var(--hairline); box-shadow: 0 2px 8px rgba(0, 0, 0, .12); cursor: pointer; transition: color .3s ease-in-out; }
+.trip-snd svg { width: 16px; height: 16px; }
+.trip-snd .off { display: none; }
+.trip-snd.muted { color: var(--muted); }
+.trip-snd.muted .on { display: none; }
+.trip-snd.muted .off { display: inline; }
+.trip-snd:focus-visible { outline: 2px solid var(--line); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .trip-who, .trip-who.exit, .trip-car .tc-av, .trip-car .tc-door, .trip-car .tc-slot, .trip-lab, .trip-tag { transition: none; }
+}

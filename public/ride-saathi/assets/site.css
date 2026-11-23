@@ -415,7 +415,7 @@ p { margin: 0; }
 .tips li::before { content: counter(tip, decimal-leading-zero); position: absolute; left: 0; top: 10px; font-family: var(--mono); font-size: 12px; color: var(--line-text); font-weight: 500; }
 .tips strong { color: var(--text); }
 
-/* ---------- Docs (legal, support, credits) ---------- */
+/* ---------- Docs (legal, support) ---------- */
 .doc { padding: 30px 0 48px; }
 .doc .wrap { max-width: 780px; }
 .doc h1 { font-size: clamp(28px, 6vw, 40px); margin-bottom: 8px; }
@@ -464,7 +464,6 @@ p { margin: 0; }
 .faq summary::after { content: "+"; position: absolute; right: 4px; top: 9px; font-family: var(--mono); font-size: 18px; color: var(--line-text); }
 .faq details[open] summary::after { content: "–"; }
 .faq details p { padding: 0 0 14px; color: var(--muted); }
-.credit-list li { margin: 8px 0; }
 
 /* ---------- Footer ---------- */
 .site-footer { border-top: 1px solid var(--hairline); padding: 30px 0 26px; background: var(--bg-deep); margin-top: 8px; }

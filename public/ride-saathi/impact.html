@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Impact · RideSaathi</title>
+<meta name="description" content="One shared seat keeps about 1.7 kg of CO₂ out of the air on a 14 km commute. Zoom out from one trip to your city, your state, India and the planet, and work out your own savings in CO₂, petrol and parking.">
+<link rel="canonical" href="https://askdevelopers.github.io/ride-saathi/impact.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RideSaathi">
+<meta property="og:title" content="Impact · RideSaathi">
+<meta property="og:description" content="One shared seat keeps about 1.7 kg of CO₂ out of the air on a 14 km commute. Zoom out from one trip to the planet.">
+<meta property="og:url" content="https://askdevelopers.github.io/ride-saathi/impact.html">
+<meta property="og:image" content="https://askdevelopers.github.io/ride-saathi/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="author" content="Ask Developers">
+<meta name="theme-color" content="#DDE7E0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111915" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231B2620'/%3E%3Cpath d='M16 2v28' stroke='%2313A150' stroke-width='5'/%3E%3Ccircle cx='16' cy='16' r='7.5' fill='%23FFD23F' stroke='%231B2620' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="assets/theme.js"></script>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/home.css">
+<link rel="stylesheet" href="assets/impact.css">
+<script src="assets/site.js" defer></script>
+<script src="assets/impact.js" defer></script>
+</head>
+<body class="impact">
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- The car, the same drawing as index.html and src/components/SeatMap.tsx. -->
+<svg class="defs car-svg" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="rsBody" x1="0" y1="0" x2="1" y2="0"><stop offset="0" class="st-car"/><stop offset=".5" class="st-car-light"/><stop offset="1" class="st-car"/></linearGradient>
+    <linearGradient id="rsGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="st-glass-light"/><stop offset="1" class="st-glass"/></linearGradient>
+    <radialGradient id="rsShadow" cx=".5" cy=".5" r=".5"><stop offset=".7" class="st-shadow"/><stop offset="1" class="st-shadow-0"/></radialGradient>
+    <symbol id="car" viewBox="0 0 200 404">
+      <ellipse class="cz-shadow" cx="100" cy="212" rx="98" ry="200"/>
+      <rect class="cz-tyre" x="8" y="78" width="14" height="58" rx="5"/><rect class="cz-tyre" x="8" y="282" width="14" height="58" rx="5"/>
+      <rect class="cz-tyre" x="178" y="78" width="14" height="58" rx="5"/><rect class="cz-tyre" x="178" y="282" width="14" height="58" rx="5"/>
+      <ellipse class="cz-mirror" cx="14" cy="140" rx="10" ry="6"/><ellipse class="cz-mirror" cx="186" cy="140" rx="10" ry="6"/>
+      <rect class="cz-body" x="18" y="8" width="164" height="388" rx="74" ry="86"/>
+      <rect class="cz-headlight" x="46" y="12" width="30" height="9" rx="4.5"/><rect class="cz-headlight" x="124" y="12" width="30" height="9" rx="4.5"/>
+      <path class="cz-crease" stroke-width="4" stroke-linecap="round" d="M54 34Q100 24 146 34"/>
+      <path class="cz-glass" d="M36 104Q100 94 164 104L152 152L48 152Z"/>
+      <path class="cz-glint" stroke-width="4" stroke-linecap="round" d="M58 114L84 114L78 136"/>
+      <rect class="cz-cabin" x="46" y="160" width="108" height="168" rx="20"/>
+      <path class="cz-glass" d="M50 338L150 338L158 368Q100 374 42 368Z"/>
+      <rect class="cz-tail" x="48" y="384" width="28" height="7" rx="3.5"/><rect class="cz-tail" x="124" y="384" width="28" height="7" rx="3.5"/>
+      <rect class="cz-seat" x="52" y="176" width="46" height="58" rx="10"/><rect class="cz-seat" x="102" y="176" width="46" height="58" rx="10"/><rect class="cz-seat" x="52" y="262" width="46" height="58" rx="10"/><rect class="cz-seat" x="102" y="262" width="46" height="58" rx="10"/>
+      <path class="cz-wheel" stroke-width="3.2" stroke-linecap="round" d="M110 173Q125 163 140 173"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="index.html" aria-label="RideSaathi home"><svg viewBox="0 0 26 26" aria-hidden="true"><path class="b-line" d="M13 0v26" stroke-width="4"/><circle class="b-ring" cx="13" cy="13" r="7" stroke-width="3"/></svg>RideSaathi</a>
+    <nav class="nav-links" id="links" aria-label="Main">
+      <a href="how-it-works.html">How it works</a>
+      <a href="impact.html" aria-current="page">Impact</a>
+      <a href="safety.html">Safety</a>
+      <a href="support.html">Help</a>
+    </nav>
+    <div class="nav-right">
+      <button class="icon-btn theme-btn" id="themeBtn" type="button" aria-label="Switch light or dark theme" title="Light or dark"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="links"><svg class="bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Impact</span>
+      <h1>Every shared seat is a car left at home.</h1>
+      <p>The car was going anyway. When you ride in its empty seat instead of driving your own, a whole car trip disappears: its petrol, its CO₂, its parking space. Here is what one seat adds up to, zoomed out.</p>
+    </div>
+  </section>
+
+  <!-- ============ Zoom out: one figure that pulls back from the car to the planet as you scroll ============ -->
+  <section class="zm-sec" aria-labelledby="zmTitle">
+    <div class="wrap">
+      <h2 class="sr" id="zmTitle">From one trip to the whole planet</h2>
+      <div class="zm-grid">
+        <figure class="zm-fig" aria-hidden="true">
+          <svg class="zm car-svg" id="zm" data-level="0" viewBox="-6.5 -6.5 13 13" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <radialGradient id="zmEarth" cx=".42" cy=".38" r=".7"><stop offset="0" class="zm-s-e1"/><stop offset="1" class="zm-s-e2"/></radialGradient>
+            </defs>
+            <!-- Each disc is one zoom layer: Earth, India, your state, your city, your route. -->
+            <circle class="zm-earth" r="1296" fill="url(#zmEarth)"/>
+            <g class="zm-lat"><ellipse rx="1296" ry="420"/><ellipse rx="1296" ry="860"/><ellipse rx="420" ry="1296"/><ellipse rx="860" ry="1296"/><path d="M-1296 0H1296M0 -1296V1296"/></g>
+            <circle class="zm-disc d4" r="432"/>
+            <g id="zmL4"></g>
+            <circle class="zm-disc d3" r="144"/>
+            <g id="zmL3"></g>
+            <circle class="zm-disc d2" r="48"/>
+            <g id="zmL2"></g>
+            <circle class="zm-ring r1" r="16"/>
+
+            <path class="zm-road" d="M-9 10H-3Q0 10 0 7V-6Q0 -9 3 -9H9"/>
+            <path class="zm-lane" d="M0 7V-6"/>
+            <path class="zm-route" d="M-9 10H-3Q0 10 0 7V-6Q0 -9 3 -9H9"/>
+            <circle class="zm-pin" cx="-9" cy="10" r=".75"/>
+            <circle class="zm-pin end" cx="9" cy="-9" r=".75"/>
+
+            <use href="#car" x="-2.3" y="-4.65" width="4.6" height="9.3"/>
+            <circle class="av av-sun" cx="-.58" cy=".07" r=".38"/>
+            <circle class="av av-sky" cx=".58" cy=".07" r=".38"/>
+            <circle class="av av-lilac" cx="-.58" cy="2.04" r=".38"/>
+            <circle class="zm-free" cx=".58" cy="2.04" r=".33"/>
+
+            <text class="zm-lab l0" x="0" y="5.7" text-anchor="middle">ONE SEAT · 14 KM</text>
+            <text class="zm-lab l1" x="0" y="-13.2" text-anchor="middle">YOUR ROUTE</text>
+            <text class="zm-lab l2" x="0" y="-40" text-anchor="middle">YOUR CITY</text>
+            <text class="zm-lab l3" x="0" y="-120" text-anchor="middle">YOUR STATE</text>
+            <text class="zm-lab l4" x="0" y="-360" text-anchor="middle">INDIA</text>
+            <text class="zm-lab l5" x="0" y="-1080" text-anchor="middle">EARTH</text>
+          </svg>
+          <div class="zm-scale"><i></i><span id="zmScale">about 2 m</span><em>Schematic</em></div>
+        </figure>
+
+        <ol class="zm-steps" id="zmSteps">
+          <li data-level="0">
+            <span class="zm-n">01 · One trip</span>
+            <p class="zm-big">1.7 kg <small>CO₂</small></p>
+            <p>Your 14 km seat in Rahul's car, instead of your own. That's <b>0.7 litres of petrol</b> that never burns. Anita's 7 km next to you saves another 0.8 kg.</p>
+          </li>
+          <li data-level="1">
+            <span class="zm-n">02 · Your year</span>
+            <p class="zm-big">806 kg <small>CO₂</small></p>
+            <p>Both ways, five days a week, 48 weeks a year: <b>6,720 km</b> you don't drive, <b>355 litres</b> of petrol you don't buy, and a year of parking you don't pay for.</p>
+          </li>
+          <li data-level="2">
+            <span class="zm-n">03 · Your city</span>
+            <p class="zm-big">806 tonnes</p>
+            <p>If <b>1,000 commuters</b> in one city share like this: 1,000 fewer cars in the rush hour, 1,000 parking spaces free, and less exhaust on the roads you breathe beside.</p>
+          </li>
+          <li data-level="3">
+            <span class="zm-n">04 · Your state</span>
+            <p class="zm-big">80,600 tonnes</p>
+            <p>If <b>1 lakh commuters</b> across a state's cities share: lighter traffic on every office corridor and <b>3.5 crore litres</b> of petrol not burned in a year.</p>
+          </li>
+          <li data-level="4">
+            <span class="zm-n">05 · India</span>
+            <p class="zm-big">8 lakh tonnes</p>
+            <p>If <b>10 lakh commuters</b> across India share: 35 crore litres of petrol a year stay in the ground. India imports most of its crude oil, so that's money that stays home too.</p>
+          </li>
+          <li data-level="5">
+            <span class="zm-n">06 · The planet</span>
+            <p class="zm-big">Every tonne counts</p>
+            <p>Road transport makes about <b>12% of India's energy CO₂</b> and could double by 2050 on today's path. A seat in a car that's going anyway is the cheapest cut there is: nothing to build, nothing to buy.</p>
+          </li>
+        </ol>
+      </div>
+      <p class="zm-note">Estimates, not measured savings. Each step assumes riders would otherwise drive a petrol car alone. The city, state and India numbers are "what if"s, not RideSaathi users. <a href="#method">How we count ↓</a></p>
+    </div>
+  </section>
+
+  <!-- ============ Your numbers: a petrol-pump display that counts what you don't spend ============ -->
+  <section class="pm-sec" aria-labelledby="pmTitle">
+    <div class="wrap pm-grid">
+      <div class="pm-copy">
+        <span class="eyebrow">Your numbers</span>
+        <h2 id="pmTitle">The pump that runs backwards.</h2>
+        <p class="soft">Move the sliders to match your commute. The meter shows what you keep out of the air, and out of your pocket, in a year of riding instead of driving.</p>
+
+        <label class="fs-slider" for="pmKm">
+          <span class="fs-lab">One way</span>
+          <output id="pmKmOut" for="pmKm">14 km</output>
+          <input id="pmKm" type="range" min="2" max="60" step="1" value="14">
+        </label>
+        <label class="fs-slider" for="pmDays">
+          <span class="fs-lab">Days a week</span>
+          <output id="pmDaysOut" for="pmDays">5 days</output>
+          <input id="pmDays" type="range" min="1" max="7" step="1" value="5">
+        </label>
+        <label class="fs-slider" for="pmPark">
+          <span class="fs-lab">Your parking per day</span>
+          <output id="pmParkOut" for="pmPark">₹60</output>
+          <input id="pmPark" type="range" min="0" max="300" step="10" value="60">
+        </label>
+      </div>
+
+      <div class="pm" aria-live="polite">
+        <p class="pm-brand">RIDESAATHI · SAVED, NOT SPENT</p>
+        <div class="pm-row"><span class="pm-k">CO₂ kept out · per year</span><span class="pm-lcd"><b id="pmCo2">806</b><i>kg</i></span></div>
+        <div class="pm-row"><span class="pm-k">Petrol not burned · per year</span><span class="pm-lcd"><b id="pmFuel">355</b><i>L</i></span></div>
+        <div class="pm-row"><span class="pm-k">Parking not paid · per year</span><span class="pm-lcd"><b id="pmParking">14,400</b><i>₹</i></span></div>
+        <p class="pm-foot">Each trip · <span id="pmTrip">1.7 kg CO₂</span> · <span id="pmKmYear">6,720 km</span> a year</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ More than CO₂ ============ -->
+  <section class="bn-sec" aria-labelledby="bnTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">More than CO₂</span>
+        <h2 id="bnTitle">Good for you, your office and your city.</h2>
+      </div>
+      <ol class="bn">
+        <li class="reveal">
+          <svg class="bn-ic" viewBox="0 0 40 40" aria-hidden="true"><rect x="7" y="7" width="26" height="26" rx="5"/><path d="M16 28V12h6a5 5 0 0 1 0 10h-6"/><path class="bn-x" d="M5 35L35 5"/></svg>
+          <div><h3>Leave the car, skip the parking</h3><p>Riders don't pay for parking or circle the block looking for it. Offices need fewer spaces, and streets get their kerbs back.</p></div>
+        </li>
+        <li class="reveal">
+          <svg class="bn-ic" viewBox="0 0 40 40" aria-hidden="true"><circle cx="10" cy="12" r="4"/><circle cx="30" cy="12" r="4"/><circle cx="20" cy="29" r="4"/><path d="M13.5 14l4.5 11.5M26.5 14L22 25.5M14 12h12"/></svg>
+          <div><h3>Your commute becomes your network</h3><p>Share the road with people from other companies and other fields, every weekday. Forty minutes together, day after day, turns into ideas, introductions and friendships.</p></div>
+        </li>
+        <li class="reveal">
+          <svg class="bn-ic" viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="13" width="28" height="20" rx="4"/><path d="M15 13V9.5A2.5 2.5 0 0 1 17.5 7h5A2.5 2.5 0 0 1 25 9.5V13M6 21h28"/></svg>
+          <div><h3>Good for people at work</h3><p>Employees spend less on the commute and don't sit in traffic alone. Drivers get their running costs shared. Companies need fewer parking spaces and cut their commute emissions, with no budget.</p></div>
+        </li>
+        <li class="reveal">
+          <!-- PUBLISH GATE: true only once accounts and the office-email badge (module 2) are live. -->
+          <svg class="bn-ic" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 5l12 5v9c0 8-5.5 13-12 16C13.5 32 8 27 8 19v-9z"/><path class="bn-ok" d="M14.5 20l4 4 7-8"/></svg>
+          <div><h3>Know who is in the car</h3><p>Every rider and driver signs in with Google, Apple or email. Confirm your office email and your profile shows a verified badge. Ratings from past rides sit on every profile, both ways.</p></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ How we count ============ -->
+  <section class="mt-sec" id="method" aria-labelledby="mtTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">How we count</span>
+        <h2 id="mtTitle">Simple sums, open sources.</h2>
+      </div>
+      <dl class="mt">
+        <div><dt>120 g CO₂ per km</dt><dd>for a petrol car, the middle of the India GHG Program's range for petrol cars (111–140 g/km). <a href="https://indiaghgp.org/sites/default/files/Road%20Transport%20Technical%20Paper.pdf" rel="noopener">India GHG Program, road transport emission factors</a></dd></div>
+        <div><dt>2.27 kg CO₂ per litre</dt><dd>of petrol burned, used to turn CO₂ into litres. <a href="https://teriin.org/sites/default/transport/Per_passenger_emission_in_Delhi_Different_Modes.pdf" rel="noopener">TERI, per-passenger emissions in Delhi</a></dd></div>
+        <div><dt>Only riders' kilometres</dt><dd>The driver was making the trip anyway, so we count only the kilometres riders spend in the car instead of in their own. If you'd otherwise take the metro or a bus, your saving is smaller, and that's a good choice too.</dd></div>
+        <div><dt>A year is 48 weeks</dt><dd>Both ways on each day you pick, leaving four weeks for holidays. Parking is the amount you enter.</dd></div>
+        <div><dt>12% of India's energy CO₂</dt><dd>comes from road transport today, and it could double by 2050. <a href="https://www.iea.org/reports/transitioning-indias-road-transport-sector" rel="noopener">IEA and NITI Aayog, Transitioning India's Road Transport Sector (2023)</a></dd></div>
+        <div><dt>"What if", not live</dt><dd>RideSaathi isn't in the stores yet. The city, state and India numbers show what sharing would add up to, not riders we have.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="cl reveal">
+        <div><h2>Coming soon to Android and iOS.</h2><p class="soft">Until then, see how a ride works, stop by stop.</p></div>
+        <a class="btn btn-ink" href="how-it-works.html">How it works</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><svg viewBox="0 0 26 26" aria-hidden="true"><path class="b-line" d="M13 0v26" stroke-width="4"/><circle class="b-ring" cx="13" cy="13" r="7" stroke-width="3"/></svg>RideSaathi</a>
+        <p class="soft footer-tag">Carpooling for every Indian city. Share the empty seats, split only the running cost.</p>
+        <p class="soft made-by">Made by <a href="https://askdevelopers.github.io/#contact" rel="noopener">Ask Developers</a>, India</p>
+      </div>
+      <div>
+        <h4>App</h4>
+        <ul><li><a href="how-it-works.html">How it works</a></li><li><a href="impact.html">Impact</a></li><li><a href="safety.html">Safety</a></li><li><a href="support.html">Help</a></li></ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul><li><a href="privacy.html">Privacy policy</a></li><li><a href="terms.html">Terms of use</a></li><li><a href="delete-account.html">Delete your account</a></li><li><a class="mail" href="mailto:askdevelopers001@gmail.com">askdevelopers001@gmail.com</a></li></ul>
+      </div>
+    </div>
+    <p class="fineprint">© <span data-year>2026</span> Ask Developers. RideSaathi helps people share the running costs of trips they were making anyway. It is not a taxi or ride-hailing service, and it never handles payments.</p>
+  </div>
+</footer>
+</body>
+</html>

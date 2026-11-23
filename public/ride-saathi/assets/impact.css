@@ -1,0 +1,146 @@
+/* RideSaathi impact page. Concept: zoom out on a map. One figure pulls back from the car to your route, city,
+   state, India and Earth as you scroll; a petrol-pump meter counts what you don't spend; a scale-bar of sources.
+   Prefixes: zm- zoom figure and steps, pm- pump calculator, bn- benefits, mt- method (how we count).
+   Uses home.css for the car parts (cz-) and the custom range slider (fs-slider). */
+
+:root {
+  --zm-e1: #D7ECF3; --zm-e2: #B9D9E6; --zm-lat: #9CC3D3;
+  --zm-d4: #D9E7CF; --zm-d3: #E2EDDA; --zm-d2: #EDF3EA;
+  --zm-dot: #13A150;
+  --lcd: #C9D7B2; --lcd-ink: #1E2A1A; --lcd-ghost: rgba(30, 42, 26, .09);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --zm-e1: #15303B; --zm-e2: #0E2028; --zm-lat: #1F4352;
+    --zm-d4: #1A2B1F; --zm-d3: #1E3124; --zm-d2: #23372A;
+    --zm-dot: #2BC06A;
+    --lcd: #A9BC8C; --lcd-ink: #141C11;
+  }
+}
+:root[data-theme="dark"] {
+  --zm-e1: #15303B; --zm-e2: #0E2028; --zm-lat: #1F4352;
+  --zm-d4: #1A2B1F; --zm-d3: #1E3124; --zm-d2: #23372A;
+  --zm-dot: #2BC06A;
+  --lcd: #A9BC8C; --lcd-ink: #141C11;
+}
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.impact main > section { border-bottom: 1px solid var(--hairline); }
+.impact main > section.band { border-bottom: 0; }
+.impact h2 { letter-spacing: -.015em; }
+
+/* ---------- Zoom out ---------- */
+.zm-sec { padding: 8px 0 30px; }
+.zm-grid { display: grid; }
+.zm-fig {
+  position: sticky; top: 56px; z-index: 2; margin: 0 -16px; padding: 10px 16px 8px;
+  background: var(--bg); border-bottom: 1px solid var(--hairline);
+}
+.zm { width: 100%; height: min(40vh, 310px); margin: 0 auto; border-radius: 16px; background: var(--bg-deep); }
+.zm-s-e1 { stop-color: var(--zm-e1); } .zm-s-e2 { stop-color: var(--zm-e2); }
+.zm-lat { fill: none; stroke: var(--zm-lat); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.zm-disc { stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 5; vector-effect: non-scaling-stroke; transition: stroke-width .8s ease-in-out; }
+.zm-disc.d4 { fill: var(--zm-d4); } .zm-disc.d3 { fill: var(--zm-d3); } .zm-disc.d2 { fill: var(--zm-d2); }
+.zm-ring { fill: none; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 5; vector-effect: non-scaling-stroke; transition: stroke-width .8s ease-in-out; }
+.zm[data-level="1"] .r1, .zm[data-level="2"] .d2, .zm[data-level="3"] .d3, .zm[data-level="4"] .d4 { stroke-width: 2.4; stroke-dasharray: none; }
+.zm-road { fill: none; stroke: var(--road); stroke-width: 5.4; stroke-linecap: round; stroke-linejoin: round; transition: opacity .8s ease-in-out; }
+.zm-lane { fill: none; stroke: var(--lane); stroke-width: .16; stroke-dasharray: .8 .7; transition: opacity .8s ease-in-out; }
+.zm-route { fill: none; stroke: var(--line); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity .8s ease-in-out; }
+.zm-pin { fill: var(--surface); stroke: var(--line); stroke-width: 2.5; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity .8s ease-in-out; }
+.zm-pin.end { fill: var(--sun); stroke: var(--ink); }
+.zm .av { stroke-width: .08; }
+.zm-free { fill: none; stroke: var(--accent); stroke-width: .07; stroke-dasharray: .14 .12; }
+.zm[data-level="0"] .zm-route { opacity: .0; }
+.zm:not([data-level="0"]) .zm-route, .zm:not([data-level="0"]) .zm-pin { opacity: 1; }
+.zm:not([data-level="0"]):not([data-level="1"]) .zm-road, .zm:not([data-level="0"]):not([data-level="1"]) .zm-lane { opacity: 0; }
+.zm-dot { fill: var(--zm-dot); opacity: .75; }
+.zm-town { fill: var(--zm-d2); stroke: var(--line); stroke-opacity: .55; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.zm-town.st { fill: var(--zm-d3); }
+.zm-lab { font-family: var(--mono); font-weight: 500; letter-spacing: .16em; fill: var(--line-text); opacity: 0; transition: opacity .8s ease-in-out; }
+.zm[data-level="0"] .l0, .zm[data-level="1"] .l1, .zm[data-level="2"] .l2, .zm[data-level="3"] .l3, .zm[data-level="4"] .l4, .zm[data-level="5"] .l5 { opacity: 1; }
+.zm-lab.l0 { fill: var(--muted); }
+/* Sizes in user units (CSS px inside SVG), each about 13 px on screen at its own zoom level. Set here because
+   site.css gives .car-svg text a fixed size. */
+.zm .zm-lab.l0 { font-size: .46px; } .zm .zm-lab.l1 { font-size: 1.35px; } .zm .zm-lab.l2 { font-size: 4.1px; }
+.zm .zm-lab.l3 { font-size: 12.3px; } .zm .zm-lab.l4 { font-size: 37px; } .zm .zm-lab.l5 { font-size: 111px; }
+
+.zm-scale { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; color: var(--muted); }
+.zm-scale i { width: 46px; height: 6px; border: 1.5px solid var(--text); border-top: 0; background: linear-gradient(90deg, var(--text) 50%, transparent 50%) 0 100% / 100% 3px no-repeat; }
+.zm-scale em { margin-left: auto; font-style: normal; color: var(--faint); text-transform: uppercase; }
+#zmScale { transition: opacity .4s ease-in-out; }
+
+.zm-steps { list-style: none; margin: 0; padding: 0; position: relative; z-index: 1; }
+.zm-steps li { min-height: 58vh; padding: 30px 0 24px; display: flex; flex-direction: column; justify-content: center; opacity: .35; transition: opacity .7s ease-in-out; }
+.zm-steps li.on { opacity: 1; }
+.zm-steps li p:last-child { color: var(--muted); max-width: 30em; font-size: 14.5px; }
+.zm-steps li b { color: var(--text); font-weight: 700; }
+.zm-n { font-family: var(--mono); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--line-text); }
+.zm-big { font: 800 clamp(34px, 8vw, 52px)/1.05 var(--display); letter-spacing: -.03em; margin: 6px 0 10px; }
+.zm-big small { font-size: .42em; letter-spacing: 0; color: var(--muted); font-weight: 700; }
+.zm-note { font-size: 12px; color: var(--faint); max-width: 46em; padding-top: 12px; border-top: 1px solid var(--hairline); }
+.zm-note a { color: var(--line-text); }
+
+@media (min-width: 900px) {
+  .zm-sec { padding: 24px 0 40px; }
+  .zm-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 48px; align-items: start; }
+  .zm-fig { top: 84px; margin: 0; padding: 0; border: 0; background: none; }
+  .zm { height: auto; aspect-ratio: 1; max-height: calc(100vh - 150px); }
+  .zm-steps li { min-height: 78vh; }
+  .zm-steps li:first-child { min-height: 60vh; justify-content: flex-start; padding-top: 60px; }
+}
+
+/* ---------- Pump ---------- */
+.pm-sec { padding: 52px 0 56px; background: var(--bg-deep); }
+.pm-grid { display: grid; gap: 34px; align-items: center; }
+.pm-copy h2 { margin-bottom: 8px; }
+.pm-copy > .soft { max-width: 34em; margin-bottom: 4px; }
+.pm-copy .fs-slider { margin-top: 18px; }
+.pm {
+  justify-self: center; width: 100%; max-width: 380px; padding: 18px 18px 16px; border-radius: 22px 22px 14px 14px;
+  background: var(--surface); box-shadow: inset 0 0 0 1px var(--hairline), var(--shadow);
+  border-top: 10px solid var(--line);
+}
+.pm-brand { font: 500 11px/1 var(--mono); letter-spacing: .22em; text-align: center; color: var(--muted); padding-bottom: 12px; }
+.pm-row { display: grid; gap: 5px; padding: 10px 0; border-top: 1px solid var(--hairline); }
+.pm-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.pm-lcd {
+  display: flex; align-items: baseline; justify-content: flex-end; gap: 8px; padding: 8px 12px 6px; border-radius: 6px;
+  background: var(--lcd); color: var(--lcd-ink); box-shadow: inset 0 2px 5px rgba(0, 0, 0, .22);
+  font-family: var(--mono); font-variant-numeric: tabular-nums;
+}
+.pm-lcd b { font-weight: 500; font-size: 30px; line-height: 1; letter-spacing: .04em; }
+.pm-lcd i { font-style: normal; font-size: 12px; letter-spacing: .1em; width: 1.6em; }
+.pm-lcd b.tick { animation: rs-fade .45s ease-in-out; }
+.pm-foot { margin-top: 6px; padding-top: 10px; border-top: 1px dashed var(--hairline); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); text-align: center; }
+@media (min-width: 900px) { .pm-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 400px); gap: 56px; } }
+
+/* ---------- Benefits ---------- */
+.bn-sec { padding: 48px 0 44px; }
+.bn { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1.5px solid var(--text); }
+.bn li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--hairline); }
+.bn h3 { font-size: 15px; margin-bottom: 4px; }
+.bn p { font-size: 13.5px; color: var(--muted); max-width: 36em; }
+.bn-ic { width: 40px; height: 40px; fill: none; stroke: var(--text); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.bn-ic circle:first-child { fill: var(--sun); }
+.bn-ic .bn-x { stroke: var(--accent); stroke-width: 2.4; }
+.bn-ic .bn-ok { stroke: var(--line); stroke-width: 2.6; }
+@media (min-width: 820px) {
+  .bn { grid-template-columns: 1fr 1fr; column-gap: 40px; }
+}
+
+/* ---------- How we count ---------- */
+.mt-sec { padding: 44px 0 40px; background: var(--bg-deep); }
+.mt { margin: 0; display: grid; border-top: 1.5px solid var(--text); }
+.mt div { display: grid; gap: 2px; padding: 12px 0; border-bottom: 1px solid var(--hairline); }
+.mt dt { font: 700 14px/1.3 var(--display); }
+.mt dd { margin: 0; font-size: 13px; color: var(--muted); }
+.mt a { color: var(--line-text); }
+@media (min-width: 820px) {
+  .mt { grid-template-columns: 1fr 1fr; column-gap: 40px; }
+  .mt div { grid-template-columns: 190px minmax(0, 1fr); gap: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zm-steps li, .zm-lab, .zm-route, .zm-pin, .zm-road, .zm-lane, .zm-disc, .zm-ring { transition: none; }
+  .pm-lcd b.tick { animation: none; }
+}

@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>RideSaathi: Carpooling for Every Indian City</title>
-<meta name="description" content="Share the empty seats on your daily commute. RideSaathi matches riders to cars whose route passes near them, and each rider pays only for the kilometres they share. No commission.">
+<meta name="description" content="Share the empty seats on your daily commute. RideSaathi matches riders to cars whose route passes near them, and each rider pays only for the kilometres they share. No commission, and one car fewer on the road for every seat filled.">
 <link rel="canonical" href="https://askdevelopers.github.io/ride-saathi/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RideSaathi">
@@ -28,8 +28,11 @@
 <script src="assets/theme.js"></script>
 <link rel="stylesheet" href="assets/site.css">
 <link rel="stylesheet" href="assets/home.css">
+<link rel="stylesheet" href="assets/trip.css">
 <script src="assets/site.js" defer></script>
 <script src="assets/home.js" defer></script>
+<script src="assets/trip.js" defer></script>
+<script src="assets/stories.js" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"MobileApplication","name":"RideSaathi","url":"https://askdevelopers.github.io/ride-saathi/","operatingSystem":"Android, iOS","applicationCategory":"TravelApplication","description":"Carpooling for every Indian city: offer the empty seats on your daily route, or join a car going your way and share only the running cost.","inLanguage":["en","hi","kn","ta","te","mr"],"author":{"@type":"Organization","name":"Ask Developers","url":"https://askdevelopers.github.io/","email":"askdevelopers001@gmail.com"}}</script>
 </head>
 <body class="home">
@@ -58,6 +61,42 @@
       <rect class="cz-seat" x="52" y="176" width="46" height="58" rx="10"/><rect class="cz-seat" x="102" y="176" width="46" height="58" rx="10"/><rect class="cz-seat" x="52" y="262" width="46" height="58" rx="10"/><rect class="cz-seat" x="102" y="262" width="46" height="58" rx="10"/>
       <path class="cz-wheel" stroke-width="3.2" stroke-linecap="round" d="M110 173Q125 163 140 173"/>
     </symbol>
+
+    <!-- Soft, hand-painted look for the "How a ride works" scenes (original drawings). Morning in light, dusk in dark. -->
+    <linearGradient id="ilSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="il-s-sky1"/><stop offset="1" class="il-s-sky2"/></linearGradient>
+    <linearGradient id="ilHillFar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="il-s-hf1"/><stop offset="1" class="il-s-hf2"/></linearGradient>
+    <linearGradient id="ilHillNear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="il-s-hn1"/><stop offset="1" class="il-s-hn2"/></linearGradient>
+    <radialGradient id="ilGlow" cx=".5" cy=".5" r=".5"><stop offset="0" class="il-s-glow"/><stop offset="1" class="il-s-glow0"/></radialGradient>
+    <linearGradient id="ilCarBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="st-car-light"/><stop offset="1" class="st-car"/></linearGradient>
+    <symbol id="ilBack" viewBox="0 0 240 160">
+      <rect width="240" height="160" fill="url(#ilSky)"/>
+      <circle cx="188" cy="38" r="34" fill="url(#ilGlow)"/>
+      <circle class="il-sun" cx="188" cy="38" r="12"/>
+      <g class="il-cloud"><ellipse cx="52" cy="34" rx="20" ry="7"/><ellipse cx="62" cy="29" rx="12" ry="8"/><ellipse cx="44" cy="30" rx="9" ry="6"/></g>
+      <g class="il-cloud il-c2"><ellipse cx="128" cy="22" rx="15" ry="5"/><ellipse cx="135" cy="18" rx="8" ry="5"/></g>
+      <path fill="url(#ilHillFar)" d="M0 102Q36 80 78 91T156 85Q200 74 240 88V160H0Z"/>
+      <path fill="url(#ilHillNear)" d="M0 120Q50 103 104 114T204 110Q226 106 240 112V160H0Z"/>
+    </symbol>
+    <symbol id="ilTree" viewBox="0 0 30 50">
+      <rect class="il-trunk" x="13" y="30" width="4.5" height="20" rx="2"/>
+      <circle class="il-leaf" cx="15" cy="20" r="12"/><circle class="il-leaf" cx="8" cy="28" r="8"/><circle class="il-leaf" cx="22" cy="28" r="8"/>
+      <circle class="il-leafhi" cx="11" cy="15" r="5"/>
+    </symbol>
+    <symbol id="ilCarS" viewBox="0 0 90 52">
+      <ellipse class="il-shade" cx="47" cy="49" rx="42" ry="3.5"/>
+      <path fill="url(#ilCarBody)" d="M5 36Q5 27 13 25L25 23Q33 11 45 10H61Q71 11 77 22L84 25Q88 27 88 34V39Q88 42 85 42H8Q5 42 5 39Z"/>
+      <path class="il-glass" d="M29 23Q35 14 44 13V23Z"/><path class="il-glass" d="M48 13H60Q68 14 72 23H48Z"/>
+      <path class="il-carline" d="M46 24V39M12 30H83"/>
+      <rect class="il-head" x="83" y="28" width="5" height="4" rx="2"/><rect class="il-tail" x="5" y="29" width="4" height="4" rx="2"/>
+      <circle class="il-wheel" cx="24" cy="42" r="8"/><circle class="il-hub" cx="24" cy="42" r="3.2"/>
+      <circle class="il-wheel" cx="70" cy="42" r="8"/><circle class="il-hub" cx="70" cy="42" r="3.2"/>
+    </symbol>
+    <symbol id="ilPerson" viewBox="0 0 20 42">
+      <rect class="il-legs" x="5" y="28" width="4" height="14" rx="2"/><rect class="il-legs" x="11" y="28" width="4" height="14" rx="2"/>
+      <path class="il-body" d="M3 27Q3 16 10 16Q17 16 17 27V31H3Z"/>
+      <circle class="il-skin" cx="10" cy="9" r="6"/>
+      <path class="il-hair" d="M4 8Q4 2 10 2Q16 2 16 8Q13 5 10 5.5Q7 5 4 8Z"/>
+    </symbol>
   </defs>
 </svg>
 
@@ -66,6 +105,7 @@
     <a class="brand" href="index.html" aria-label="RideSaathi home"><svg viewBox="0 0 26 26" aria-hidden="true"><path class="b-line" d="M13 0v26" stroke-width="4"/><circle class="b-ring" cx="13" cy="13" r="7" stroke-width="3"/></svg>RideSaathi</a>
     <nav class="nav-links" id="links" aria-label="Main">
       <a href="how-it-works.html">How it works</a>
+      <a href="impact.html">Impact</a>
       <a href="safety.html">Safety</a>
       <a href="support.html">Help</a>
     </nav>
@@ -84,7 +124,7 @@
       <div class="h2o-copy">
         <span class="eyebrow">Carpooling · every Indian city</span>
         <h1>Same road.<br>Same time.<br><span class="hl">Share the car.</span></h1>
-        <p class="h2o-lede">RideSaathi matches people whose commutes overlap. Drivers offer the seats they already have. Riders join a car that passes near them and pay only for the kilometres they share.</p>
+        <p class="h2o-lede">RideSaathi matches people whose commutes overlap. Drivers offer the seats they already have. Riders join a car that passes near them and pay only for the kilometres they share. Every seat filled is one car fewer on the road.</p>
         <div class="h2o-cta">
           <span class="tag">Coming soon · Android &amp; iOS</span>
           <a class="arrow-link" href="#line">See a ride, stop by stop ↓</a>
@@ -92,7 +132,7 @@
         <dl class="h2o-facts">
           <div><dt>₹2–8</dt><dd>per km, capped</dd></div>
           <div><dt>0%</dt><dd>commission</dd></div>
-          <div><dt>6</dt><dd>languages</dd></div>
+          <div><dt>1.7 kg</dt><dd>less CO₂ per 14 km seat</dd></div>
         </dl>
       </div>
 
@@ -175,12 +215,12 @@
           <svg class="ln-car car-svg" viewBox="0 0 200 404" aria-hidden="true"><use href="#car"/></svg>
         </div>
         <ol class="ln-stops">
-          <li><span class="ln-dot"></span><span class="ln-n">01 · Driver</span><h3>Offer your seats</h3><p>Add your daily route, the time you leave and the seats you have free. Once, or on repeat weekdays.</p></li>
-          <li><span class="ln-dot"></span><span class="ln-n">02 · Rider</span><h3>Match on the way</h3><p>You see cars whose route passes within a short walk of your pickup and your drop.</p></li>
-          <li><span class="ln-dot you"></span><span class="ln-n">03 · Rider</span><h3>Pick your seat</h3><p>See who already sits where, then ask for a seat. The driver accepts or declines.</p></li>
-          <li><span class="ln-dot"></span><span class="ln-n">04 · Both</span><h3>Say the code</h3><p>At pickup you tell the driver your 4-digit code, so you always get into the right car.</p></li>
-          <li><span class="ln-dot"></span><span class="ln-n">05 · Rider</span><h3>Pay your share</h3><p>Only the kilometres you rode, straight to the driver by UPI or cash.</p></li>
-          <li><span class="ln-dot end"></span><span class="ln-n">06 · Both</span><h3>Rate both ways</h3><p>Drivers rate riders and riders rate drivers, so good co-travellers stand out.</p></li>
+          <li><span class="ln-dot"></span><svg class="ln-art" viewBox="0 0 240 160" role="img" aria-label="A driver beside his car outside his house, with three free seats to offer."><use href="#ilBack"/><g><rect class="il-wall" x="22" y="94" width="44" height="40" rx="3"/><path class="il-roof" d="M15 97L44 73L73 97Z"/><rect class="il-win" x="30" y="104" width="11" height="11" rx="2"/><rect class="il-door" x="49" y="112" width="10" height="22" rx="2"/></g><use href="#ilTree" x="198" y="84" width="30" height="50"/><rect class="il-road" x="0" y="132" width="240" height="22"/><path class="il-rline" d="M0 143H240"/><use href="#ilCarS" x="100" y="100" width="90" height="52"/><use class="pc-sky sk-2" href="#ilPerson" x="80" y="100" width="20" height="42"/><g class="il-bubble"><rect x="108" y="60" width="74" height="28" rx="9"/><path d="M136 87l5 7 5-7z"/><rect class="il-seat taken" x="116" y="67" width="12" height="14" rx="3"/><rect class="il-seat" x="132" y="67" width="12" height="14" rx="3"/><rect class="il-seat" x="148" y="67" width="12" height="14" rx="3"/><rect class="il-seat" x="164" y="67" width="12" height="14" rx="3"/></g></svg><span class="ln-n">01 · Driver</span><h3>Offer your seats</h3><p>Add your daily route, the time you leave and the seats you have free. Once, or on repeat weekdays.</p></li>
+          <li><span class="ln-dot"></span><svg class="ln-art" viewBox="0 0 240 160" role="img" aria-label="A road winding over green hills with the car's route in green. A rider walks a short way to the pickup point."><use href="#ilBack"/><path class="il-road-c" d="M-10 150Q70 140 110 118T250 84"/><path class="il-route" d="M-10 150Q70 140 110 118T250 84"/><use href="#ilTree" x="196" y="112" width="26" height="44"/><use href="#ilTree" x="150" y="50" width="20" height="34"/><use href="#ilCarS" x="18" y="113" width="54" height="31"/><path class="il-walk" d="M84 122Q96 126 106 120"/><use class="pc-sun sk-1" href="#ilPerson" x="70" y="96" width="14" height="29"/><circle class="il-pin you" cx="110" cy="118" r="6"/><circle class="il-pin" cx="208" cy="91" r="6"/></svg><span class="ln-n">02 · Rider</span><h3>Match on the way</h3><p>You see cars whose route passes within a short walk of your pickup and your drop.</p></li>
+          <li><span class="ln-dot you"></span><svg class="ln-art" viewBox="0 0 240 160" role="img" aria-label="The car with the driver at the wheel and an empty back seat glowing yellow, and a small seat map with your seat picked."><use href="#ilBack"/><use href="#ilTree" x="18" y="86" width="28" height="47"/><rect class="il-road" x="0" y="132" width="240" height="22"/><path class="il-rline" d="M0 143H240"/><use href="#ilCarS" x="58" y="77" width="126" height="73"/><circle class="il-skin sk-2" cx="138" cy="101" r="6"/><path class="il-hair" d="M132 100Q132 94 138 94Q144 94 144 100Q141 97 138 97.5Q135 97 132 100Z"/><circle class="il-free" cx="111" cy="102" r="6.5"/><g class="il-bubble"><rect x="160" y="22" width="50" height="54" rx="10"/><rect class="il-seat taken" x="168" y="30" width="15" height="17" rx="4"/><rect class="il-seat taken2" x="187" y="30" width="15" height="17" rx="4"/><rect class="il-seat you" x="168" y="51" width="15" height="17" rx="4"/><rect class="il-seat" x="187" y="51" width="15" height="17" rx="4"/></g></svg><span class="ln-n">03 · Rider</span><h3>Pick your seat</h3><p>See who already sits where, then ask for a seat. The driver accepts or declines.</p></li>
+          <li><span class="ln-dot"></span><svg class="ln-art" viewBox="0 0 240 160" role="img" aria-label="A rider at the car door saying the four-digit code, and a green tick from the driver."><use href="#ilBack"/><use href="#ilTree" x="200" y="86" width="28" height="47"/><rect class="il-road" x="0" y="132" width="240" height="22"/><path class="il-rline" d="M0 143H240"/><use href="#ilCarS" x="96" y="100" width="90" height="52"/><use class="pc-sun sk-1" href="#ilPerson" x="76" y="100" width="20" height="42"/><g class="il-bubble"><rect x="24" y="60" width="66" height="28" rx="9"/><path d="M70 87l4 8 6-8z"/><text class="il-code" x="57" y="79" text-anchor="middle">4821</text></g><circle class="il-ok" cx="156" cy="84" r="10"/><path class="il-tick" d="M151 84l3.5 3.5 6.5-7"/></svg><span class="ln-n">04 · Both</span><h3>Say the code</h3><p>At pickup you tell the driver your 4-digit code, so you always get into the right car.</p></li>
+          <li><span class="ln-dot"></span><svg class="ln-art" viewBox="0 0 240 160" role="img" aria-label="A phone showing 56 rupees paid by UPI straight to the driver, with the car behind."><use href="#ilBack"/><use href="#ilTree" x="104" y="88" width="26" height="44"/><rect class="il-road" x="0" y="132" width="240" height="22"/><path class="il-rline" d="M0 143H240"/><use href="#ilCarS" x="14" y="100" width="90" height="52"/><path class="il-walk" d="M138 104Q120 98 104 108"/><g><rect class="il-phone" x="142" y="36" width="62" height="112" rx="11"/><rect class="il-screen" x="147" y="46" width="52" height="94" rx="6"/><text class="il-amt" x="173" y="84" text-anchor="middle">₹56</text><text class="il-upi" x="173" y="98" text-anchor="middle">UPI · 14 KM</text><circle class="il-ok" cx="173" cy="118" r="9"/><path class="il-tick" d="M168.5 118l3 3 6-6.5"/></g></svg><span class="ln-n">05 · Rider</span><h3>Pay your share</h3><p>Only the kilometres you rode, straight to the driver by UPI or cash.</p></li>
+          <li><span class="ln-dot end"></span><svg class="ln-art" viewBox="0 0 240 160" role="img" aria-label="The car parked at the office. The driver and the rider stand together under five stars."><use href="#ilBack"/><g><rect class="il-bldg" x="158" y="44" width="66" height="90" rx="4"/><g class="il-bwin"><rect x="166" y="54" width="10" height="9" rx="1.5"/><rect x="186" y="54" width="10" height="9" rx="1.5"/><rect x="206" y="54" width="10" height="9" rx="1.5"/><rect x="166" y="72" width="10" height="9" rx="1.5"/><rect x="186" y="72" width="10" height="9" rx="1.5"/><rect x="206" y="72" width="10" height="9" rx="1.5"/><rect x="166" y="90" width="10" height="9" rx="1.5"/><rect x="186" y="90" width="10" height="9" rx="1.5"/><rect x="206" y="90" width="10" height="9" rx="1.5"/></g><rect class="il-door" x="184" y="112" width="14" height="22" rx="2"/></g><rect class="il-road" x="0" y="132" width="240" height="22"/><path class="il-rline" d="M0 143H240"/><use href="#ilCarS" x="12" y="100" width="90" height="52"/><use class="pc-sky sk-2" href="#ilPerson" x="110" y="100" width="20" height="42"/><use class="pc-sun sk-1" href="#ilPerson" x="132" y="100" width="20" height="42"/><text class="il-stars" x="118" y="84" text-anchor="middle">★★★★★</text></svg><span class="ln-n">06 · Both</span><h3>Rate both ways</h3><p>Drivers rate riders and riders rate drivers, so good co-travellers stand out.</p></li>
         </ol>
       </div>
     </div>
@@ -221,9 +261,34 @@
           <dl class="tk-rows tk-total">
             <div><dt>To Rahul, the driver</dt><dd id="tkDrv">₹84</dd></div>
             <div><dt>RideSaathi commission</dt><dd>₹0</dd></div>
+            <div class="tk-co2"><dt>CO₂ kept out of the air</dt><dd>≈ 2.5 kg</dd></div>
           </dl>
           <p class="tk-foot">Paid straight to the driver · UPI or cash</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Impact: a map scale bar from one trip to all of India (estimates; sums in assets/impact.js) ============ -->
+  <section class="zs" aria-labelledby="zsTitle">
+    <div class="wrap">
+      <div class="zs-head">
+        <div>
+          <span class="eyebrow">Why it matters</span>
+          <h2 id="zsTitle">One seat. 1.7 kg less CO₂.</h2>
+        </div>
+        <p class="soft">Your 14 km seat in Rahul's car is a car trip you never make. No petrol burned, no parking to pay, one car fewer in the rush hour. Zoom out and it adds up for your city, your state, India and the planet.</p>
+      </div>
+      <ol class="zs-bar" aria-label="Estimated CO₂ kept out of the air">
+        <li><span class="zs-k">One trip</span><i></i><b>1.7 kg</b></li>
+        <li><span class="zs-k">Your year</span><i></i><b>806 kg</b></li>
+        <li><span class="zs-k">1,000 in a city</span><i></i><b>806 t</b></li>
+        <li><span class="zs-k">1 lakh in a state</span><i></i><b>80,600 t</b></li>
+        <li><span class="zs-k">10 lakh in India</span><i></i><b>8 lakh t</b></li>
+      </ol>
+      <div class="zs-foot">
+        <p>Estimates for riders who would otherwise drive a petrol car alone, 14 km each way, 5 days a week. "What if" numbers, not live users.</p>
+        <a class="arrow-link" href="impact.html">Zoom out: the full picture →</a>
       </div>
     </div>
   </section>
@@ -236,10 +301,37 @@
           <defs><linearGradient id="sxFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="st-fade-in"/><stop offset=".16" class="st-fade-on"/><stop offset=".84" class="st-fade-on"/><stop offset="1" class="st-fade-in"/></linearGradient><mask id="sxMask"><rect x="0" y="0" width="260" height="330" fill="url(#sxFade)"/></mask></defs>
           <g mask="url(#sxMask)"><rect class="sx-road" x="45" y="-10" width="170" height="350"/><path class="m-lane" d="M130 -40V380"/></g>
           <use href="#car" x="60" y="10" width="140" height="283"/>
-          <circle class="av av-sun" cx="112.5" cy="153.5" r="13"/><text class="ini" x="112.5" y="157.8">Y</text>
-          <circle class="av sx-drv" cx="147.5" cy="153.5" r="13"/><text class="ini sx-m" x="147.5" y="157.8">RK</text><text class="ini sx-w" x="147.5" y="157.8">PM</text>
-          <circle class="av av-lilac" cx="112.5" cy="213.7" r="13"/><text class="ini" x="112.5" y="218">AS</text>
-          <circle class="free-ring" cx="147.5" cy="213.7" r="11.5"/><path class="free-plus" d="M142 213.7H153M147.5 208.2V219.2"/>
+          <!-- Doodle riders. .pp-m = Rahul's ride (anyone), .pp-w = Priya's women-only ride; Ananya rides in both. -->
+          <g class="sx-notes" aria-hidden="true">
+            <g transform="translate(124 127)"><g class="sx-note n1"><path d="M2 0V-7.5L6.5-8.8V-1.4"/><circle cx=".6" cy="0" r="1.6"/><circle cx="5.1" cy="-1.4" r="1.6"/></g></g>
+            <g transform="translate(160 124)"><g class="sx-note n2"><path d="M2 0V-7.5L6.5-8.8V-1.4"/><circle cx=".6" cy="0" r="1.6"/><circle cx="5.1" cy="-1.4" r="1.6"/></g></g>
+          </g>
+          <g class="pp pp-m" transform="translate(147.5 153.5)"><g class="pp-in">
+                        <path class="pp-body sh-sky" d="M-11.5 19.5C-11.5 11-7.5 7 0 7C7.5 7 11.5 11 11.5 19.5Z"/><path class="pp-line" d="M-3 7.2L0 10.5L3 7.2"/>
+            <g class="pp-head h1"><circle class="pp-face sk-b" cx="0" cy="-3" r="7.2"/><path class="pp-hair" d="M-7.5-4.2C-8.3-10.8-3.2-12.4.6-11.8C5.2-11.6 8.3-9 7.5-4.2C6.2-7.2 2.4-8.4-1.6-8C-4.4-7.7-6.4-6.3-7.5-4.2Z"/><g class="pp-eyes e1"><circle cx="-2.6" cy="-3.4" r=".95"/><circle cx="2.6" cy="-3.4" r=".95"/></g><path class="pp-hair" d="M-3 .2Q-1.5-1 0-.2Q1.5-1 3 .2Q1.5 1 0 .5Q-1.5 1-3 .2Z"/><path class="pp-mouth" d="M-1.6 2.2Q0 3.3 1.6 2.2"/></g>
+          
+            <g class="pp-steer"><circle class="pp-wheel" cx="0" cy="15.5" r="6.6"/><path class="pp-spoke" d="M-6.2 15.5H6.2M0 15.5V21.6"/><circle class="pp-hand sk-b" cx="-6" cy="12.6" r="2.3"/><circle class="pp-hand sk-b" cx="6" cy="12.6" r="2.3"/></g>
+          </g></g>
+          <g class="pp pp-m" transform="translate(112.5 153.5)"><g class="pp-in">
+            <path class="pp-body sh-sun" d="M-11.5 19.5C-11.5 11-7.5 7 0 7C7.5 7 11.5 11 11.5 19.5Z"/><path class="pp-line" d="M-3 7.4Q0 9.6 3 7.4"/>
+            <g class="pp-head h2"><circle class="pp-face sk-c" cx="0" cy="-3" r="7.2"/><path class="pp-hair" d="M-7.4-3.8C-8.8-8.8-6.4-11.8-3.6-11.2C-2.2-13 1.4-13.1 3-11.4C6-11.9 8.8-9.2 7.4-3.8C6.2-6.6 3-7.8 0-7.8C-3-7.8-6.2-6.6-7.4-3.8Z"/><g class="pp-eyes e2"><circle cx="-2.7" cy="-3" r=".9"/><circle cx="2.7" cy="-3" r=".9"/></g><path class="pp-glass" d="M-.5-3H.5M-4.9-3a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0-4.4 0M.5-3a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0-4.4 0"/><circle class="pp-cheek" cx="-4.6" cy=".2" r="1.2"/><circle class="pp-cheek" cx="4.6" cy=".2" r="1.2"/><path class="pp-mouth" d="M-2.2 1.2Q0 3 2.2 1.2"/></g>
+          </g></g>
+          <g class="pp pp-w" transform="translate(147.5 153.5)"><g class="pp-in">
+                        <path class="pp-body sh-lilac" d="M-11.5 19.5C-11.5 11-7.5 7 0 7C7.5 7 11.5 11 11.5 19.5Z"/>
+            <g class="pp-head h1"><path class="pp-hair" d="M-8.4-3C-9.4-13 9.4-13 8.4-3L9.6 9.5C6 11.2-6 11.2-9.6 9.5Z"/><circle class="pp-face sk-d" cx="0" cy="-3" r="7.2"/><path class="pp-hair" d="M-7.4-4C-6.8-10.6-1-11 0-8.2C1-11 6.8-10.6 7.4-4C5.8-7.6 2.5-8 0-7.4C-2.5-8-5.8-7.6-7.4-4Z"/><circle class="pp-bindi" cx="0" cy="-5.9" r=".85"/><g class="pp-eyes e1"><circle cx="-2.6" cy="-3" r=".95"/><circle cx="2.6" cy="-3" r=".95"/></g><circle class="pp-ring" cx="-7.4" cy="-.2" r="1.1"/><circle class="pp-ring" cx="7.4" cy="-.2" r="1.1"/><circle class="pp-cheek" cx="-4.4" cy=".2" r="1.2"/><circle class="pp-cheek" cx="4.4" cy=".2" r="1.2"/><path class="pp-mouth" d="M-2.2 1Q0 2.8 2.2 1"/></g>
+            <path class="pp-line" d="M-3 7.4L0 10.6L3 7.4"/>
+          
+            <g class="pp-steer"><circle class="pp-wheel" cx="0" cy="15.5" r="6.6"/><path class="pp-spoke" d="M-6.2 15.5H6.2M0 15.5V21.6"/><circle class="pp-hand sk-d" cx="-6" cy="12.6" r="2.3"/><circle class="pp-hand sk-d" cx="6" cy="12.6" r="2.3"/></g>
+          </g></g>
+          <g class="pp pp-w" transform="translate(112.5 153.5)"><g class="pp-in">
+            <path class="pp-body sh-sun" d="M-11.5 19.5C-11.5 11-7.5 7 0 7C7.5 7 11.5 11 11.5 19.5Z"/><path class="pp-line" d="M-3 7.4Q0 9.6 3 7.4"/>
+            <g class="pp-head h2"><path class="pp-hair" d="M-8.2-2.8C-9.2-12.4 9.2-12.4 8.2-2.8L8.4 2.6C7.6 3.6 6.4 3.2 6.6 1.4L-6.6 1.4C-6.4 3.2-7.6 3.6-8.4 2.6Z"/><circle class="pp-face sk-c" cx="0" cy="-3" r="7.2"/><path class="pp-hair" d="M-7.4-3.2C-7.4-10.4 3.4-12.2 7.4-5C3.6-8.4-2-7.6-7.4-3.2Z"/><g class="pp-eyes e2"><circle cx="-2.7" cy="-2.8" r=".9"/><circle cx="2.7" cy="-2.8" r=".9"/></g><path class="pp-glass" d="M-.5-2.8H.5M-4.9-2.8a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0-4.4 0M.5-2.8a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0-4.4 0"/><circle class="pp-cheek" cx="-4.6" cy=".4" r="1.2"/><circle class="pp-cheek" cx="4.6" cy=".4" r="1.2"/><path class="pp-mouth" d="M-2.2 1.4Q0 3.2 2.2 1.4"/></g>
+          </g></g>
+          <g class="pp" transform="translate(112.5 213.7)"><g class="pp-in">
+            <path class="pp-body sh-mint" d="M-11.5 19.5C-11.5 11-7.5 7 0 7C7.5 7 11.5 11 11.5 19.5Z"/><path class="pp-dupatta" d="M-10.8 12.4C-4 9.4 3 12.6 9.4 18.8"/>
+            <g class="pp-head h3"><circle class="pp-hair" cx="0" cy="-11.6" r="3.3"/><circle class="pp-face sk-a" cx="0" cy="-3" r="7.2"/><path class="pp-hair" d="M-7.5-2.6C-8.2-10.6-3.2-11.2 0-11C3.2-11.2 8.2-10.6 7.5-2.6C6.8-6.4 3.6-7.9 0-7.7C-3.6-7.9-6.8-6.4-7.5-2.6Z"/><circle class="pp-bindi" cx="0" cy="-5.9" r=".85"/><g class="pp-eyes e3"><circle cx="-2.6" cy="-3" r=".95"/><circle cx="2.6" cy="-3" r=".95"/></g><circle class="pp-ring" cx="-7.4" cy="-.2" r="1.1"/><circle class="pp-ring" cx="7.4" cy="-.2" r="1.1"/><circle class="pp-cheek" cx="-4.4" cy=".2" r="1.2"/><circle class="pp-cheek" cx="4.4" cy=".2" r="1.2"/><path class="pp-mouth" d="M-2.2 1Q0 2.8 2.2 1"/></g>
+          </g></g>
+          <circle class="free-ring sx-free" cx="147.5" cy="213.7" r="11.5"/><path class="free-plus sx-free" d="M142 213.7H153M147.5 208.2V219.2"/>
           <text class="sx-badge" x="130" y="322" text-anchor="middle">WOMEN-ONLY RIDE</text>
         </svg>
         <figcaption>
@@ -293,14 +385,52 @@
       </div>
       <div class="sign" role="img" aria-label="A green road sign listing English, Hindi, Kannada, Tamil, Telugu and Marathi">
         <div class="sign-in">
-          <span lang="en">English <i>↑</i></span>
-          <span lang="hi">हिन्दी <i>↗</i></span>
-          <span lang="kn">ಕನ್ನಡ <i>→</i></span>
-          <span lang="ta">தமிழ் <i>↘</i></span>
-          <span lang="te">తెలుగు <i>←</i></span>
-          <span lang="mr">मराठी <i>↖</i></span>
+          <span lang="en" data-i="0">English <i>↑</i></span>
+          <span lang="hi" data-i="1">हिन्दी <i>↗</i></span>
+          <span lang="kn" data-i="2">ಕನ್ನಡ <i>→</i></span>
+          <span lang="ta" data-i="3">தமிழ் <i>↘</i></span>
+          <span lang="te" data-i="4">తెలుగు <i>←</i></span>
+          <span lang="mr" data-i="5">मराठी <i>↖</i></span>
         </div>
       </div>
+    </div>
+
+    <!-- Window-seat stories: one real street per language, with a line from the app. The active window rolls down. -->
+    <div class="ws wrap" id="ws">
+      <div class="ws-bars" aria-hidden="true"><i data-i="0"><b></b></i><i data-i="1"><b></b></i><i data-i="2"><b></b></i><i data-i="3"><b></b></i><i data-i="4"><b></b></i><i data-i="5"><b></b></i></div>
+      <ul class="ws-row" id="wsRow">
+          <li><button class="ws-card" type="button" data-i="0" aria-pressed="true" aria-label="Any town, in English: Share the daily commute. Split the cost.">
+            <span class="ws-win"><img src="assets/img/story-town.webp" alt="A country road seen from the driver’s seat of a car" width="600" height="900" loading="lazy" decoding="async"><span class="ws-tint" aria-hidden="true"></span></span>
+            <span class="ws-top" aria-hidden="true"><b lang="en">English</b><small>Any town</small></span>
+            <span class="ws-say" aria-hidden="true"><span lang="en">Share the daily commute. Split the cost.</span></span>
+          </button></li>
+          <li><button class="ws-card" type="button" data-i="1" aria-pressed="false" aria-label="Delhi, in Hindi: Cars going your way">
+            <span class="ws-win"><img src="assets/img/story-delhi.webp" alt="A tree-lined Delhi road with cars and a green city bus" width="600" height="900" loading="lazy" decoding="async"><span class="ws-tint" aria-hidden="true"></span></span>
+            <span class="ws-top" aria-hidden="true"><b lang="hi">हिन्दी</b><small>Delhi</small></span>
+            <span class="ws-say" aria-hidden="true"><span lang="hi">आपकी तरफ़ जाने वाली कारें</span><span class="ws-en">Cars going your way</span></span>
+          </button></li>
+          <li><button class="ws-card" type="button" data-i="2" aria-pressed="false" aria-label="Bengaluru, in Kannada: Offer your seats">
+            <span class="ws-win"><img src="assets/img/story-bengaluru.webp" alt="Cars and autorickshaws at a sunny Bengaluru junction" width="600" height="900" loading="lazy" decoding="async"><span class="ws-tint" aria-hidden="true"></span></span>
+            <span class="ws-top" aria-hidden="true"><b lang="kn">ಕನ್ನಡ</b><small>Bengaluru</small></span>
+            <span class="ws-say" aria-hidden="true"><span lang="kn">ನಿಮ್ಮ ಸೀಟುಗಳನ್ನು ನೀಡಿ</span><span class="ws-en">Offer your seats</span></span>
+          </button></li>
+          <li><button class="ws-card" type="button" data-i="3" aria-pressed="false" aria-label="Chennai, in Tamil: Women-only cars">
+            <span class="ws-win"><img src="assets/img/story-chennai.webp" alt="A shaded Chennai high road with a yellow autorickshaw" width="600" height="900" loading="lazy" decoding="async"><span class="ws-tint" aria-hidden="true"></span></span>
+            <span class="ws-top" aria-hidden="true"><b lang="ta">தமிழ்</b><small>Chennai</small></span>
+            <span class="ws-say" aria-hidden="true"><span lang="ta">பெண்களுக்கு மட்டுமான கார்கள்</span><span class="ws-en">Women-only cars</span></span>
+          </button></li>
+          <li><button class="ws-card" type="button" data-i="4" aria-pressed="false" aria-label="Hyderabad, in Telugu: Your daily commute, on the days you pick">
+            <span class="ws-win"><img src="assets/img/story-hyderabad.webp" alt="A curving flyover between office towers in Hyderabad" width="600" height="900" loading="lazy" decoding="async"><span class="ws-tint" aria-hidden="true"></span></span>
+            <span class="ws-top" aria-hidden="true"><b lang="te">తెలుగు</b><small>Hyderabad</small></span>
+            <span class="ws-say" aria-hidden="true"><span lang="te">మీ రోజువారీ ప్రయాణం, మీరు ఎంచుకున్న రోజుల్లో</span><span class="ws-en">Your daily commute, on the days you pick</span></span>
+          </button></li>
+          <li><button class="ws-card" type="button" data-i="5" aria-pressed="false" aria-label="Mumbai, in Marathi: Your seat is booked">
+            <span class="ws-win"><img src="assets/img/story-mumbai.webp" alt="Marine Drive in Mumbai at night, street lights along the sea" width="600" height="900" loading="lazy" decoding="async"><span class="ws-tint" aria-hidden="true"></span></span>
+            <span class="ws-top" aria-hidden="true"><b lang="mr">मराठी</b><small>Mumbai</small></span>
+            <span class="ws-say" aria-hidden="true"><span lang="mr">तुमची जागा बुक झाली</span><span class="ws-en">Your seat is booked</span></span>
+          </button></li>
+      </ul>
+      <p class="ws-note">Real streets, words from the app. Photos from Wikimedia Commons, cropped: <a href="https://commons.wikimedia.org/wiki/File:Countryside_Road_View_from_Car_in_My_Village_%E2%80%93_Oct_2025.jpg" rel="noopener">Rajveer Bairagi</a> (<a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>), <a href="https://commons.wikimedia.org/wiki/File:Traffic_in_urban_India.jpg" rel="noopener">Pexels</a> (CC0), <a href="https://commons.wikimedia.org/wiki/File:Bangalore_India_traffic.jpg" rel="noopener">Eirik Refsdal</a> (<a href="https://creativecommons.org/licenses/by/2.0/" rel="noopener">CC BY 2.0</a>), <a href="https://commons.wikimedia.org/wiki/File:Triplicane_High_Road_(244391773).jpeg" rel="noopener">Francisco Anzola</a> (<a href="https://creativecommons.org/licenses/by/3.0/" rel="noopener">CC BY 3.0</a>), <a href="https://commons.wikimedia.org/wiki/File:Gachibowli%E2%80%93Kondapur_Flyover_Hyderabad.jpg" rel="noopener">Mohammad Anees Qamar</a> (<a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>), <a href="https://commons.wikimedia.org/wiki/File:Mumbai,_India,_Beach_promenade_and_highway_in_Mumbai.jpg" rel="noopener">Vyacheslav Argenberg</a> (<a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>).</p>
     </div>
   </section>
 
@@ -352,7 +482,7 @@
       </div>
       <div>
         <h4>App</h4>
-        <ul><li><a href="how-it-works.html">How it works</a></li><li><a href="safety.html">Safety</a></li><li><a href="support.html">Help</a></li><li><a href="credits.html">Credits</a></li></ul>
+        <ul><li><a href="how-it-works.html">How it works</a></li><li><a href="impact.html">Impact</a></li><li><a href="safety.html">Safety</a></li><li><a href="support.html">Help</a></li></ul>
       </div>
       <div>
         <h4>Legal</h4>
