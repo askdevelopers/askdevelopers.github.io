@@ -2,6 +2,9 @@
 // Four planter boxes, pests crawling in from the right toward your houseplants on the left. Spend water drops on
 // defenders based on real pest control: a mister sprays, a Venus flytrap snaps a bug and chews, marigolds block,
 // rain barrels collect more drops. Six waves; every pest that gets through eats one of your five leaves.
+// Endless rounds of three waves, each tougher; combos for quick catches; stars per round; a seeded Daily garden
+// (same pests for everyone that day) and a share button. Between rounds there is a short ad break, and a lost
+// garden can be saved once by watching an ad (both via ads.js, off until AdSense is set up).
 // Drawn entirely in SVG. The loop runs only during a round, and pauses off screen or in a hidden tab.
 (function () {
   'use strict';
@@ -13,10 +16,19 @@
   var hud = {}; game.querySelectorAll('[data-pt]').forEach(function (e) { hud[e.getAttribute('data-pt')] = e; });
   var banner = game.querySelector('.pt-banner');
   var cards = {}; game.querySelectorAll('.pt-card').forEach(function (c) { cards[c.getAttribute('data-kind')] = c; });
-  var startCard = game.querySelector('.pt-start'), pauseCard = game.querySelector('.pt-pause'), endCard = game.querySelector('.pt-end');
+  var startCard = game.querySelector('.pt-start'), pauseCard = game.querySelector('.pt-pause'), endCard = game.querySelector('.pt-end'), roundCard = game.querySelector('.pt-round');
+  var saveBtn = game.querySelector('.pt-save');
+  var Ads = window.LPAds || { enabled: false, next: function (n, d) { d(); }, reward: function (n, h) { if (h.done) h.done(); } };
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, String(v)); } catch (e) { return null; } }
+
+  // seeded randomness, so the Daily garden sends the same pests to everyone
+  var rnd = Math.random;
+  function seeded(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  var today = function () { var d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 
   function el(tag, a, p) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
   function rand(a, b) { return a + Math.random() * (b - a); }
+  function grand(a, b) { return a + rnd() * (b - a); } // gameplay randomness (seeded in Daily mode)
   function tf(e, x, y) { e.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ')'); }
 
   /* ---------- board ---------- */
@@ -140,14 +152,16 @@
     cat: { hp: 7, speed: 17, bite: 1, reward: 15, y: 20 },
     snail: { hp: 16, speed: 10, bite: 1.4, reward: 30, y: 16 }
   };
-  var WAVES = [
-    ['aphid', 'aphid', 'aphid', 'aphid'],
-    ['aphid', 'aphid', 'cat', 'aphid', 'cat', 'aphid'],
-    ['aphid', 'cat', 'aphid', 'cat', 'snail', 'aphid', 'cat', 'aphid'],
-    ['cat', 'aphid', 'snail', 'aphid', 'cat', 'aphid', 'snail', 'cat', 'aphid', 'aphid'],
-    ['snail', 'cat', 'aphid', 'cat', 'aphid', 'snail', 'cat', 'aphid', 'snail', 'cat', 'aphid', 'aphid'],
-    ['aphid', 'aphid', 'cat', 'snail', 'aphid', 'cat', 'snail', 'aphid', 'cat', 'snail', 'aphid', 'cat', 'snail', 'aphid', 'aphid', 'cat']
-  ];
+  var POINTS = { aphid: 10, cat: 15, snail: 30 };
+  // three waves a round; every round brings more, tougher, faster pests
+  function makeWave(round, w) {
+    var n = 3 + round * 2 + w * 2, list = [];
+    for (var i = 0; i < n; i++) {
+      var r = rnd(), snailP = round > 1 || w === 3 ? .12 + round * .03 : 0, catP = round > 1 || w > 1 ? .3 : 0;
+      list.push(r < snailP ? 'snail' : r < snailP + catP ? 'cat' : 'aphid');
+    }
+    return list;
+  }
 
   /* ---------- your houseplants (the leaves you protect) ---------- */
   var HOMES = [];
@@ -168,18 +182,24 @@
   fitScene(); window.addEventListener('resize', fitScene);
 
   /* ---------- state ---------- */
-  var S, sel = null, running = false, paused = false, last = 0, visible = true;
-  var best = 0; try { best = parseInt(localStorage.getItem('lp-pest-best') || '0', 10) || 0; } catch (e) { /* private mode */ }
+  var S, sel = null, running = false, paused = false, last = 0, visible = true, daily = false;
+  var best = parseInt(store('lp-pest-best') || '0', 10) || 0;
   function fresh() {
-    return { t: 0, drops: 150, leaves: 5, wave: 0, queue: [], spawnT: 0, waveGap: 4, units: {}, pests: [], shots: [], caught: 0, passiveT: 0, cool: { mister: 0, barrel: 0, trap: 0, marigold: 0 } };
+    return { t: 0, drops: 150, leaves: 5, round: 1, wave: 0, roundStartLeaves: 5, queue: [], spawnT: 0, waveGap: 4, units: {}, pests: [], shots: [], caught: 0, passiveT: 0,
+      score: 0, combo: 0, lastCatch: -9, saved: false, cool: { mister: 0, barrel: 0, trap: 0, marigold: 0 } };
   }
+  function paintBests() {
+    var db = parseInt(store('lp-pest-daily-' + today()) || '0', 10) || 0;
+    game.querySelector('.pt-bests').textContent = (best ? 'Your best: ' + best.toLocaleString() + ' pts' : '') + (db ? (best ? ' · ' : '') + "Today's daily best: " + db.toLocaleString() : '');
+  }
+  paintBests();
   function key(c, ln) { return c + ',' + ln; }
 
   /* ---------- sound ---------- */
   var soundOn = true; try { soundOn = localStorage.getItem('lp-game-sound') !== 'off'; } catch (e) { /* private mode */ }
   var clips = {}, lastSnd = {};
   function snd(name, vol) {
-    if (!soundOn || (lastSnd[name] && performance.now() - lastSnd[name] < 500)) return;
+    if (!soundOn || game.classList.contains('ad-playing') || (lastSnd[name] && performance.now() - lastSnd[name] < 500)) return;
     lastSnd[name] = performance.now();
     try { var a = clips[name] || (clips[name] = new Audio('assets/sounds/' + name + '.m4a')); a.volume = vol; a.currentTime = 0; var p = a.play(); if (p && p.catch) p.catch(function () {}); clearTimeout(a._s); a._s = setTimeout(function () { a.pause(); }, 900); } catch (e) { /* no audio */ }
   }
@@ -191,7 +211,9 @@
   /* ---------- HUD ---------- */
   function paint() {
     hud.drops.textContent = Math.floor(S.drops);
-    hud.wave.textContent = Math.min(6, Math.max(1, S.wave));
+    hud.wave.textContent = Math.min(3, Math.max(1, S.wave));
+    hud.round.textContent = S.round;
+    hud.score.textContent = S.score.toLocaleString();
     var lv = ''; for (var i = 0; i < 5; i++) lv += '<i class="' + (i < S.leaves ? 'on' : '') + '"></i>';
     if (hud.leaves.innerHTML !== lv) { hud.leaves.innerHTML = lv; hud.leaves.setAttribute('aria-label', S.leaves + ' leaves left'); }
     Object.keys(UNIT).forEach(function (k) {
@@ -256,17 +278,17 @@
   /* ---------- waves ---------- */
   function startWave() {
     S.wave++;
-    if (S.wave > WAVES.length) { finish(true); return; }
-    S.queue = WAVES[S.wave - 1].slice(); S.spawnT = 1.2;
-    say(S.wave === WAVES.length ? 'Final wave: here they all come!' : 'Wave ' + S.wave + (S.wave === 1 ? ': aphids!' : S.wave === 2 ? ': caterpillars too' : S.wave === 3 ? ': snails join in' : ''), true);
+    if (S.wave > 3) { roundClear(); return; }
+    S.queue = makeWave(S.round, S.wave); S.spawnT = 1.2;
+    say('Round ' + S.round + ' · wave ' + S.wave + (S.wave === 3 ? ': the big one!' : S.round === 1 && S.wave === 1 ? ': aphids!' : ''), true);
     paint();
   }
   function spawn(kind) {
-    var lane = Math.floor(Math.random() * LANES), d = PEST[kind];
+    var lane = Math.floor(rnd() * LANES), d = PEST[kind];
     var g = el('g', { class: 'pt-pest pt-' + kind }, G.ptPests); PEST_ART[kind](g);
     var bar = el('rect', { x: -14, y: -34, width: 28, height: 4, rx: 2, class: 'pt-hp' }, g);
-    var hp = d.hp + Math.floor(S.wave / 3);
-    S.pests.push({ kind: kind, l: lane, x: 930, y: cy(lane) + d.y - 14, hp: hp, max: hp, d: d, g: g, bar: bar, slow: 0 });
+    var hp = Math.round(d.hp * (1 + .3 * (S.round - 1)));
+    S.pests.push({ kind: kind, l: lane, x: 930, y: cy(lane) + d.y - 14, hp: hp, max: hp, d: d, g: g, bar: bar, slow: 0, sp: d.speed * (1 + .07 * (S.round - 1)) });
   }
 
   /* ---------- effects ---------- */
@@ -284,6 +306,11 @@
   function caught(p) {
     if (p.dead) return; p.dead = true;
     S.caught++; S.drops += p.d.reward; floatText('+' + p.d.reward, p.x, p.y - 30, 'gain');
+    // combo: catches less than 2.5 s apart multiply the points
+    S.combo = S.t - S.lastCatch < 2.5 ? Math.min(4, S.combo + 1) : 1; S.lastCatch = S.t;
+    var mult = [1, 1, 1.5, 2, 3][S.combo];
+    S.score += Math.round(POINTS[p.kind] * mult * (1 + .2 * (S.round - 1)));
+    if (mult > 1) floatText('Combo x' + mult, p.x, p.y - 52, 'combo');
     puff(p.x, p.y, '#D8F0B8'); p.g.remove();
   }
   function frontOf(p) { // the defender a pest is chewing, if any
@@ -298,7 +325,7 @@
     S.passiveT += dt; if (S.passiveT >= 5) { S.passiveT = 0; S.drops += 10; }
     for (var ck in S.cool) S.cool[ck] = Math.max(0, S.cool[ck] - dt);
 
-    if (S.queue.length) { S.spawnT -= dt; if (S.spawnT <= 0) { spawn(S.queue.shift()); S.spawnT = Math.max(1.4, 4.2 - S.wave * .45) * rand(.75, 1.25); } }
+    if (S.queue.length) { S.spawnT -= dt; if (S.spawnT <= 0) { spawn(S.queue.shift()); S.spawnT = Math.max(1.1, 4 - S.wave * .4 - S.round * .3) * grand(.75, 1.25); } }
     else if (!S.pests.length) { S.waveGap -= dt; if (S.waveGap <= 0) { S.waveGap = 6; startWave(); if (!running) return; } }
 
     for (var k in S.units) {
@@ -344,12 +371,12 @@
       } else {
         p.g.classList.remove('eating');
         p.slow = Math.max(0, p.slow - dt);
-        p.x -= p.d.speed * (p.slow > 0 ? .55 : 1) * dt;
+        p.x -= p.sp * (p.slow > 0 ? .55 : 1) * dt;
       }
       if (p.x < HOME_X + 34) { // reached a houseplant: one leaf lost
         S.leaves--; p.g.remove(); flash(HOMES[p.l].g, 'nibbled');
         floatText('-1 leaf', HOME_X, cy(p.l) - 40, 'loss');
-        if (S.leaves <= 0) finish(false);
+        if (S.leaves <= 0) lost();
         return false;
       }
       tf(p.g, p.x, p.y);
@@ -368,25 +395,71 @@
   function go() { if (running && !paused && visible && !document.hidden) { last = 0; requestAnimationFrame(frame); } }
 
   /* ---------- round control ---------- */
-  function start() {
+  function hideCards() { startCard.hidden = true; endCard.hidden = true; pauseCard.hidden = true; roundCard.hidden = true; }
+  function start(isDaily) {
     ['ptUnits', 'ptPests', 'ptShots', 'ptFx'].forEach(function (id) { G[id].innerHTML = ''; });
-    S = fresh(); running = true; paused = false;
-    startCard.hidden = true; endCard.hidden = true; pauseCard.hidden = true;
-    game.classList.add('is-playing'); choose('mister'); paint();
-    say('Plant a mister or two. The aphids are coming', true);
+    daily = !!isDaily; rnd = daily ? seeded(today()) : Math.random;
+    S = fresh(); running = true; paused = false; hideCards();
+    store('lp-pest-runs', (parseInt(store('lp-pest-runs') || '0', 10) || 0) + 1);
+    game.classList.add('is-playing'); game.classList.toggle('is-daily', daily); choose('mister'); paint();
+    say(daily ? "Daily garden: everyone gets today's pests" : 'Plant a mister or two. The aphids are coming', true);
     go();
   }
-  function finish(won) {
-    running = false; game.classList.remove('is-playing'); choose(null);
-    var reached = won ? 6 : Math.max(0, S.wave - 1);
-    var score = reached * 100 + S.caught * 5 + (won ? S.leaves * 50 : 0);
-    var nb = score > best; if (nb) { best = score; try { localStorage.setItem('lp-pest-best', String(best)); } catch (e) { /* private mode */ } }
-    game.querySelector('.pt-end-kick').textContent = won ? 'Garden saved' : 'The bugs got through';
-    game.querySelector('.pt-end-title').textContent = won ? (S.leaves === 5 ? 'Not a single leaf lost!' : 'Every plant made it') : 'Your plants need a rest';
-    game.querySelector('.pt-end-text').textContent = (won ? 'All six waves held back with ' : 'You held ' + reached + ' of 6 waves with ') + S.caught + ' pests caught' + (won ? ' and ' + S.leaves + ' of 5 leaves kept' : '') + '. Score ' + score + (nb ? ', a new best!' : ' (best ' + best + ').') + ' In real life, LeafPulse\'s Leaf doctor helps you spot pests early.';
-    endCard.hidden = false;
+  function roundClear() {
+    running = false; game.classList.remove('is-playing');
+    S.shots.forEach(function (sh) { sh.g.remove(); }); S.shots = [];
+    var lost_ = S.roundStartLeaves - S.leaves, stars = lost_ === 0 ? 3 : lost_ <= 2 ? 2 : 1;
+    var bonus = 100 * S.round + 20 * S.leaves; S.score += bonus;
+    var healed = Math.min(5, S.leaves + 2) - S.leaves; S.leaves += healed;
+    roundCard.querySelector('.pt-round-kick').textContent = 'Round ' + S.round + ' cleared';
+    roundCard.querySelectorAll('.pt-stars i').forEach(function (st, i) { st.classList.toggle('on', i < stars); });
+    roundCard.querySelector('.pt-round-title').textContent = stars === 3 ? 'Not a leaf lost!' : stars === 2 ? 'Nicely defended' : 'That was close';
+    roundCard.querySelector('.pt-round-text').textContent = '+' + bonus + ' round bonus · ' + S.score.toLocaleString() + ' pts so far' + (healed ? ' · your plants grew ' + healed + (healed === 1 ? ' leaf' : ' leaves') + ' back' : '') + '. Next round: tougher, faster pests.';
+    roundCard.hidden = false; paint();
   }
-  game.querySelectorAll('.pt-go').forEach(function (b) { b.addEventListener('click', start); });
+  function nextRound() {
+    roundCard.hidden = true;
+    var resume = function () {
+      S.round++; S.wave = 0; S.waveGap = 2.5; S.roundStartLeaves = S.leaves;
+      running = true; paused = false; game.classList.add('is-playing'); paint(); go();
+    };
+    // a short ad between rounds; skipped during a visitor's very first game
+    var firstGame = (parseInt(store('lp-pest-runs') || '0', 10) || 0) <= 1;
+    if (firstGame && S.round === 1) resume(); else Ads.next('pest-round-' + (S.round + 1), resume);
+  }
+  function lost() {
+    running = false; game.classList.remove('is-playing'); choose(null);
+    var title = endCard.querySelector('.pt-end-title');
+    endCard.querySelector('.pt-end-kick').textContent = 'The bugs got through';
+    title.textContent = S.round > 2 ? 'What a run!' : 'Your plants need a rest';
+    var nb = S.score > best; if (nb) { best = S.score; store('lp-pest-best', best); }
+    if (daily) { var dk = 'lp-pest-daily-' + today(); if (S.score > (parseInt(store(dk) || '0', 10) || 0)) store(dk, S.score); }
+    endCard.querySelector('.pt-end-text').textContent = 'Round ' + S.round + ', ' + S.caught + ' pests caught, ' + S.score.toLocaleString() + ' pts' + (nb ? '. A new best!' : ' (best ' + best.toLocaleString() + ').') + (daily ? ' Daily garden for ' + new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) + '.' : '');
+    endCard.hidden = false; saveBtn.hidden = true; paintBests();
+    // one rescue per game: offered only when an ad is actually ready
+    if (!S.saved && Ads.enabled) Ads.reward('pest-save', {
+      available: function (show) { saveBtn.hidden = false; saveBtn.onclick = function () { saveBtn.disabled = true; show(); }; },
+      viewed: function () { rescue(); },
+      done: function () { saveBtn.hidden = true; saveBtn.disabled = false; }
+    });
+  }
+  function rescue() {
+    S.saved = true; S.leaves = 3;
+    S.pests.forEach(function (p) { puff(p.x, p.y, '#D8F0B8'); p.g.remove(); }); S.pests = [];
+    endCard.hidden = true; saveBtn.hidden = true;
+    running = true; paused = false; game.classList.add('is-playing'); choose('mister'); paint();
+    say('Garden saved! 3 leaves back, the planters are clear', true); go();
+  }
+  game.querySelector('.pt-next').addEventListener('click', nextRound);
+  game.querySelector('.pt-daily').addEventListener('click', function () { start(true); });
+  game.querySelector('.pt-share').addEventListener('click', function () {
+    var txt = 'I reached round ' + S.round + ' with ' + S.score.toLocaleString() + ' points in LeafPulse Pest Patrol' + (daily ? " (today's daily garden)" : '') + '. Can you beat it?';
+    var url = location.origin + location.pathname + '#play', btn = this;
+    if (navigator.share) { navigator.share({ title: 'Pest Patrol', text: txt, url: url }).catch(function () {}); return; }
+    if (navigator.clipboard) navigator.clipboard.writeText(txt + ' ' + url).then(function () { btn.textContent = 'Copied!'; setTimeout(function () { btn.textContent = 'Share score'; }, 1800); });
+  });
+  document.addEventListener('lp:ad', function (e) { game.classList.toggle('ad-playing', e.detail.playing); });
+  game.querySelectorAll('.pt-go').forEach(function (b) { b.addEventListener('click', function () { start(false); }); });
   function pause(on) { if (!running) return; paused = on; pauseCard.hidden = !on; if (!on) go(); }
   game.querySelector('.pt-pausebtn').addEventListener('click', function () { pause(!paused); });
   game.querySelector('.pt-resume').addEventListener('click', function () { pause(false); });
