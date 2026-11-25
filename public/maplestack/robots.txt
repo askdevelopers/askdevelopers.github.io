@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://askdevelopers.github.io/maplestack/sitemap.xml
